@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FuseBoard — 20 Fuseboard Themes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Outfit',sans-serif;background:#07080a;color:#e4e6ea;padding:32px 12px}
+    h1{text-align:center;font-size:1.6rem;font-weight:800;margin-bottom:4px}
+    .sub{text-align:center;color:#555;font-size:.8rem;margin-bottom:32px}
+
+    .section{max-width:680px;margin:0 auto 40px;padding-bottom:40px;border-bottom:1px solid #1a1c20}
+    .section:last-child{border-bottom:none}
+    .stitle{font-family:'JetBrains Mono',monospace;font-size:.55rem;color:#444;text-transform:uppercase;letter-spacing:.1em;text-align:center;margin-bottom:16px}
+
+    :root{
+      --g:#22c55e;--gg:rgba(34,197,94,.2);--gd:rgba(34,197,94,.08);
+      --r:#ef4444;--rg:rgba(239,68,68,.15);
+      --trk:#0c0d12;--trkb:#1c1e26;
+      --lev1:#5a708a;--lev2:#3e5468;
+      --bg1:#12141a;--bd1:#1e2028;
+    }
+
+    /* Shared: 4-col grid, items clickable */
+    .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+    .f{cursor:pointer;user-select:none;display:flex;flex-direction:column;align-items:center}
+
+    /* Wire */
+    .w{width:4px;border-radius:3px;position:relative;overflow:hidden;transition:background .4s}
+    .wi{height:14px}.wo{height:14px}
+    .f[data-s="0"] .w{background:#2a1212}
+    .f[data-s="0"] .w::after{content:'';position:absolute;left:0;right:0;top:-10px;height:10px;background:linear-gradient(180deg,transparent,var(--r),#f88,var(--r),transparent);border-radius:3px;animation:fl .6s linear infinite}
+    .f[data-s="1"] .w{background:#1a1a20}
+    .f[data-s="1"] .w::after{display:none}
+    @keyframes fl{0%{top:-10px}100%{top:calc(100% + 10px)}}
+    .f:nth-child(1) .w::after{animation-delay:0s}.f:nth-child(2) .w::after{animation-delay:.07s}.f:nth-child(3) .w::after{animation-delay:.14s}.f:nth-child(4) .w::after{animation-delay:.21s}
+    .f:nth-child(5) .w::after{animation-delay:.04s}.f:nth-child(6) .w::after{animation-delay:.11s}.f:nth-child(7) .w::after{animation-delay:.18s}.f:nth-child(8) .w::after{animation-delay:.25s}
+
+    /* Connector dot */
+    .cd{width:8px;height:8px;border-radius:50%;background:#080910;border:1.5px solid #1e2028;z-index:2}
+
+    /* ===== 20 FUSEBOARD THEMES ===== */
+
+    /* 1. Clean card, label top, slim track, lever slides */
+    .t1 .box{width:100%;background:var(--bg1);border:1px solid var(--bd1);border-radius:12px;padding:12px 8px 10px;display:flex;flex-direction:column;align-items:center;gap:6px;transition:.2s}
+    .t1 .f:hover .box{border-color:#333}
+    .t1 .f[data-s="1"] .box{border-color:rgba(34,197,94,.25);background:#0f1814}
+    .t1 .lb{font-weight:700;font-size:.85rem;color:#bbc;transition:.2s;text-align:center;line-height:1.15}
+    .t1 .f[data-s="1"] .lb{color:var(--g)}
+    .t1 .trk{width:100%;height:44px;background:var(--trk);border:1px solid #1a1e24;border-radius:8px;position:relative;overflow:hidden}
+    .t1 .lev{position:absolute;left:3px;right:3px;top:3px;height:18px;background:linear-gradient(180deg,var(--lev1),var(--lev2));border-radius:5px;transition:.2s cubic-bezier(.22,1,.36,1);box-shadow:0 2px 4px rgba(0,0,0,.4)}
+    .t1 .lev::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:16px;height:1px;background:rgba(255,255,255,.12);border-radius:1px}
+    .t1 .f[data-s="1"] .lev{top:auto;bottom:3px;background:linear-gradient(180deg,var(--g),#16a34a);box-shadow:0 0 12px var(--gg)}
+    .t1 .inf{font-size:.5rem;color:#3a3e48;font-family:'JetBrains Mono',monospace;transition:.2s}
+    .t1 .f[data-s="1"] .inf{color:rgba(34,197,94,.35)}
+
+    /* 2. Same but no card border — floats */
+    .t2 .box{width:100%;padding:12px 8px 10px;display:flex;flex-direction:column;align-items:center;gap:6px;border-radius:10px;transition:.2s}
+    .t2 .f:hover .box{background:rgba(255,255,255,.02)}
+    .t2 .lb{font-weight:700;font-size:.85rem;color:#bbc;transition:.2s;text-align:center;line-height:1.15}
+    .t2 .f[data-s="1"] .lb{color:var(--g)}
+    .t2 .trk{width:100%;height:40px;background:var(--trk);border:1px solid #1a1e24;border-radius:8px;position:relative;overflow:hidden}
+    .t2 .lev{position:absolute;left:3px;right:3px;top:3px;height:16px;background:linear-gradient(180deg,var(--lev1),var(--lev2));border-radius:5px;transition:.2s cubic-bezier(.22,1,.36,1);box-shadow:0 2px 4px rgba(0,0,0,.4)}
+    .t2 .f[data-s="1"] .lev{top:auto;bottom:3px;background:linear-gradient(180deg,var(--g),#16a34a);box-shadow:0 0 10px var(--gg)}
+    .t2 .inf{font-size:.5rem;color:#3a3e48}
+    .t2 .f[data-s="1"] .inf{color:rgba(34,197,94,.35)}
+
+    /* 3. Horizontal fuse — label left, lever right */
+    .t3{display:flex;flex-direction:column;gap:4px}
+    .t3 .f{flex-direction:row;align-items:center;gap:0}
+    .t3 .w{display:none}
+    .t3 .cd{display:none}
+    .t3 .box{flex:1;display:flex;align-items:center;padding:12px 14px;background:var(--bg1);border:1px solid var(--bd1);border-radius:10px;gap:12px;transition:.2s}
+    .t3 .f:hover .box{border-color:#333}
+    .t3 .f[data-s="1"] .box{border-color:rgba(34,197,94,.25);background:#0f1814}
+    .t3 .lb{font-weight:700;font-size:.9rem;color:#bbc;flex:1;transition:.2s}
+    .t3 .f[data-s="1"] .lb{color:var(--g)}
+    .t3 .trk{width:44px;height:24px;background:var(--trk);border:1px solid #1a1e24;border-radius:12px;position:relative;flex-shrink:0;overflow:hidden}
+    .t3 .lev{position:absolute;top:3px;bottom:3px;left:3px;width:16px;background:linear-gradient(180deg,var(--lev1),var(--lev2));border-radius:9px;transition:.2s cubic-bezier(.22,1,.36,1);box-shadow:0 1px 3px rgba(0,0,0,.4)}
+    .t3 .f[data-s="1"] .lev{left:auto;right:3px;background:linear-gradient(180deg,var(--g),#16a34a);box-shadow:0 0 8px var(--gg)}
+    .t3 .inf{display:none}
+
+    /* 4. Inside a panel enclosure */
+    .t4-panel{background:#0c0e14;border:1.5px solid #1a1e28;border-radius:16px;padding:16px 14px}
+    .t4 .box{width:100%;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:6px}
+    .t4 .lb{font-weight:700;font-size:.82rem;color:#bbc;transition:.2s;text-align:center;line-height:1.15}
+    .t4 .f[data-s="1"] .lb{color:var(--g)}
+    .t4 .trk{width:100%;height:40px;background:var(--trk);border:1px solid #1a1e24;border-radius:8px;position:relative;overflow:hidden}
+    .t4 .lev{position:absolute;left:3px;right:3px;top:3px;height:16px;background:linear-gradient(180deg,var(--lev1),var(--lev2));border-radius:5px;transition:.2s cubic-bezier(.22,1,.36,1);box-shadow:0 2px 4px rgba(0,0,0,.4)}
+    .t4 .f[data-s="1"] .lev{top:auto;bottom:3px;background:linear-gradient(180deg,var(--g),#16a34a);box-shadow:0 0 10px var(--gg)}
+    .t4 .inf{font-size:.48rem;color:#3a3e48}
+    .t4 .f[data-s="1"] .inf{color:rgba(34,197,94,.35)}
+
+    /* 5. Big label IS the button, track is inline accent */
+    .t5 .box{width:100%;background:var(--bg1);border:1px solid var(--bd1);border-radius:12px;padding:16px 12px;text-align:center;transition:.2s;position:relative;overflow:hidden}
+    .t5 .f:hover .box{border-color:#333}
+    .t5 .f[data-s="1"] .box{border-color:rgba(34,197,94,.25);background:#0f1814}
+    .t5 .lb{font-weight:700;font-size:.92rem;color:#bbc;transition:.2s;position:relative;z-index:1}
+    .t5 .f[data-s="1"] .lb{color:var(--g)}
+    .t5 .bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--r);transition:.3s}
+    .t5 .f[data-s="1"] .bar{background:var(--g);box-shadow:0 0 8px var(--gg)}
+    .t5 .trk{display:none}.t5 .inf{font-size:.55rem;color:#3a3e48;margin-top:6px;position:relative;z-index:1}
+    .t5 .f[data-s="1"] .inf{color:rgba(34,197,94,.4)}
+
+    /* 6. Pill fuses in a row */
+    .t6{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+    .t6 .f{flex-direction:row}
+    .t6 .w{display:none}.t6 .cd{display:none}
+    .t6 .box{display:flex;align-items:center;gap:8px;padding:10px 16px;background:var(--bg1);border:1px solid var(--bd1);border-radius:100px;transition:.2s}
+    .t6 .f:hover .box{border-color:#333}
+    .t6 .f[data-s="1"] .box{border-color:rgba(34,197,94,.25);background:var(--gd)}
+    .t6 .lb{font-weight:600;font-size:.85rem;color:#bbc;transition:.2s}
+    .t6 .f[data-s="1"] .lb{color:var(--g)}
+    .t6 .dot{width:8px;height:8px;border-radius:50%;background:var(--r);box-shadow:0 0 4px var(--rg);transition:.2s;flex-shrink:0}
+    .t6 .f[data-s="1"] .dot{background:var(--g);box-shadow:0 0 4px var(--gg)}
+    .t6 .trk{display:none}.t6 .inf{display:none}
+
+    /* 7. Tight compact rows with lever */
+    .t7{display:flex;flex-direction:column;gap:3px;background:#0c0e14;border-radius:12px;overflow:hidden;border:1px solid #1a1e28;padding:4px}
+    .t7 .f{flex-direction:row;align-items:center;gap:0}
+    .t7 .w{display:none}.t7 .cd{display:none}
+    .t7 .box{flex:1;display:flex;align-items:center;padding:11px 12px;gap:10px;border-radius:8px;transition:.15s}
+    .t7 .f:hover .box{background:rgba(255,255,255,.02)}
+    .t7 .lb{font-weight:600;font-size:.88rem;color:#bbc;flex:1;transition:.2s}
+    .t7 .f[data-s="1"] .lb{color:var(--g)}
+    .t7 .trk{width:36px;height:20px;background:var(--trk);border:1px solid #1a1e24;border-radius:10px;position:relative;flex-shrink:0;overflow:hidden}
+    .t7 .lev{position:absolute;top:2px;bottom:2px;left:2px;width:14px;background:var(--lev1);border-radius:8px;transition:.2s cubic-bezier(.22,1,.36,1)}
+    .t7 .f[data-s="1"] .lev{left:auto;right:2px;background:var(--g);box-shadow:0 0 6px var(--gg)}
+    .t7 .inf{display:none}
+
+    /* 8. Wire prominent — big visible flow */
+    .t8 .box{width:100%;background:var(--bg1);border:1px solid var(--bd1);border-radius:12px;padding:12px 8px 10px;display:flex;flex-direction:column;align-items:center;gap:6px;transition:.2s}
+    .t8 .f[data-s="1"] .box{border-color:rgba(34,197,94,.25);background:#0f1814}
+    .t8 .lb{font-weight:700;font-size:.85rem;color:#bbc;transition:.2s;text-align:center;line-height:1.15}
+    .t8 .f[data-s="1"] .lb{color:var(--g)}
+    .t8 .trk{width:100%;height:36px;background:var(--trk);border:1px solid #1a1e24;border-radius:8px;position:relative;overflow:hidden}
+    .t8 .lev{position:absolute;left:3px;right:3px;top:3px;height:14px;background:linear-gradient(180deg,var(--lev1),var(--lev2));border-radius:5px;transition:.2s cubic-bezier(.22,1,.36,1)}
+    .t8 .f[data-s="1"] .lev{top:auto;bottom:3px;background:linear-gradient(180deg,var(--g),#16a34a);box-shadow:0 0 10px var(--gg)}
+    .t8 .inf{font-size:.5rem;color:#3a3e48}
+    .t8 .f[data-s="1"] .inf{color:rgba(34,197,94,.35)}
+    /* Bigger wires */
+    .t8 .w{width:6px;border-radius:4px}
+    .t8 .wi{height:24px}.t8 .wo{height:24px}
+
+    /* 9. Label + colored left bar only */
+    .t9{display:flex;flex-direction:column;gap:4px}
+    .t9 .f{flex-direction:row}.t9 .w{display:none}.t9 .cd{display:none}
+    .t9 .box{flex:1;display:flex;align-items:center;padding:14px 16px;background:var(--bg1);border-radius:10px;border-left:3px solid var(--r);gap:10px;transition:.2s}
+    .t9 .f:hover .box{background:#161820}
+    .t9 .f[data-s="1"] .box{border-left-color:var(--g);background:#0f1814}
+    .t9 .lb{font-weight:700;font-size:.9rem;color:#bbc;flex:1;transition:.2s}
+    .t9 .f[data-s="1"] .lb{color:var(--g)}
+    .t9 .trk{width:32px;height:18px;background:var(--trk);border:1px solid #1a1e24;border-radius:9px;position:relative;flex-shrink:0;overflow:hidden}
+    .t9 .lev{position:absolute;top:2px;bottom:2px;left:2px;width:12px;background:var(--lev1);border-radius:7px;transition:.2s cubic-bezier(.22,1,.36,1)}
+    .t9 .f[data-s="1"] .lev{left:auto;right:2px;background:var(--g);box-shadow:0 0 6px var(--gg)}
+    .t9 .inf{display:none}
+
+    /* 10. Just the lever, label below — icon-like grid */
+    .t10 .box{width:100%;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0}
+    .t10 .lb{font-weight:600;font-size:.75rem;color:#889;transition:.2s;text-align:center;line-height:1.15}
+    .t10 .f[data-s="1"] .lb{color:var(--g)}
+    .t10 .trk{width:28px;height:52px;background:var(--trk);border:1px solid #1a1e24;border-radius:14px;position:relative;overflow:hidden}
+    .t10 .lev{position:absolute;left:3px;right:3px;top:3px;height:20px;background:linear-gradient(180deg,var(--lev1),var(--lev2));border-radius:10px;transition:.2s cubic-bezier(.22,1,.36,1);box-shadow:0 2px 4px rgba(0,0,0,.4)}
+    .t10 .f[data-s="1"] .lev{top:auto;bottom:3px;background:linear-gradient(180deg,var(--g),#16a34a);box-shadow:0 0 10px var(--gg)}
+    .t10 .inf{display:none}
+
+    /* 11-20: More subtle variations */
+
+    /* 11. White-ish panel (light mode fuseboard) */
+    .t11-p{background:#e8e8ec;border-radius:16px;padding:16px 14px}
+    .t11 .box{width:100%;background:#f4f4f6;border:1px solid #d0d2d8;border-radius:10px;padding:12px 8px 10px;display:flex;flex-direction:column;align-items:center;gap:6px;transition:.2s}
+    .t11 .f[data-s="1"] .box{background:#e8f5ee;border-color:rgba(34,197,94,.3)}
+    .t11 .lb{font-weight:700;font-size:.82rem;color:#444;transition:.2s;text-align:center;line-height:1.15}
+    .t11 .f[data-s="1"] .lb{color:#16a34a}
+    .t11 .trk{width:100%;height:36px;background:#d8d8de;border-radius:8px;position:relative;overflow:hidden}
+    .t11 .lev{position:absolute;left:3px;right:3px;top:3px;height:14px;background:linear-gradient(180deg,#999,#777);border-radius:5px;transition:.2s cubic-bezier(.22,1,.36,1);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+    .t11 .f[data-s="1"] .lev{top:auto;bottom:3px;background:linear-gradient(180deg,var(--g),#16a34a)}
+    .t11 .inf{font-size:.5rem;color:#999}
+    .t11 .f[data-s="1"] .inf{color:#16a34a}
+    .t11 .w{display:none}.t11 .cd{display:none}
+
+    /* 12. Glassmorphism */
+    .t12 .box{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px 8px 10px;display:flex;flex-direction:column;align-items:center;gap:6px;backdrop-filter:blur(8px);transition:.2s}
+    .t12 .f[data-s="1"] .box{background:rgba(34,197,94,.06);border-color:rgba(34,197,94,.2)}
+    .t12 .lb{font-weight:700;font-size:.85rem;color:#ccd;transition:.2s;text-align:center;line-height:1.15}
+    .t12 .f[data-s="1"] .lb{color:var(--g)}
+    .t12 .trk{width:100%;height:38px;background:rgba(0,0,0,.3);border-radius:8px;position:relative;overflow:hidden}
+    .t12 .lev{position:absolute;left:3px;right:3px;top:3px;height:14px;background:rgba(255,255,255,.15);border-radius:5px;transition:.2s cubic-bezier(.22,1,.36,1)}
+    .t12 .f[data-s="1"] .lev{top:auto;bottom:3px;background:var(--g);box-shadow:0 0 12px var(--gg)}
+    .t12 .inf{font-size:.5rem;color:#556}
+    .t12 .f[data-s="1"] .inf{color:rgba(34,197,94,.4)}
+
+    /* 13-20: Quick card+lever combos with different accents */
+    .t13 .box,.t14 .box,.t15 .box,.t16 .box,.t17 .box,.t18 .box,.t19 .box,.t20 .box{width:100%;background:var(--bg1);border:1px solid var(--bd1);border-radius:12px;padding:12px 8px 10px;display:flex;flex-direction:column;align-items:center;gap:6px;transition:.2s}
+    .t13 .lb,.t14 .lb,.t15 .lb,.t16 .lb,.t17 .lb,.t18 .lb,.t19 .lb,.t20 .lb{font-weight:700;font-size:.85rem;color:#bbc;transition:.2s;text-align:center;line-height:1.15}
+    .t13 .trk,.t14 .trk,.t15 .trk,.t16 .trk,.t17 .trk,.t18 .trk,.t19 .trk,.t20 .trk{width:100%;background:var(--trk);border:1px solid #1a1e24;border-radius:8px;position:relative;overflow:hidden}
+    .t13 .inf,.t14 .inf,.t15 .inf,.t16 .inf,.t17 .inf,.t18 .inf,.t19 .inf,.t20 .inf{font-size:.5rem;color:#3a3e48}
+
+    /* 13. Taller track */
+    .t13 .trk{height:56px}.t13 .lev{position:absolute;left:3px;right:3px;top:3px;height:24px;background:linear-gradient(180deg,var(--lev1),var(--lev2));border-radius:5px;transition:.2s cubic-bezier(.22,1,.36,1);box-shadow:0 2px 4px rgba(0,0,0,.4)}
+    .t13 .f[data-s="1"] .lev{top:auto;bottom:3px;background:linear-gradient(180deg,var(--g),#16a34a);box-shadow:0 0 10px var(--gg)}
+    .t13 .f[data-s="1"] .box{border-color:rgba(34,197,94,.25)}.t13 .f[data-s="1"] .lb{color:var(--g)}.t13 .f[data-s="1"] .inf{color:rgba(34,197,94,.35)}
+
+    /* 14. Round lever */
+    .t14 .trk{height:48px;border-radius:24px}
+    .t14 .lev{position:absolute;left:4px;right:4px;top:4px;height:18px;background:linear-gradient(180deg,var(--lev1),var(--lev2));border-radius:20px;transition:.2s cubic-bezier(.22,1,.36,1)}
+    .t14 .f[data-s="1"] .lev{top:auto;bottom:4px;background:linear-gradient(180deg,var(--g),#16a34a);box-shadow:0 0 10px var(--gg)}
+    .t14 .f[data-s="1"] .box{border-color:rgba(34,197,94,.25)}.t14 .f[data-s="1"] .lb{color:var(--g)}.t14 .f[data-s="1"] .inf{color:rgba(34,197,94,.35)}
+
+    /* 15. Outlined track */
+    .t15 .trk{height:44px;background:transparent;border:2px solid #222630}
+    .t15 .lev{position:absolute;left:3px;right:3px;top:3px;height:16px;background:var(--lev1);border-radius:5px;transition:.2s cubic-bezier(.22,1,.36,1)}
+    .t15 .f[data-s="1"] .lev{top:auto;bottom:3px;background:var(--g);box-shadow:0 0 10px var(--gg)}
+    .t15 .f[data-s="1"] .trk{border-color:rgba(34,197,94,.3)}
+    .t15 .f[data-s="1"] .box{border-color:rgba(34,197,94,.25)}.t15 .f[data-s="1"] .lb{color:var(--g)}.t15 .f[data-s="1"] .inf{color:rgba(34,197,94,.35)}
+
+    /* 16. No wire, just cards */
+    .t16 .w{display:none}.t16 .cd{display:none}
+    .t16 .trk{height:40px}
+    .t16 .lev{position:absolute;left:3px;right:3px;top:3px;height:16px;background:linear-gradient(180deg,var(--lev1),var(--lev2));border-radius:5px;transition:.2s cubic-bezier(.22,1,.36,1);box-shadow:0 2px 4px rgba(0,0,0,.4)}
+    .t16 .f[data-s="1"] .lev{top:auto;bottom:3px;background:linear-gradient(180deg,var(--g),#16a34a);box-shadow:0 0 10px var(--gg)}
+    .t16 .f[data-s="1"] .box{border-color:rgba(34,197,94,.25);background:#0f1814}.t16 .f[data-s="1"] .lb{color:var(--g)}.t16 .f[data-s="1"] .inf{color:rgba(34,197,94,.35)}
+
+    /* 17. Dot indicator instead of track */
+    .t17 .trk{display:none}
+    .t17 .dot{width:10px;height:10px;border-radius:50%;background:var(--r);box-shadow:0 0 6px var(--rg);transition:.2s}
+    .t17 .f[data-s="1"] .dot{background:var(--g);box-shadow:0 0 6px var(--gg)}
+    .t17 .f[data-s="1"] .box{border-color:rgba(34,197,94,.25);background:#0f1814}.t17 .f[data-s="1"] .lb{color:var(--g)}.t17 .f[data-s="1"] .inf{color:rgba(34,197,94,.35)}
+
+    /* 18. Lever is a horizontal bar at bottom of card */
+    .t18 .trk{height:10px;border-radius:5px}
+    .t18 .lev{position:absolute;top:1px;bottom:1px;left:2px;width:40%;background:linear-gradient(90deg,var(--lev1),var(--lev2));border-radius:4px;transition:.2s cubic-bezier(.22,1,.36,1)}
+    .t18 .f[data-s="1"] .lev{left:auto;right:2px;background:linear-gradient(90deg,#16a34a,var(--g));box-shadow:0 0 8px var(--gg)}
+    .t18 .f[data-s="1"] .box{border-color:rgba(34,197,94,.25);background:#0f1814}.t18 .f[data-s="1"] .lb{color:var(--g)}.t18 .f[data-s="1"] .inf{color:rgba(34,197,94,.35)}
+
+    /* 19. Text emphasis — big label, tiny lever */
+    .t19 .lb{font-size:1.1rem;font-weight:800}
+    .t19 .trk{height:28px}
+    .t19 .lev{position:absolute;left:3px;right:3px;top:3px;height:10px;background:linear-gradient(180deg,var(--lev1),var(--lev2));border-radius:4px;transition:.2s cubic-bezier(.22,1,.36,1)}
+    .t19 .f[data-s="1"] .lev{top:auto;bottom:3px;background:linear-gradient(180deg,var(--g),#16a34a);box-shadow:0 0 8px var(--gg)}
+    .t19 .f[data-s="1"] .box{border-color:rgba(34,197,94,.25);background:#0f1814}.t19 .f[data-s="1"] .lb{color:var(--g)}.t19 .f[data-s="1"] .inf{color:rgba(34,197,94,.35)}
+
+    /* 20. Combo: card + wire accent + lever */
+    .t20 .box{position:relative;overflow:hidden}
+    .t20 .box::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#2a1212;transition:.3s;overflow:hidden}
+    .t20 .box::after{content:'';position:absolute;left:0;top:-8px;width:3px;height:8px;background:linear-gradient(180deg,transparent,var(--r),transparent);animation:wfl .5s linear infinite;border-radius:2px}
+    @keyframes wfl{0%{top:-8px}100%{top:calc(100% + 8px)}}
+    .t20 .f[data-s="1"] .box::before{background:#1a2a1a}.t20 .f[data-s="1"] .box::after{display:none}
+    .t20 .trk{height:40px}
+    .t20 .lev{position:absolute;left:3px;right:3px;top:3px;height:16px;background:linear-gradient(180deg,var(--lev1),var(--lev2));border-radius:5px;transition:.2s cubic-bezier(.22,1,.36,1);box-shadow:0 2px 4px rgba(0,0,0,.4)}
+    .t20 .f[data-s="1"] .lev{top:auto;bottom:3px;background:linear-gradient(180deg,var(--g),#16a34a);box-shadow:0 0 10px var(--gg)}
+    .t20 .f[data-s="1"] .box{border-color:rgba(34,197,94,.25);background:#0f1814}.t20 .f[data-s="1"] .lb{color:var(--g)}.t20 .f[data-s="1"] .inf{color:rgba(34,197,94,.35)}
+    .t20 .w{display:none}.t20 .cd{display:none}
+
+    @media(max-width:600px){.g4{grid-template-columns:repeat(2,1fr)}}
+    @media(prefers-reduced-motion:reduce){.w::after,.t20 .box::after{animation:none!important;display:none}}
+  </style>
+</head>
+<body>
+  <h1>20 FuseBoard Themes</h1>
+  <p class="sub">Fuseboard identity kept. Text front and centre. Click to trip.</p>
+  <div id="app"></div>
+
+  <script>
+    const D=[
+      {t:'Social Media',s:'9 sites'},{t:'Video Stream',s:'6 sites'},
+      {t:'Ads & Trackers',s:'4 sites'},{t:'Adult Content',s:'category'},
+      {t:'Gambling',s:'category'},{t:'Gaming',s:'6 sites'},
+      {t:'News & Media',s:'category'},{t:'Security',s:'threats',on:1},
+    ];
+
+    const themes=[
+      {n:'1 — Card + Slider Track',c:'t1'},
+      {n:'2 — Borderless Float',c:'t2'},
+      {n:'3 — Horizontal Row + Lever',c:'t3',noGrid:1},
+      {n:'4 — Inside Panel Enclosure',c:'t4',panel:1},
+      {n:'5 — Card + Bottom Accent Bar',c:'t5'},
+      {n:'6 — Pill Fuses',c:'t6',noGrid:1},
+      {n:'7 — Compact List + Lever',c:'t7',noGrid:1},
+      {n:'8 — Big Wires + Card',c:'t8'},
+      {n:'9 — Left Bar + Row Lever',c:'t9',noGrid:1},
+      {n:'10 — Icon Grid (lever only)',c:'t10'},
+      {n:'11 — Light Mode Panel',c:'t11',panel:'t11-p'},
+      {n:'12 — Glassmorphism',c:'t12'},
+      {n:'13 — Tall Track',c:'t13'},
+      {n:'14 — Rounded Pill Track',c:'t14'},
+      {n:'15 — Outlined Track',c:'t15'},
+      {n:'16 — Cards Only (no wires)',c:'t16'},
+      {n:'17 — Dot Indicator (no track)',c:'t17'},
+      {n:'18 — Horizontal Bar Lever',c:'t18'},
+      {n:'19 — Big Text + Tiny Lever',c:'t19'},
+      {n:'20 — Wire Accent on Card',c:'t20',noGrid:1},
+    ];
+
+    const app=document.getElementById('app');
+
+    themes.forEach(th=>{
+      const sec=document.createElement('div');
+      sec.className='section';
+      sec.innerHTML=`<div class="stitle">${th.n}</div>`;
+
+      let container;
+      if(th.panel){
+        const p=document.createElement('div');
+        p.className=typeof th.panel==='string'?th.panel:'t4-panel';
+        container=document.createElement('div');
+        container.className=th.noGrid?th.c:`g4 ${th.c}`;
+        p.appendChild(container);
+        sec.appendChild(p);
+      } else {
+        container=document.createElement('div');
+        container.className=th.noGrid?th.c:`g4 ${th.c}`;
+        sec.appendChild(container);
+      }
+
+      D.forEach(d=>{
+        const st={on:!!d.on};
+        const f=document.createElement('div');
+        f.className='f';f.dataset.s=st.on?'1':'0';
+
+        const hasDot=th.c==='t6'||th.c==='t17';
+
+        function render(){
+          f.dataset.s=st.on?'1':'0';
+          f.innerHTML=`
+            <div class="cd"></div><div class="w wi"></div>
+            <div class="box">
+              <div class="lb">${d.t}</div>
+              ${hasDot?'<div class="dot"></div>':'<div class="trk"><div class="lev"></div></div>'}
+              ${th.c==='t5'?'<div class="bar"></div>':''}
+              <div class="inf">${d.s}</div>
+            </div>
+            <div class="w wo"></div><div class="cd"></div>
+          `;
+        }
+        render();
+        f.addEventListener('click',()=>{st.on=!st.on;render()});
+        container.appendChild(f);
+      });
+
+      app.appendChild(sec);
+    });
+  </script>
+</body>
+</html>

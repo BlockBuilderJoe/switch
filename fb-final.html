@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FuseBoard — Themes on #5 and #10</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Syne:wght@600;700;800&family=Fraunces:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Outfit',sans-serif;background:#07080a;color:#e4e6ea;padding:32px 12px}
+    h1{text-align:center;font-size:1.6rem;font-weight:800;margin-bottom:4px}
+    .sub{text-align:center;color:#555;font-size:.8rem;margin-bottom:32px}
+    .section{max-width:680px;margin:0 auto 44px;padding-bottom:44px;border-bottom:1px solid #1a1c20}
+    .section:last-child{border-bottom:none}
+    .stitle{font-family:'JetBrains Mono',monospace;font-size:.55rem;color:#444;text-transform:uppercase;letter-spacing:.1em;text-align:center;margin-bottom:14px}
+
+    :root{
+      --g:#22c55e;--gg:rgba(34,197,94,.2);--gd:rgba(34,197,94,.08);
+      --r:#ef4444;--rg:rgba(239,68,68,.15);
+      --trk:#0c0d12;--bd:#1e2028;--bg:#12141a;
+    }
+
+    .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .f{cursor:pointer;user-select:none;display:flex;flex-direction:column;align-items:center;transition:.15s}
+
+    /* =============================================
+       BASE #5: Card + Bottom Accent Bar
+       ============================================= */
+
+    /* 5A — Original */
+    .a .f .bx{width:100%;background:var(--bg);border:1px solid var(--bd);border-radius:12px;padding:18px 12px 14px;text-align:center;transition:.2s;position:relative;overflow:hidden}
+    .a .f:hover .bx{border-color:#333}
+    .a .f .lb{font-weight:700;font-size:.92rem;color:#bbc;transition:.2s;position:relative;z-index:1}
+    .a .f .inf{font-size:.55rem;color:#3a3e48;margin-top:4px;position:relative;z-index:1;transition:.2s}
+    .a .f .bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--r);transition:.3s}
+    .a .f[data-s="1"] .bx{border-color:rgba(34,197,94,.25);background:#0f1814}
+    .a .f[data-s="1"] .lb{color:var(--g)}
+    .a .f[data-s="1"] .bar{background:var(--g);box-shadow:0 0 8px var(--gg)}
+    .a .f[data-s="1"] .inf{color:rgba(34,197,94,.4)}
+
+    /* 5B — Thicker bar (6px), no border on card */
+    .b .f .bx{width:100%;background:var(--bg);border:none;border-radius:10px;padding:18px 12px 16px;text-align:center;transition:.2s;position:relative;overflow:hidden}
+    .b .f:hover .bx{background:#161820}
+    .b .f .lb{font-weight:700;font-size:.92rem;color:#bbc;transition:.2s;position:relative;z-index:1}
+    .b .f .inf{font-size:.55rem;color:#3a3e48;margin-top:4px;position:relative;z-index:1;transition:.2s}
+    .b .f .bar{position:absolute;bottom:0;left:0;right:0;height:6px;background:var(--r);transition:.3s;border-radius:0 0 10px 10px}
+    .b .f[data-s="1"] .bx{background:#0f1814}
+    .b .f[data-s="1"] .lb{color:var(--g)}
+    .b .f[data-s="1"] .bar{background:var(--g);box-shadow:0 0 10px var(--gg)}
+    .b .f[data-s="1"] .inf{color:rgba(34,197,94,.4)}
+
+    /* 5C — Bar on LEFT side instead of bottom */
+    .c .f .bx{width:100%;background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:16px 12px 16px 18px;text-align:left;transition:.2s;position:relative;overflow:hidden}
+    .c .f:hover .bx{border-color:#333}
+    .c .f .lb{font-weight:700;font-size:.88rem;color:#bbc;transition:.2s;position:relative;z-index:1}
+    .c .f .inf{font-size:.55rem;color:#3a3e48;margin-top:3px;position:relative;z-index:1;transition:.2s}
+    .c .f .bar{position:absolute;top:0;bottom:0;left:0;width:3px;background:var(--r);transition:.3s}
+    .c .f[data-s="1"] .bx{border-color:rgba(34,197,94,.25);background:#0f1814}
+    .c .f[data-s="1"] .lb{color:var(--g)}
+    .c .f[data-s="1"] .bar{background:var(--g);box-shadow:0 0 6px var(--gg)}
+    .c .f[data-s="1"] .inf{color:rgba(34,197,94,.4)}
+
+    /* 5D — Bar fills UP from bottom like a meter */
+    .d .f .bx{width:100%;background:var(--bg);border:1px solid var(--bd);border-radius:12px;padding:18px 12px 14px;text-align:center;transition:.2s;position:relative;overflow:hidden}
+    .d .f:hover .bx{border-color:#333}
+    .d .f .lb{font-weight:700;font-size:.92rem;color:#bbc;transition:.2s;position:relative;z-index:1}
+    .d .f .inf{font-size:.55rem;color:#3a3e48;margin-top:4px;position:relative;z-index:1;transition:.2s}
+    .d .f .bar{position:absolute;bottom:0;left:0;right:0;height:0%;background:var(--gd);transition:.4s;border-radius:0 0 12px 12px}
+    .d .f .bar::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--g);box-shadow:0 0 8px var(--gg);opacity:0;transition:.3s}
+    .d .f[data-s="1"] .bx{border-color:rgba(34,197,94,.25)}
+    .d .f[data-s="1"] .lb{color:var(--g)}
+    .d .f[data-s="1"] .bar{height:100%}
+    .d .f[data-s="1"] .bar::after{opacity:1}
+    .d .f[data-s="1"] .inf{color:rgba(34,197,94,.5)}
+
+    /* 5E — Glowing underline only */
+    .e .f .bx{width:100%;padding:18px 12px 14px;text-align:center;transition:.2s;position:relative}
+    .e .f:hover .bx{background:rgba(255,255,255,.02);border-radius:10px}
+    .e .f .lb{font-weight:700;font-size:.95rem;color:#99a;transition:.2s}
+    .e .f .inf{font-size:.55rem;color:#3a3e48;margin-top:4px;transition:.2s}
+    .e .f .bar{width:40px;height:2px;background:#333;margin:8px auto 0;border-radius:1px;transition:.3s}
+    .e .f[data-s="1"] .lb{color:var(--g)}
+    .e .f[data-s="1"] .bar{background:var(--g);width:60px;box-shadow:0 0 10px var(--gg),0 0 20px rgba(34,197,94,.1)}
+    .e .f[data-s="1"] .inf{color:rgba(34,197,94,.4)}
+
+    /* 5F — Bold font, top bar */
+    .ff .f .bx{width:100%;background:var(--bg);border:1px solid var(--bd);border-radius:12px;padding:14px 12px 16px;text-align:center;transition:.2s;position:relative;overflow:hidden}
+    .ff .f:hover .bx{border-color:#333}
+    .ff .f .lb{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:#ccd;transition:.2s;position:relative;z-index:1}
+    .ff .f .inf{font-size:.55rem;color:#3a3e48;margin-top:4px;position:relative;z-index:1;transition:.2s}
+    .ff .f .bar{position:absolute;top:0;left:0;right:0;height:3px;background:var(--r);transition:.3s}
+    .ff .f[data-s="1"] .bx{border-color:rgba(34,197,94,.25);background:#0f1814}
+    .ff .f[data-s="1"] .lb{color:var(--g)}
+    .ff .f[data-s="1"] .bar{background:var(--g);box-shadow:0 0 8px var(--gg)}
+    .ff .f[data-s="1"] .inf{color:rgba(34,197,94,.4)}
+
+    /* 5G — Outline card, bottom bar, serif */
+    .g5 .f .bx{width:100%;background:transparent;border:1.5px solid #222430;border-radius:10px;padding:18px 12px 14px;text-align:center;transition:.25s;position:relative;overflow:hidden}
+    .g5 .f:hover .bx{border-color:#333}
+    .g5 .f .lb{font-family:'Fraunces',serif;font-weight:700;font-size:.95rem;color:#bbc;transition:.2s;position:relative;z-index:1}
+    .g5 .f .inf{font-size:.55rem;color:#3a3e48;margin-top:4px;position:relative;z-index:1;transition:.2s}
+    .g5 .f .bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--r);transition:.3s}
+    .g5 .f[data-s="1"] .bx{border-color:var(--g);background:var(--gd)}
+    .g5 .f[data-s="1"] .lb{color:var(--g)}
+    .g5 .f[data-s="1"] .bar{background:var(--g);box-shadow:0 0 8px var(--gg)}
+    .g5 .f[data-s="1"] .inf{color:rgba(34,197,94,.4)}
+
+    /* 5H — Pill cards, bottom dot not bar */
+    .h .f .bx{width:100%;background:var(--bg);border:1px solid var(--bd);border-radius:100px;padding:14px 16px;text-align:center;transition:.2s;position:relative}
+    .h .f:hover .bx{border-color:#333}
+    .h .f .lb{font-weight:600;font-size:.85rem;color:#bbc;transition:.2s}
+    .h .f .inf{display:none}
+    .h .f .bar{width:6px;height:6px;border-radius:50%;background:var(--r);box-shadow:0 0 4px var(--rg);margin:6px auto 0;transition:.2s}
+    .h .f[data-s="1"] .bx{border-color:rgba(34,197,94,.25);background:var(--gd)}
+    .h .f[data-s="1"] .lb{color:var(--g)}
+    .h .f[data-s="1"] .bar{background:var(--g);box-shadow:0 0 6px var(--gg)}
+
+    /* 5I — Dark solid, glowing bottom edge */
+    .i5 .f .bx{width:100%;background:#0e1014;border:1px solid #181a22;border-radius:12px;padding:20px 12px 16px;text-align:center;transition:.25s;position:relative;overflow:hidden}
+    .i5 .f:hover .bx{background:#12141a}
+    .i5 .f .lb{font-weight:800;font-size:.95rem;color:#aab;transition:.2s;position:relative;z-index:1}
+    .i5 .f .inf{font-size:.55rem;color:#333;margin-top:5px;position:relative;z-index:1;transition:.2s}
+    .i5 .f .bar{position:absolute;bottom:0;left:0;right:0;height:2px;background:#222;transition:.4s}
+    .i5 .f[data-s="1"] .bx{border-color:rgba(34,197,94,.2)}
+    .i5 .f[data-s="1"] .lb{color:var(--g);text-shadow:0 0 16px var(--gg)}
+    .i5 .f[data-s="1"] .bar{background:var(--g);height:3px;box-shadow:0 0 12px var(--gg),0 -4px 16px rgba(34,197,94,.06)}
+    .i5 .f[data-s="1"] .inf{color:rgba(34,197,94,.35)}
+
+    /* 5J — Two-tone: bar + card bg shift */
+    .j .f .bx{width:100%;background:var(--bg);border:1px solid var(--bd);border-radius:12px;padding:18px 12px 14px;text-align:center;transition:.3s;position:relative;overflow:hidden}
+    .j .f:hover .bx{border-color:#333}
+    .j .f .lb{font-weight:700;font-size:.92rem;color:#bbc;transition:.2s;position:relative;z-index:1}
+    .j .f .inf{font-size:.55rem;color:#3a3e48;margin-top:4px;position:relative;z-index:1;transition:.2s}
+    .j .f .bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--r);transition:.3s}
+    .j .f[data-s="1"] .bx{border-color:var(--g);background:linear-gradient(180deg,#0f1814,#0a1a10);box-shadow:0 0 20px rgba(34,197,94,.08)}
+    .j .f[data-s="1"] .lb{color:#fff}
+    .j .f[data-s="1"] .bar{background:var(--g);box-shadow:0 0 8px var(--gg)}
+    .j .f[data-s="1"] .inf{color:var(--g)}
+
+    /* =============================================
+       BASE #10: Lever icon grid — lever + label below
+       ============================================= */
+
+    /* 10A — Original slim pill lever */
+    .la .f .bx{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 0}
+    .la .f .lb{font-weight:600;font-size:.78rem;color:#889;transition:.2s;text-align:center;line-height:1.15}
+    .la .f[data-s="1"] .lb{color:var(--g)}
+    .la .f .trk{width:28px;height:52px;background:var(--trk);border:1px solid #1a1e24;border-radius:14px;position:relative;overflow:hidden}
+    .la .f .lev{position:absolute;left:3px;right:3px;top:3px;height:20px;background:linear-gradient(180deg,#5a708a,#3e5468);border-radius:10px;transition:.2s cubic-bezier(.22,1,.36,1);box-shadow:0 2px 4px rgba(0,0,0,.4)}
+    .la .f[data-s="1"] .lev{top:auto;bottom:3px;background:linear-gradient(180deg,var(--g),#16a34a);box-shadow:0 0 10px var(--gg)}
+    .la .f .inf{font-size:.48rem;color:#333;transition:.2s}
+    .la .f[data-s="1"] .inf{color:rgba(34,197,94,.3)}
+
+    /* 10B — Wider rectangular lever */
+    .lb2 .f .bx{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 0}
+    .lb2 .f .lb{font-weight:600;font-size:.78rem;color:#889;transition:.2s;text-align:center;line-height:1.15}
+    .lb2 .f[data-s="1"] .lb{color:var(--g)}
+    .lb2 .f .trk{width:44px;height:48px;background:var(--trk);border:1px solid #1a1e24;border-radius:10px;position:relative;overflow:hidden}
+    .lb2 .f .lev{position:absolute;left:3px;right:3px;top:3px;height:18px;background:linear-gradient(180deg,#5a708a,#3e5468);border-radius:7px;transition:.2s cubic-bezier(.22,1,.36,1);box-shadow:0 2px 4px rgba(0,0,0,.4)}
+    .lb2 .f .lev::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:16px;height:1px;background:rgba(255,255,255,.12);border-radius:1px}
+    .lb2 .f[data-s="1"] .lev{top:auto;bottom:3px;background:linear-gradient(180deg,var(--g),#16a34a);box-shadow:0 0 10px var(--gg)}
+    .lb2 .f .inf{font-size:.48rem;color:#333;transition:.2s}
+    .lb2 .f[data-s="1"] .inf{color:rgba(34,197,94,.3)}
+
+    /* 10C — Circle toggle (dot moves in circle) */
+    .lc .f .bx{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 0}
+    .lc .f .lb{font-weight:600;font-size:.78rem;color:#889;transition:.2s;text-align:center;line-height:1.15}
+    .lc .f[data-s="1"] .lb{color:var(--g)}
+    .lc .f .trk{width:40px;height:40px;background:var(--trk);border:1px solid #1a1e24;border-radius:50%;position:relative;overflow:hidden}
+    .lc .f .lev{position:absolute;left:50%;top:4px;transform:translateX(-50%);width:14px;height:14px;background:#5a708a;border-radius:50%;transition:.2s cubic-bezier(.22,1,.36,1);box-shadow:0 2px 4px rgba(0,0,0,.4)}
+    .lc .f[data-s="1"] .lev{top:auto;bottom:4px;background:var(--g);box-shadow:0 0 10px var(--gg)}
+    .lc .f .inf{font-size:.48rem;color:#333;transition:.2s}
+    .lc .f[data-s="1"] .inf{color:rgba(34,197,94,.3)}
+
+    /* 10D — Lever with label ON it (inside track) */
+    .ld .f .bx{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0}
+    .ld .f .lb{display:none}
+    .ld .f .trk{width:100%;height:56px;background:var(--trk);border:1px solid #1a1e24;border-radius:10px;position:relative;overflow:hidden}
+    .ld .f .lev{position:absolute;left:3px;right:3px;top:3px;height:24px;background:linear-gradient(180deg,#5a708a,#3e5468);border-radius:7px;transition:.2s cubic-bezier(.22,1,.36,1);box-shadow:0 2px 4px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:.68rem;color:rgba(255,255,255,.8)}
+    .ld .f[data-s="1"] .lev{top:auto;bottom:3px;background:linear-gradient(180deg,var(--g),#16a34a);box-shadow:0 0 10px var(--gg);color:#fff}
+    .ld .f .inf{font-size:.48rem;color:#333;transition:.2s}
+    .ld .f[data-s="1"] .inf{color:rgba(34,197,94,.3)}
+
+    /* 10E — Thin line track, label prominent */
+    .le .f .bx{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 0}
+    .le .f .lb{font-weight:700;font-size:.88rem;color:#aab;transition:.2s;text-align:center;line-height:1.15}
+    .le .f[data-s="1"] .lb{color:var(--g)}
+    .le .f .trk{width:4px;height:36px;background:#1a1e24;border-radius:2px;position:relative;overflow:hidden}
+    .le .f .lev{position:absolute;left:-4px;right:-4px;top:2px;height:12px;background:#5a708a;border-radius:6px;transition:.2s cubic-bezier(.22,1,.36,1);box-shadow:0 2px 4px rgba(0,0,0,.4)}
+    .le .f[data-s="1"] .lev{top:auto;bottom:2px;background:var(--g);box-shadow:0 0 8px var(--gg)}
+    .le .f .inf{font-size:.48rem;color:#333;transition:.2s}
+    .le .f[data-s="1"] .inf{color:rgba(34,197,94,.3)}
+
+    /* 10F — Big label, tiny indicator dot below */
+    .lf .f .bx{display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 0}
+    .lf .f .lb{font-weight:800;font-size:1rem;color:#aab;transition:.2s;text-align:center;line-height:1.15}
+    .lf .f[data-s="1"] .lb{color:var(--g)}
+    .lf .f .trk{width:8px;height:8px;background:var(--r);border-radius:50%;box-shadow:0 0 4px var(--rg);transition:.2s}
+    .lf .f[data-s="1"] .trk{background:var(--g);box-shadow:0 0 6px var(--gg)}
+    .lf .f .lev{display:none}
+    .lf .f .inf{font-size:.52rem;color:#333;margin-top:2px;transition:.2s}
+    .lf .f[data-s="1"] .inf{color:rgba(34,197,94,.3)}
+
+    /* 10G — Ghost outline lever */
+    .lg .f .bx{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 0}
+    .lg .f .lb{font-weight:600;font-size:.78rem;color:#889;transition:.2s;text-align:center;line-height:1.15}
+    .lg .f[data-s="1"] .lb{color:var(--g)}
+    .lg .f .trk{width:30px;height:52px;background:transparent;border:1.5px solid #222630;border-radius:14px;position:relative;overflow:hidden;transition:.2s}
+    .lg .f .lev{position:absolute;left:3px;right:3px;top:3px;height:20px;border:1.5px solid #444;background:transparent;border-radius:10px;transition:.2s cubic-bezier(.22,1,.36,1)}
+    .lg .f[data-s="1"] .trk{border-color:rgba(34,197,94,.3)}
+    .lg .f[data-s="1"] .lev{top:auto;bottom:3px;border-color:var(--g);background:var(--gd);box-shadow:0 0 10px var(--gg)}
+    .lg .f .inf{font-size:.48rem;color:#333;transition:.2s}
+    .lg .f[data-s="1"] .inf{color:rgba(34,197,94,.3)}
+
+    /* 10H — Square chunky lever */
+    .lh .f .bx{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 0}
+    .lh .f .lb{font-weight:600;font-size:.78rem;color:#889;transition:.2s;text-align:center;line-height:1.15}
+    .lh .f[data-s="1"] .lb{color:var(--g)}
+    .lh .f .trk{width:36px;height:52px;background:var(--trk);border:1.5px solid #1a1e24;border-radius:6px;position:relative;overflow:hidden}
+    .lh .f .lev{position:absolute;left:4px;right:4px;top:4px;height:18px;background:linear-gradient(180deg,#5a708a,#3e5468);border-radius:3px;transition:.2s cubic-bezier(.22,1,.36,1);box-shadow:0 3px 0 #1a2838,0 4px 6px rgba(0,0,0,.4)}
+    .lh .f .lev::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:14px;height:1px;background:rgba(255,255,255,.1);box-shadow:0 2px 0 rgba(255,255,255,.06)}
+    .lh .f[data-s="1"] .lev{top:auto;bottom:4px;background:linear-gradient(180deg,var(--g),#16a34a);box-shadow:0 -2px 0 #0a4a22,0 0 12px var(--gg)}
+    .lh .f .inf{font-size:.48rem;color:#333;transition:.2s}
+    .lh .f[data-s="1"] .inf{color:rgba(34,197,94,.3)}
+
+    /* 10I — Double track with center line */
+    .li .f .bx{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 0}
+    .li .f .lb{font-weight:600;font-size:.78rem;color:#889;transition:.2s;text-align:center;line-height:1.15}
+    .li .f[data-s="1"] .lb{color:var(--g)}
+    .li .f .trk{width:28px;height:52px;background:var(--trk);border:1px solid #1a1e24;border-radius:14px;position:relative;overflow:hidden}
+    .li .f .trk::before{content:'';position:absolute;left:4px;right:4px;top:50%;height:1px;background:#1a1e28}
+    .li .f .trk::after{content:'';position:absolute;left:50%;top:6px;bottom:6px;width:1px;background:#141620;transform:translateX(-50%)}
+    .li .f .lev{position:absolute;left:3px;right:3px;top:3px;height:20px;background:linear-gradient(180deg,#5a708a,#3e5468);border-radius:10px;transition:.2s cubic-bezier(.22,1,.36,1);box-shadow:0 2px 4px rgba(0,0,0,.4);z-index:1}
+    .li .f[data-s="1"] .lev{top:auto;bottom:3px;background:linear-gradient(180deg,var(--g),#16a34a);box-shadow:0 0 10px var(--gg)}
+    .li .f .inf{font-size:.48rem;color:#333;transition:.2s}
+    .li .f[data-s="1"] .inf{color:rgba(34,197,94,.3)}
+
+    /* 10J — Lever + label in a subtle card */
+    .lj .f .bx{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 8px;background:var(--bg);border:1px solid var(--bd);border-radius:12px;transition:.2s}
+    .lj .f:hover .bx{border-color:#333}
+    .lj .f[data-s="1"] .bx{border-color:rgba(34,197,94,.25);background:#0f1814}
+    .lj .f .lb{font-weight:700;font-size:.82rem;color:#aab;transition:.2s;text-align:center;line-height:1.15}
+    .lj .f[data-s="1"] .lb{color:var(--g)}
+    .lj .f .trk{width:28px;height:44px;background:var(--trk);border:1px solid #1a1e24;border-radius:12px;position:relative;overflow:hidden}
+    .lj .f .lev{position:absolute;left:3px;right:3px;top:3px;height:16px;background:linear-gradient(180deg,#5a708a,#3e5468);border-radius:8px;transition:.2s cubic-bezier(.22,1,.36,1);box-shadow:0 2px 4px rgba(0,0,0,.4)}
+    .lj .f[data-s="1"] .lev{top:auto;bottom:3px;background:linear-gradient(180deg,var(--g),#16a34a);box-shadow:0 0 10px var(--gg)}
+    .lj .f .inf{font-size:.48rem;color:#333;transition:.2s}
+    .lj .f[data-s="1"] .inf{color:rgba(34,197,94,.3)}
+
+    @media(max-width:600px){.g4{grid-template-columns:repeat(2,1fr)}}
+  </style>
+</head>
+<body>
+  <h1>Themes on #5 and #10</h1>
+  <p class="sub">10 variations each. Click to trip.</p>
+  <div id="app"></div>
+
+  <script>
+    const D=[
+      {t:'Social Media',s:'9 sites'},{t:'Video Stream',s:'6 sites'},
+      {t:'Ads & Trackers',s:'4 sites'},{t:'Adult Content',s:'category'},
+      {t:'Gambling',s:'category'},{t:'Gaming',s:'6 sites'},
+      {t:'News & Media',s:'category'},{t:'Security',s:'threats',on:1},
+    ];
+
+    // Type 5 themes (card + accent bar)
+    const t5=[
+      {n:'5A — Original Bottom Bar',c:'a',html:d=>`<div class="bx"><div class="lb">${d.t}</div><div class="inf">${d.s}</div><div class="bar"></div></div>`},
+      {n:'5B — Thick Bar, No Border',c:'b',html:d=>`<div class="bx"><div class="lb">${d.t}</div><div class="inf">${d.s}</div><div class="bar"></div></div>`},
+      {n:'5C — Left Side Bar',c:'c',html:d=>`<div class="bx"><div class="lb">${d.t}</div><div class="inf">${d.s}</div><div class="bar"></div></div>`},
+      {n:'5D — Meter Fill Up',c:'d',html:d=>`<div class="bx"><div class="lb">${d.t}</div><div class="inf">${d.s}</div><div class="bar"></div></div>`},
+      {n:'5E — Glowing Underline',c:'e',html:d=>`<div class="bx"><div class="lb">${d.t}</div><div class="inf">${d.s}</div><div class="bar"></div></div>`},
+      {n:'5F — Bold Syne + Top Bar',c:'ff',html:d=>`<div class="bx"><div class="lb">${d.t}</div><div class="inf">${d.s}</div><div class="bar"></div></div>`},
+      {n:'5G — Serif Outline + Bar',c:'g5',html:d=>`<div class="bx"><div class="lb">${d.t}</div><div class="inf">${d.s}</div><div class="bar"></div></div>`},
+      {n:'5H — Pill Cards + Dot',c:'h',html:d=>`<div class="bx"><div class="lb">${d.t}</div><div class="inf">${d.s}</div><div class="bar"></div></div>`},
+      {n:'5I — Dark Glow Edge',c:'i5',html:d=>`<div class="bx"><div class="lb">${d.t}</div><div class="inf">${d.s}</div><div class="bar"></div></div>`},
+      {n:'5J — Two-Tone Gradient Fill',c:'j',html:d=>`<div class="bx"><div class="lb">${d.t}</div><div class="inf">${d.s}</div><div class="bar"></div></div>`},
+    ];
+
+    // Type 10 themes (lever icon grid)
+    const t10=[
+      {n:'10A — Slim Pill Lever',c:'la',html:(d)=>`<div class="bx"><div class="trk"><div class="lev"></div></div><div class="lb">${d.t}</div><div class="inf">${d.s}</div></div>`},
+      {n:'10B — Wide Rectangular + Grip',c:'lb2',html:(d)=>`<div class="bx"><div class="trk"><div class="lev"></div></div><div class="lb">${d.t}</div><div class="inf">${d.s}</div></div>`},
+      {n:'10C — Circle Toggle',c:'lc',html:(d)=>`<div class="bx"><div class="trk"><div class="lev"></div></div><div class="lb">${d.t}</div><div class="inf">${d.s}</div></div>`},
+      {n:'10D — Label ON Lever',c:'ld',html:(d)=>`<div class="bx"><div class="trk"><div class="lev">${d.t}</div></div><div class="lb">${d.t}</div><div class="inf">${d.s}</div></div>`},
+      {n:'10E — Thin Line Track',c:'le',html:(d)=>`<div class="bx"><div class="lb">${d.t}</div><div class="trk"><div class="lev"></div></div><div class="inf">${d.s}</div></div>`},
+      {n:'10F — Big Label + Tiny Dot',c:'lf',html:(d)=>`<div class="bx"><div class="lb">${d.t}</div><div class="trk"></div><div class="inf">${d.s}</div></div>`},
+      {n:'10G — Ghost Outline Lever',c:'lg',html:(d)=>`<div class="bx"><div class="trk"><div class="lev"></div></div><div class="lb">${d.t}</div><div class="inf">${d.s}</div></div>`},
+      {n:'10H — Square Chunky 3D',c:'lh',html:(d)=>`<div class="bx"><div class="trk"><div class="lev"></div></div><div class="lb">${d.t}</div><div class="inf">${d.s}</div></div>`},
+      {n:'10I — Double Track Lines',c:'li',html:(d)=>`<div class="bx"><div class="trk"><div class="lev"></div></div><div class="lb">${d.t}</div><div class="inf">${d.s}</div></div>`},
+      {n:'10J — Lever in Card',c:'lj',html:(d)=>`<div class="bx"><div class="trk"><div class="lev"></div></div><div class="lb">${d.t}</div><div class="inf">${d.s}</div></div>`},
+    ];
+
+    const app=document.getElementById('app');
+
+    [...t5,...t10].forEach(th=>{
+      const sec=document.createElement('div');
+      sec.className='section';
+      sec.innerHTML=`<div class="stitle">${th.n}</div>`;
+      const grid=document.createElement('div');
+      grid.className=`g4 ${th.c}`;
+
+      D.forEach(d=>{
+        const st={on:!!d.on};
+        const f=document.createElement('div');
+        f.className='f';f.dataset.s=st.on?'1':'0';
+        function render(){f.dataset.s=st.on?'1':'0';f.innerHTML=th.html(d)}
+        render();
+        f.addEventListener('click',()=>{st.on=!st.on;render()});
+        grid.appendChild(f);
+      });
+
+      sec.appendChild(grid);
+      app.appendChild(sec);
+    });
+  </script>
+</body>
+</html>

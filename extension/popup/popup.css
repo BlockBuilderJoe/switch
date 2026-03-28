@@ -1,0 +1,90 @@
+/* FuseBoard Extension Popup — 10J Lever-in-Card */
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#07080a;--surface:#12141a;--border:#1e2028;--border-light:#2a2e38;
+  --text:#e4e6ea;--text-sec:#8a8e96;--text-tri:#555a64;
+  --green:#22c55e;--green-glow:rgba(34,197,94,.2);--green-dim:rgba(34,197,94,.08);
+  --red:#ef4444;--amber:#f59e0b;
+  --trk:#0c0d12;--lev1:#5a708a;--lev2:#3e5468;
+  --wire-live:#3a1414;--wire-stream:#ef4444;--wire-bright:#ff8888;--wire-dead:#1a1a20;
+}
+
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);width:420px;padding:12px}
+
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:0 4px}
+.logo{font-weight:800;font-size:1rem;letter-spacing:-.02em}
+.logo .dot{display:inline-block;width:6px;height:6px;background:var(--green);border-radius:50%;box-shadow:0 0 6px var(--green-glow);margin:0 1px}
+.logo .version{font-size:.5rem;font-weight:500;color:var(--text-tri);margin-left:4px;vertical-align:middle}
+.options-btn{background:none;border:none;color:var(--text-tri);cursor:pointer;padding:4px;border-radius:6px;transition:.15s}
+.options-btn:hover{color:var(--text);background:var(--surface)}
+
+/* Grid — equal height rows */
+.fuse-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;align-items:stretch}
+
+/* Cell — stretch to fill row height */
+.fuse-cell{display:flex;flex-direction:column;align-items:center;cursor:pointer;user-select:none;padding:8px 4px}
+
+/* Connector dot */
+.fuse-cd{width:6px;height:6px;border-radius:50%;background:#080910;border:1px solid #1e2028;z-index:2}
+
+/* Wire */
+.fuse-wire{width:4px;border-radius:3px;position:relative;overflow:hidden;transition:background .4s}
+.fuse-wi{height:12px}.fuse-wo{height:12px;margin-top:4px}
+
+.fuse-wi{background:var(--wire-live)}
+.fuse-wi::after{content:'';position:absolute;left:0;right:0;top:-10px;height:10px;background:linear-gradient(180deg,transparent,var(--wire-stream),var(--wire-bright),var(--wire-stream),transparent);border-radius:3px;animation:fl .6s linear infinite}
+
+/* Bottom wire by state */
+.fuse-cell[data-w="red"] .fuse-wo{background:var(--wire-live)}
+.fuse-cell[data-w="red"] .fuse-wo::after{content:'';position:absolute;left:0;right:0;top:-10px;height:10px;background:linear-gradient(180deg,transparent,var(--wire-stream),var(--wire-bright),var(--wire-stream),transparent);border-radius:3px;animation:fl .6s linear infinite}
+.fuse-cell[data-w="amber"] .fuse-wo{background:#2a2010}
+.fuse-cell[data-w="amber"] .fuse-wo::after{content:'';position:absolute;left:0;right:0;top:-10px;height:10px;background:linear-gradient(180deg,transparent,var(--amber),#ffcc44,var(--amber),transparent);border-radius:3px;animation:fl 1.2s linear infinite}
+.fuse-cell[data-w="green"] .fuse-wo{background:#0a2a14}
+.fuse-cell[data-w="green"] .fuse-wo::after{content:'';position:absolute;left:0;right:0;top:-10px;height:10px;background:linear-gradient(180deg,transparent,var(--green),#4ade80,var(--green),transparent);border-radius:3px;animation:fl .9s linear infinite}
+
+@keyframes fl{0%{top:-10px}100%{top:calc(100% + 10px)}}
+.fuse-cell:nth-child(1) .fuse-wire::after{animation-delay:0s}
+.fuse-cell:nth-child(2) .fuse-wire::after{animation-delay:.06s}
+.fuse-cell:nth-child(3) .fuse-wire::after{animation-delay:.12s}
+.fuse-cell:nth-child(4) .fuse-wire::after{animation-delay:.18s}
+.fuse-cell:nth-child(5) .fuse-wire::after{animation-delay:.03s}
+.fuse-cell:nth-child(6) .fuse-wire::after{animation-delay:.09s}
+.fuse-cell:nth-child(7) .fuse-wire::after{animation-delay:.15s}
+.fuse-cell:nth-child(8) .fuse-wire::after{animation-delay:.21s}
+.fuse-cell:nth-child(9) .fuse-wire::after{animation-delay:.06s}
+.fuse-cell:nth-child(10) .fuse-wire::after{animation-delay:.12s}
+.fuse-cell:nth-child(11) .fuse-wire::after{animation-delay:.18s}
+.fuse-cell:nth-child(12) .fuse-wire::after{animation-delay:.24s}
+
+/* Card — stretches to fill row */
+.fuse-box{width:100%;flex:1;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 4px 6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;transition:.2s}
+
+/* Configure link */
+.fuse-cfg{font-size:.45rem;color:#2a2e36;transition:.15s;cursor:pointer}
+.fuse-cell:hover .fuse-cfg{color:#555}
+.fuse-cell:hover .fuse-box{border-color:var(--border-light)}
+.fuse-cell[data-s="1"] .fuse-box{border-color:rgba(34,197,94,.25);background:#0f1814}
+.fuse-cell[data-w="amber"] .fuse-box{border-color:rgba(245,158,11,.2);background:rgba(245,158,11,.04)}
+
+/* Label */
+.fuse-lb{font-weight:700;font-size:.7rem;color:#e0e2e8;transition:.2s;text-align:center;line-height:1.15;margin-bottom:1px}
+.fuse-cell[data-s="1"] .fuse-lb{color:var(--green)}
+.fuse-cell[data-w="amber"] .fuse-lb{color:var(--amber)!important}
+
+/* Track */
+.fuse-trk{width:22px;height:36px;background:var(--trk);border:1px solid #1a1e24;border-radius:8px;position:relative;overflow:hidden;cursor:pointer}
+.fuse-lev{position:absolute;left:2px;right:2px;top:2px;height:14px;background:linear-gradient(180deg,var(--lev1),var(--lev2));border-radius:6px;transition:.2s cubic-bezier(.22,1,.36,1);box-shadow:0 2px 3px rgba(0,0,0,.4)}
+.fuse-cell[data-s="1"] .fuse-lev{top:auto;bottom:2px;background:linear-gradient(180deg,var(--green),#16a34a);box-shadow:0 0 8px var(--green-glow)}
+.fuse-cell[data-w="amber"] .fuse-lev{top:auto;bottom:2px;background:linear-gradient(180deg,var(--amber),#d97706);box-shadow:0 0 8px rgba(245,158,11,.2)}
+
+/* Info */
+.fuse-inf{font-size:.45rem;color:#333;transition:.2s}
+.fuse-cell[data-s="1"] .fuse-inf{color:rgba(34,197,94,.3)}
+
+/* Status bar */
+.status{display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;font-size:.72rem;color:var(--text-sec)}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--text-tri)}
+.status-dot.active{background:var(--green);box-shadow:0 0 6px var(--green-glow)}
+.status-dot.partial{background:var(--amber);box-shadow:0 0 6px rgba(245,158,11,.3)}

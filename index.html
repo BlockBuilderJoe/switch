@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FuseBoard — Your Digital Switchboard</title>
+  <meta name="description" content="Switch off distracting websites across all your devices in minutes. Free, open source, and private.">
+  <meta property="og:title" content="FuseBoard — Your Digital Switchboard">
+  <meta property="og:description" content="Switch off social media, ads, and more across all your devices. Your digital switchboard.">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#22c55e">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%2322c55e'/></svg>">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo" aria-label="Switch home">
+        Fuse<span class="logo-dot"></span>Board
+      </a>
+      <div class="nav-links">
+        <a href="#blocker" data-nav="blocker">Switch Off</a>
+        <a href="#devices" data-nav="devices">Devices</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PIN Unlock Screen (returning users) -->
+  <section id="pin-screen" class="screen hidden">
+    <div class="container">
+      <div class="pin-unlock">
+        <a href="#" class="nav-logo" aria-label="Switch home" style="font-size:1.5rem;text-decoration:none;color:var(--text);font-weight:800;margin-bottom:32px;display:inline-flex;align-items:center;gap:8px;">
+          Fuse<span class="logo-dot"></span>Board
+        </a>
+        <h2>Welcome back</h2>
+        <p>Enter your PIN to unlock your FuseBoard.</p>
+        <div class="pin-input-wrapper">
+          <input type="password" id="pin-unlock-input" maxlength="6" inputmode="numeric" pattern="[0-9]*" placeholder="Enter PIN" aria-label="Enter your PIN" autocomplete="off">
+        </div>
+        <div id="pin-unlock-error" class="banner banner-error hidden" style="margin-top:12px;max-width:320px;"></div>
+        <button class="btn btn-primary mt-4" id="pin-unlock-btn" style="min-width:200px;">
+          Unlock
+        </button>
+        <p class="mt-6" style="font-size:0.8rem;color:var(--text-tertiary);">
+          <button id="pin-reset-btn" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;font-family:inherit;font-size:inherit;text-decoration:underline;">Forgot PIN? Start fresh</button>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screen 1: Welcome + Pick What to Block -->
+  <main>
+    <section id="home" class="screen">
+      <div class="container">
+        <div class="hero">
+          <div class="hero-badge fade-in">
+            <span class="dot"></span>
+            Free &amp; Open Source
+          </div>
+
+          <h1 class="fade-in fade-in-delay-1">
+            Your digital<br><span class="accent">fuseboard</span>
+          </h1>
+
+          <p class="fade-in fade-in-delay-2">
+            Switch off distracting websites across all your devices in minutes.
+            Pick what to switch off. We handle the rest.
+          </p>
+
+          <div class="cta-wrapper fade-in fade-in-delay-3">
+            <a href="#blocker" class="btn btn-primary btn-lg">
+              Get Started
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+
+          <div class="trust-badges fade-in fade-in-delay-4">
+            <span class="trust-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Runs in your browser
+            </span>
+            <span class="trust-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              We store nothing
+            </span>
+            <span class="trust-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Your data is yours
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Blocklist Selection -->
+    <section id="blocker" class="screen">
+      <div class="container">
+        <div class="section-header">
+          <h2>Your FuseBoard</h2>
+          <p>Trip a fuse to block a category. Click any fuse to configure individual sites.</p>
+        </div>
+
+        <div id="categories-grid" class="categories-grid">
+          <!-- Populated by app.js -->
+        </div>
+
+        <!-- Custom Domain -->
+        <div class="custom-domain">
+          <h3>Switch off a specific site</h3>
+          <div class="custom-domain-input">
+            <input type="text" id="custom-domain-input" placeholder="example.com" aria-label="Enter a domain to switch off">
+            <button class="btn btn-secondary" id="add-domain-btn" type="button">Add</button>
+          </div>
+          <div id="custom-domains-list" class="custom-domains-list"></div>
+        </div>
+
+        <!-- Counter -->
+        <div id="selection-counter" class="selection-counter">
+          Select at least one category to continue
+        </div>
+
+        <!-- CTA -->
+        <div class="cta-wrapper">
+          <button class="btn btn-primary btn-lg" id="setup-btn" disabled>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Activate My FuseBoard
+          </button>
+          <p class="mt-2" style="font-size: 0.8rem; color: var(--text-tertiary);">
+            Uses Cloudflare's free DNS service. Takes about 2 minutes.
+          </p>
+        </div>
+
+        <!-- Token Modal (hidden until setup btn clicked) -->
+        <div id="token-modal" class="modal-overlay hidden">
+          <div class="modal">
+            <button class="modal-close" id="modal-close-btn" aria-label="Close">&times;</button>
+            <div class="modal-step" id="token-step-1">
+              <div class="modal-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </div>
+              <h3>Connect to Cloudflare</h3>
+              <p>Switch uses Cloudflare's free DNS service to filter websites. To set this up, we need a quick API token from your Cloudflare account.</p>
+              <ol class="modal-steps-list">
+                <li>Click the button below to open Cloudflare</li>
+                <li>Sign up for free (or log in)</li>
+                <li>The token is pre-configured — just click <strong>"Create Token"</strong></li>
+                <li>Copy the token and paste it here</li>
+              </ol>
+              <a href="#" id="create-token-link" class="btn btn-primary" target="_blank" rel="noopener">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Open Cloudflare (new tab)
+              </a>
+              <p class="mt-4" style="font-size: 0.8rem; color: var(--text-tertiary);">
+                Already have your token? <button id="skip-to-paste" style="background:none;border:none;color:var(--green);cursor:pointer;font-family:inherit;font-size:inherit;text-decoration:underline;">Paste it here</button>
+              </p>
+            </div>
+            <div class="modal-step hidden" id="token-step-2">
+              <div class="modal-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </div>
+              <h3>Paste your token</h3>
+              <p>Copy the API token from Cloudflare and paste it below. It starts with a long string of letters and numbers.</p>
+              <div class="token-input-wrapper">
+                <input type="password" id="token-input" placeholder="Paste your Cloudflare API token here" aria-label="API token" autocomplete="off">
+                <button class="token-toggle" id="token-toggle" type="button" aria-label="Show token">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+              <div id="token-error" class="banner banner-error hidden" style="margin-top:12px;"></div>
+              <button class="btn btn-primary mt-4" id="token-submit-btn" style="width:100%;" disabled>
+                Next
+              </button>
+            </div>
+            <div class="modal-step hidden" id="token-step-3">
+              <div class="modal-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>
+              </div>
+              <h3>Protect your FuseBoard</h3>
+              <p>Choose a PIN so you can access your FuseBoard next time without pasting the token again.</p>
+              <div class="pin-input-wrapper">
+                <input type="password" id="pin-create-input" maxlength="6" inputmode="numeric" pattern="[0-9]*" placeholder="Choose a PIN (4-6 digits)" aria-label="Choose a PIN" autocomplete="off">
+              </div>
+              <div class="pin-input-wrapper mt-2">
+                <input type="password" id="pin-confirm-input" maxlength="6" inputmode="numeric" pattern="[0-9]*" placeholder="Confirm PIN" aria-label="Confirm PIN" autocomplete="off">
+              </div>
+              <div id="pin-create-error" class="banner banner-error hidden" style="margin-top:12px;"></div>
+              <button class="btn btn-primary mt-4" id="pin-create-btn" style="width:100%;" disabled>
+                Connect & Set Up My FuseBoard
+              </button>
+              <p class="mt-2" style="font-size: 0.75rem; color: var(--text-tertiary); text-align: center;">
+                Your token is encrypted with your PIN and stored locally. We never see it.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dashboard (returning users) -->
+    <section id="dashboard" class="screen hidden">
+      <div class="container">
+        <div class="dashboard-header">
+          <div>
+            <h2>Your FuseBoard</h2>
+            <p class="dashboard-subtitle">Manage what's switched off across your devices.</p>
+          </div>
+          <div class="dashboard-actions">
+            <button class="btn btn-ghost" id="dashboard-devices-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+              Devices
+            </button>
+            <button class="btn btn-ghost" id="sign-out-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Sign Out
+            </button>
+          </div>
+        </div>
+
+        <!-- Active switches -->
+        <div id="dashboard-grid" class="categories-grid">
+          <!-- Populated by app.js -->
+        </div>
+
+        <!-- Quick DNS reference -->
+        <div id="dashboard-dns" class="dns-info mt-8">
+          <h4>Your DNS Addresses</h4>
+          <div id="dashboard-dns-rows"></div>
+        </div>
+
+        <!-- Status bar -->
+        <div id="dashboard-status" class="dashboard-status">
+          <span class="status-dot active"></span>
+          <span id="dashboard-status-text">All switches active</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Screen 2: Setup Progress -->
+    <section id="setup" class="screen hidden">
+      <div class="container">
+        <div class="setup-screen" id="setup-progress">
+          <h2 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 8px;">Setting things up...</h2>
+          <p style="color: var(--text-secondary);">This only takes a few seconds.</p>
+          <div class="progress-container">
+            <div class="progress-bar">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="progress-text" id="progress-text">Connecting to Cloudflare...</div>
+          </div>
+        </div>
+
+        <!-- Setup Complete (hidden initially) -->
+        <div class="setup-complete hidden" id="setup-complete">
+          <div class="checkmark-circle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h2>Your FuseBoard is on!</h2>
+          <p>Your rules are active. Now set up your devices.</p>
+          <a href="#devices" class="btn btn-primary">
+            Set Up Devices
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Screen 3: Device Setup -->
+    <section id="devices" class="screen hidden">
+      <div class="container">
+        <div class="device-section">
+          <h2>Set up your devices</h2>
+          <p>Your FuseBoard is ready. Now apply it to your devices.</p>
+
+          <!-- Detected platform (filled by JS) -->
+          <div id="device-primary" class="device-primary hidden">
+            <div class="detected-badge">
+              <span class="dot" style="width:6px;height:6px;background:var(--green);border-radius:50%;"></span>
+              Detected: <span id="detected-platform-name">your device</span>
+            </div>
+            <h3 id="device-primary-title">Set up this device</h3>
+            <p id="device-primary-desc">One-click setup for your current device.</p>
+            <button class="btn btn-primary" id="device-primary-btn">
+              Set Up Now
+            </button>
+          </div>
+
+          <!-- DNS Info -->
+          <div id="dns-info" class="dns-info hidden">
+            <h4>Your DNS Addresses</h4>
+            <div id="dns-rows"></div>
+          </div>
+
+          <!-- Other devices -->
+          <h3 class="mt-8 mb-4" style="font-size: 1.1rem; font-weight: 700;">Other devices</h3>
+          <div id="device-grid" class="device-grid">
+            <!-- Populated by app.js -->
+          </div>
+
+          <!-- Manual Guides -->
+          <div id="guides-accordion" class="guide-accordion mt-8">
+            <!-- Populated by app.js -->
+          </div>
+
+          <!-- Share -->
+          <div class="share-section">
+            <h3>Add another device</h3>
+            <p>Share this link with family members so they can set up their devices too.</p>
+            <div class="share-buttons">
+              <button class="btn btn-secondary" id="share-link-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                Share Setup Link
+              </button>
+              <button class="btn btn-secondary" id="copy-link-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copy Link
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer style="text-align: center; padding: 32px 24px; border-top: 1px solid var(--border); position: relative; z-index: 1;">
+    <p style="font-size: 0.8rem; color: var(--text-tertiary); max-width: 500px; margin: 0 auto;">
+      FuseBoard is an independent open-source project. Not affiliated with Cloudflare.
+      Your Cloudflare account and data are entirely under your control.
+    </p>
+    <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 8px;">
+      <a href="https://github.com/BlockBuilderJoe/switch" style="color: var(--text-tertiary); text-decoration: underline;">GitHub</a>
+    </p>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

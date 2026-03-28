@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FuseBoard — Wires to Device</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Outfit',sans-serif;background:#07080a;color:#e4e6ea;padding:32px 12px;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+    h1{font-size:1.5rem;font-weight:800;margin-bottom:4px}
+    .sub{color:#555;font-size:.78rem;margin-bottom:28px}
+    .stitle{font-family:'JetBrains Mono',monospace;font-size:.55rem;color:#444;text-transform:uppercase;letter-spacing:.1em;text-align:center;margin:36px 0 14px;padding-top:20px;border-top:1px solid #1a1c20;width:100%;max-width:600px}
+    .stitle:first-of-type{border-top:none;margin-top:0}
+
+    :root{
+      --g:#22c55e;--gg:rgba(34,197,94,.2);--gd:rgba(34,197,94,.08);
+      --trk:#0c0d12;--bd:#1e2028;--bg:#12141a;
+      --lv1:#5a708a;--lv2:#3e5468;
+      --wl:#3a1414;--ws:#ef4444;--wh:#ff8888;--wd:#1a1a20;
+    }
+
+    /* === THE WHOLE FUSEBOARD UNIT === */
+    .board{display:flex;flex-direction:column;align-items:center;max-width:600px;width:100%}
+
+    /* "INTERNET" label at top */
+    .net-label{
+      font-family:'JetBrains Mono',monospace;
+      font-size:.55rem;color:#444;
+      text-transform:uppercase;letter-spacing:.12em;
+      margin-bottom:8px;
+      display:flex;align-items:center;gap:6px;
+    }
+    .net-label .dot{width:5px;height:5px;border-radius:50%;background:var(--ws);box-shadow:0 0 4px rgba(239,68,68,.3)}
+
+    /* Top wires coming down from "internet" */
+    .wires-in{
+      display:flex;
+      justify-content:center;
+      gap:0;
+      width:100%;
+      height:24px;
+      position:relative;
+    }
+    .wires-in .wire-drop{
+      width:6px;height:100%;
+      background:var(--wl);
+      border-radius:4px;
+      position:relative;
+      overflow:hidden;
+    }
+    .wires-in .wire-drop::after{
+      content:'';position:absolute;left:0;right:0;top:-14px;
+      height:14px;
+      background:linear-gradient(180deg,transparent,var(--ws),var(--wh),var(--ws),transparent);
+      border-radius:4px;
+      animation:fl .6s linear infinite;
+    }
+    @keyframes fl{0%{top:-14px}100%{top:calc(100% + 14px)}}
+
+    /* Fuse grid */
+    .fuse-row{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:0;
+      width:100%;
+      background:#0a0b10;
+      border:1.5px solid #1a1e28;
+      border-radius:14px;
+      overflow:hidden;
+    }
+
+    .f{
+      display:flex;flex-direction:column;align-items:center;
+      cursor:pointer;user-select:none;
+      padding:12px 6px 10px;
+      border-right:1px solid #141620;
+      transition:background .15s;
+    }
+    .f:last-child{border-right:none}
+    .f:nth-child(4){border-right:none}
+    .f:nth-child(5),.f:nth-child(6),.f:nth-child(7),.f:nth-child(8){border-top:1px solid #141620}
+    .f:hover{background:#0e1016}
+
+    .lb{font-weight:700;font-size:.78rem;color:#889;transition:.2s;text-align:center;line-height:1.15;margin-top:4px}
+    .f[data-s="1"] .lb{color:var(--g)}
+    .inf{font-size:.45rem;color:#333;font-family:'JetBrains Mono',monospace;transition:.2s;margin-top:1px}
+    .f[data-s="1"] .inf{color:rgba(34,197,94,.3)}
+
+    /* Bottom wires coming out of each fuse */
+    .wire-out{
+      width:6px;height:16px;
+      border-radius:4px;
+      position:relative;overflow:hidden;
+      transition:background .4s;
+      margin-top:6px;
+    }
+    .f[data-s="0"] .wire-out{background:var(--wl)}
+    .f[data-s="0"] .wire-out::after{
+      content:'';position:absolute;left:0;right:0;top:-14px;
+      height:14px;
+      background:linear-gradient(180deg,transparent,var(--ws),var(--wh),var(--ws),transparent);
+      border-radius:4px;animation:fl .6s linear infinite;
+    }
+    .f[data-s="1"] .wire-out{background:var(--wd)}
+    .f[data-s="1"] .wire-out::after{display:none}
+
+    /* Stagger */
+    .f:nth-child(1) .wire-out::after{animation-delay:0s}
+    .f:nth-child(2) .wire-out::after{animation-delay:.07s}
+    .f:nth-child(3) .wire-out::after{animation-delay:.14s}
+    .f:nth-child(4) .wire-out::after{animation-delay:.21s}
+    .f:nth-child(5) .wire-out::after{animation-delay:.04s}
+    .f:nth-child(6) .wire-out::after{animation-delay:.11s}
+    .f:nth-child(7) .wire-out::after{animation-delay:.18s}
+    .f:nth-child(8) .wire-out::after{animation-delay:.25s}
+
+    /* Converging wires section */
+    .converge{
+      width:100%;
+      height:40px;
+      position:relative;
+      display:flex;
+      justify-content:center;
+    }
+
+    .converge svg{width:100%;height:100%}
+    .converge .wire-path{stroke-width:3;fill:none;stroke-linecap:round}
+
+    /* Device outline at bottom */
+    .device{
+      width:120px;
+      display:flex;flex-direction:column;align-items:center;
+    }
+
+    .device-body{
+      width:100%;
+      padding:12px 8px 8px;
+      border:1.5px solid #222630;
+      border-radius:12px;
+      background:#0c0e14;
+      text-align:center;
+      position:relative;
+    }
+    .device-body::before{
+      content:'';position:absolute;top:6px;left:50%;transform:translateX(-50%);
+      width:6px;height:6px;border-radius:50%;background:#181a22;border:1px solid #222630;
+    }
+    .device-label{
+      font-family:'JetBrains Mono',monospace;
+      font-size:.5rem;color:#333;
+      text-transform:uppercase;letter-spacing:.08em;
+      margin-top:8px;
+    }
+    .device-screen{
+      width:100%;height:24px;
+      background:#080910;border-radius:4px;
+      margin-top:6px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:.45rem;color:#333;
+      font-family:'JetBrains Mono',monospace;
+    }
+
+    /* ==== LEVER VARIANTS ==== */
+
+    /* 10J — Card lever */
+    .vJ .trk{width:28px;height:44px;background:var(--trk);border:1px solid #1a1e24;border-radius:10px;position:relative;overflow:hidden}
+    .vJ .lev{position:absolute;left:3px;right:3px;top:3px;height:16px;background:linear-gradient(180deg,var(--lv1),var(--lv2));border-radius:7px;transition:.2s cubic-bezier(.22,1,.36,1);box-shadow:0 2px 4px rgba(0,0,0,.4)}
+    .vJ .f[data-s="1"] .lev{top:auto;bottom:3px;background:linear-gradient(180deg,var(--g),#16a34a);box-shadow:0 0 10px var(--gg)}
+
+    /* 10A — Slim pill */
+    .vA .trk{width:22px;height:44px;background:var(--trk);border:1px solid #1a1e24;border-radius:11px;position:relative;overflow:hidden}
+    .vA .lev{position:absolute;left:3px;right:3px;top:3px;height:16px;background:linear-gradient(180deg,var(--lv1),var(--lv2));border-radius:8px;transition:.2s cubic-bezier(.22,1,.36,1);box-shadow:0 2px 4px rgba(0,0,0,.4)}
+    .vA .f[data-s="1"] .lev{top:auto;bottom:3px;background:linear-gradient(180deg,var(--g),#16a34a);box-shadow:0 0 10px var(--gg)}
+
+    /* 10G — Ghost outline */
+    .vG .trk{width:24px;height:44px;background:transparent;border:1.5px solid #222630;border-radius:12px;position:relative;overflow:hidden;transition:.2s}
+    .vG .lev{position:absolute;left:3px;right:3px;top:3px;height:16px;border:1.5px solid #3a4050;background:transparent;border-radius:8px;transition:.2s cubic-bezier(.22,1,.36,1)}
+    .vG .f[data-s="1"] .trk{border-color:rgba(34,197,94,.3)}
+    .vG .f[data-s="1"] .lev{top:auto;bottom:3px;border-color:var(--g);background:var(--gd);box-shadow:0 0 10px var(--gg)}
+
+    /* 10H — Square chunky */
+    .vH .trk{width:30px;height:44px;background:var(--trk);border:1.5px solid #1a1e24;border-radius:5px;position:relative;overflow:hidden}
+    .vH .lev{position:absolute;left:3px;right:3px;top:3px;height:16px;background:linear-gradient(180deg,var(--lv1),var(--lv2));border-radius:3px;transition:.2s cubic-bezier(.22,1,.36,1);box-shadow:0 3px 0 #1a2838,0 4px 6px rgba(0,0,0,.4)}
+    .vH .lev::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:12px;height:1px;background:rgba(255,255,255,.1);box-shadow:0 2px 0 rgba(255,255,255,.06)}
+    .vH .f[data-s="1"] .lev{top:auto;bottom:3px;background:linear-gradient(180deg,var(--g),#16a34a);box-shadow:0 -2px 0 #0a4a22,0 0 12px var(--gg)}
+
+    @media(max-width:500px){.fuse-row{grid-template-columns:repeat(2,1fr)}}
+    @media(prefers-reduced-motion:reduce){.wire-drop::after,.wire-out::after{animation:none!important;display:none}}
+  </style>
+</head>
+<body>
+  <h1>FuseBoard</h1>
+  <p class="sub">Internet flows in → through your fuses → into your device. Trip a fuse to block.</p>
+
+  <div id="app"></div>
+
+  <script>
+    const D=[
+      {t:'Social Media',s:'9 sites'},
+      {t:'Video Stream',s:'6 sites'},
+      {t:'Ads & Track',s:'4 sites'},
+      {t:'Adult',s:'category'},
+      {t:'Gambling',s:'category'},
+      {t:'Gaming',s:'6 sites'},
+      {t:'News',s:'category'},
+      {t:'Security',s:'threats',on:1},
+    ];
+
+    const variants=[
+      {n:'10J — Lever in Card',c:'vJ'},
+      {n:'10A — Slim Pill',c:'vA'},
+      {n:'10G — Ghost Outline',c:'vG'},
+      {n:'10H — Square Chunky',c:'vH'},
+    ];
+
+    const app=document.getElementById('app');
+
+    variants.forEach((v,vi)=>{
+      const title=document.createElement('div');
+      title.className='stitle';
+      title.textContent=v.n;
+      app.appendChild(title);
+
+      const board=document.createElement('div');
+      board.className=`board ${v.c}`;
+
+      // Internet label
+      board.innerHTML=`<div class="net-label"><div class="dot"></div>Internet</div>`;
+
+      // Top wires
+      const wiresIn=document.createElement('div');
+      wiresIn.className='wires-in';
+      // 4 wires for top row, spaced to match grid
+      wiresIn.style.cssText='display:grid;grid-template-columns:repeat(4,1fr);width:100%';
+      for(let i=0;i<4;i++){
+        const cell=document.createElement('div');
+        cell.style.cssText='display:flex;justify-content:center';
+        cell.innerHTML=`<div class="wire-drop" style="animation-delay:${i*0.07}s"></div>`;
+        wiresIn.appendChild(cell);
+      }
+      board.appendChild(wiresIn);
+
+      // Fuse grid
+      const fuseRow=document.createElement('div');
+      fuseRow.className='fuse-row';
+
+      D.forEach((d,i)=>{
+        const st={on:!!d.on};
+        const f=document.createElement('div');
+        f.className='f';f.dataset.s=st.on?'1':'0';
+
+        function render(){
+          f.dataset.s=st.on?'1':'0';
+          f.innerHTML=`
+            <div class="trk"><div class="lev"></div></div>
+            <div class="lb">${d.t}</div>
+            <div class="inf">${d.s}</div>
+            <div class="wire-out"></div>
+          `;
+        }
+        render();
+        f.addEventListener('click',()=>{st.on=!st.on;render()});
+        fuseRow.appendChild(f);
+      });
+
+      board.appendChild(fuseRow);
+
+      // Bottom wires going into second row
+      const wiresIn2=document.createElement('div');
+      wiresIn2.className='wires-in';
+      wiresIn2.style.cssText='display:grid;grid-template-columns:repeat(4,1fr);width:100%';
+      for(let i=0;i<4;i++){
+        const cell=document.createElement('div');
+        cell.style.cssText='display:flex;justify-content:center';
+        cell.innerHTML=`<div class="wire-drop" style="animation-delay:${(i+4)*0.07}s"></div>`;
+        wiresIn2.appendChild(cell);
+      }
+
+      // Converging wires into device
+      const converge=document.createElement('div');
+      converge.className='converge';
+      converge.innerHTML=`
+        <svg viewBox="0 0 600 50" preserveAspectRatio="none">
+          <path class="wire-path" d="M75,0 Q75,25 300,48" stroke="#2a1212" id="wp1-${vi}"/>
+          <path class="wire-path" d="M225,0 Q225,25 300,48" stroke="#2a1212"/>
+          <path class="wire-path" d="M375,0 Q375,25 300,48" stroke="#2a1212"/>
+          <path class="wire-path" d="M525,0 Q525,25 300,48" stroke="#2a1212"/>
+        </svg>
+      `;
+      board.appendChild(converge);
+
+      // Device
+      const device=document.createElement('div');
+      device.className='device';
+      device.innerHTML=`
+        <div class="device-body">
+          <div class="device-screen">your device</div>
+        </div>
+        <div class="device-label">Protected</div>
+      `;
+      board.appendChild(device);
+
+      app.appendChild(board);
+    });
+  </script>
+</body>
+</html>

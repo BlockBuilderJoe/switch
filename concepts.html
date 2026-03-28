@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FuseBoard — 20 Design Concepts</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Fraunces:wght@700;800;900&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Outfit',sans-serif;background:#08090c;color:#e4e6ea;padding:40px 16px}
+    h1{text-align:center;font-size:1.8rem;font-weight:800;margin-bottom:4px}
+    .sub{text-align:center;color:#666;font-size:.82rem;margin-bottom:40px}
+    .concept{max-width:700px;margin:0 auto 48px;padding-bottom:48px;border-bottom:1px solid #1a1c20}
+    .concept:last-child{border-bottom:none}
+    .c-title{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:#555;text-transform:uppercase;letter-spacing:.12em;margin-bottom:12px;text-align:center}
+    .c-name{font-size:1rem;font-weight:700;text-align:center;margin-bottom:16px;color:#aab}
+
+    :root{
+      --g:#22c55e;--gg:rgba(34,197,94,.2);--gd:rgba(34,197,94,.08);
+      --r:#ef4444;--rg:rgba(239,68,68,.2);--rd:rgba(239,68,68,.06);
+    }
+
+    /* Shared grid */
+    .g{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+    .g2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+
+    /* Shared item behavior */
+    .i{cursor:pointer;user-select:none;transition:.2s}
+
+    /* ============================================
+       CONCEPT 1: Clean List — text left, toggle right
+       ============================================ */
+    .c1 .i{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:#12141a;border:1px solid #1e2028;border-radius:10px}
+    .c1 .i:hover{background:#161820;border-color:#2a2e38}
+    .c1 .i .t{font-weight:600;font-size:.92rem;color:#c8cad0}
+    .c1 .i .s{font-size:.65rem;color:#444;margin-top:2px}
+    .c1 .i .tog{width:40px;height:22px;background:#222;border-radius:11px;position:relative;flex-shrink:0;transition:.2s}
+    .c1 .i .tog::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;background:#666;border-radius:50%;transition:.2s cubic-bezier(.34,1.56,.64,1)}
+    .c1 .i[data-on="1"] .t{color:var(--g)}
+    .c1 .i[data-on="1"] .tog{background:var(--g)}
+    .c1 .i[data-on="1"] .tog::after{transform:translateX(18px);background:#fff}
+    .c1 .i[data-on="1"]{border-color:rgba(34,197,94,.2)}
+
+    /* ============================================
+       CONCEPT 2: Big Typography Cards
+       ============================================ */
+    .c2 .i{padding:24px 16px;background:#111318;border:1px solid #1e2028;border-radius:14px;text-align:center}
+    .c2 .i:hover{background:#161820}
+    .c2 .i .t{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:#bbc}
+    .c2 .i .s{font-size:.6rem;color:#444;margin-top:6px}
+    .c2 .i[data-on="1"]{background:#0c1810;border-color:rgba(34,197,94,.3)}
+    .c2 .i[data-on="1"] .t{color:var(--g);text-shadow:0 0 20px var(--gg)}
+
+    /* ============================================
+       CONCEPT 3: Pill Tags — horizontal wrap
+       ============================================ */
+    .c3{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+    .c3 .i{padding:10px 20px;background:#12141a;border:1px solid #222;border-radius:100px;font-weight:600;font-size:.88rem;color:#aab}
+    .c3 .i:hover{background:#181a22;border-color:#333}
+    .c3 .i[data-on="1"]{background:var(--gd);border-color:var(--g);color:var(--g)}
+
+    /* ============================================
+       CONCEPT 4: Status Cards with dot
+       ============================================ */
+    .c4 .i{padding:16px;background:#12141a;border:1px solid #1e2028;border-radius:12px;display:flex;align-items:center;gap:12px}
+    .c4 .i:hover{background:#161820}
+    .c4 .i .dot{width:10px;height:10px;border-radius:50%;background:var(--r);box-shadow:0 0 6px var(--rg);flex-shrink:0;transition:.2s}
+    .c4 .i .t{font-weight:600;font-size:.9rem;color:#c8cad0}
+    .c4 .i[data-on="1"] .dot{background:var(--g);box-shadow:0 0 6px var(--gg)}
+    .c4 .i[data-on="1"] .t{color:var(--g)}
+    .c4 .i[data-on="1"]{border-color:rgba(34,197,94,.2)}
+
+    /* ============================================
+       CONCEPT 5: Stacked vertical with left bar
+       ============================================ */
+    .c5{display:flex;flex-direction:column;gap:4px}
+    .c5 .i{display:flex;align-items:center;padding:14px 16px;background:#10121a;border-radius:8px;border-left:3px solid var(--r);transition:.2s}
+    .c5 .i:hover{background:#141620}
+    .c5 .i .t{font-weight:600;font-size:.92rem;color:#c8cad0;flex:1}
+    .c5 .i .badge{font-family:'JetBrains Mono',monospace;font-size:.55rem;padding:3px 8px;background:#1a1020;border-radius:4px;color:#666}
+    .c5 .i[data-on="1"]{border-left-color:var(--g);background:#0c1410}
+    .c5 .i[data-on="1"] .t{color:var(--g)}
+    .c5 .i[data-on="1"] .badge{background:var(--gd);color:var(--g)}
+
+    /* ============================================
+       CONCEPT 6: Checkbox style — clean and obvious
+       ============================================ */
+    .c6{display:flex;flex-direction:column;gap:6px}
+    .c6 .i{display:flex;align-items:center;gap:12px;padding:12px 16px;background:#12141a;border-radius:10px;border:1px solid #1e2028}
+    .c6 .i:hover{background:#161820}
+    .c6 .i .cb{width:22px;height:22px;border-radius:6px;border:2px solid #333;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.2s}
+    .c6 .i .cb svg{width:14px;height:14px;color:transparent;transition:.2s}
+    .c6 .i .t{font-weight:600;font-size:.92rem;color:#c8cad0}
+    .c6 .i[data-on="1"] .cb{background:var(--g);border-color:var(--g)}
+    .c6 .i[data-on="1"] .cb svg{color:#fff}
+    .c6 .i[data-on="1"] .t{color:var(--g)}
+
+    /* ============================================
+       CONCEPT 7: Kanban-ish — two columns: allowed / blocked
+       ============================================ */
+    .c7{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .c7 .col-title{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;padding-bottom:8px;border-bottom:1px solid #1e2028;margin-bottom:8px}
+    .c7 .col-allowed .col-title{color:var(--r)}
+    .c7 .col-blocked .col-title{color:var(--g)}
+    .c7 .i{padding:10px 12px;background:#12141a;border-radius:8px;font-weight:600;font-size:.85rem;color:#aab;margin-bottom:4px}
+    .c7 .i:hover{background:#181a22}
+    .c7 .col-blocked .i{color:var(--g);background:var(--gd);border:1px solid rgba(34,197,94,.15)}
+
+    /* ============================================
+       CONCEPT 8: Minimal — just text, strikethrough when blocked
+       ============================================ */
+    .c8{display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:center;padding:20px 0}
+    .c8 .i{font-weight:600;font-size:1.1rem;color:#aab;padding:4px 0;position:relative}
+    .c8 .i:hover{color:#dde}
+    .c8 .i[data-on="1"]{color:#444;text-decoration:line-through;text-decoration-color:var(--g);text-decoration-thickness:2px}
+
+    /* ============================================
+       CONCEPT 9: Dashboard meters
+       ============================================ */
+    .c9 .i{padding:16px;background:#12141a;border:1px solid #1e2028;border-radius:12px}
+    .c9 .i:hover{background:#161820}
+    .c9 .i .t{font-weight:700;font-size:.88rem;color:#c8cad0;margin-bottom:8px}
+    .c9 .i .bar{height:4px;background:#1a1e28;border-radius:2px;overflow:hidden}
+    .c9 .i .bar-fill{height:100%;background:var(--r);border-radius:2px;width:100%;transition:.3s}
+    .c9 .i[data-on="1"] .bar-fill{background:var(--g);width:100%}
+    .c9 .i[data-on="1"] .t{color:var(--g)}
+    .c9 .i .s{font-size:.55rem;color:#444;margin-top:6px}
+    .c9 .i[data-on="1"] .s{color:rgba(34,197,94,.4)}
+
+    /* ============================================
+       CONCEPT 10: Toggle cards with icon
+       ============================================ */
+    .c10 .i{padding:20px 14px;background:#12141a;border:1px solid #1e2028;border-radius:14px;text-align:center;position:relative;overflow:hidden}
+    .c10 .i:hover{background:#16182a}
+    .c10 .i .t{font-weight:700;font-size:.95rem;color:#c8cad0;position:relative;z-index:1}
+    .c10 .i .s{font-size:.6rem;color:#444;margin-top:4px;position:relative;z-index:1}
+    .c10 .i::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--r);transition:.3s}
+    .c10 .i[data-on="1"]::after{background:var(--g);height:100%;opacity:.06}
+    .c10 .i[data-on="1"]{border-color:rgba(34,197,94,.25)}
+    .c10 .i[data-on="1"] .t{color:var(--g)}
+
+    /* ============================================
+       CONCEPT 11: Serif elegant
+       ============================================ */
+    .c11{display:flex;flex-direction:column;gap:2px}
+    .c11 .i{display:flex;align-items:center;justify-content:space-between;padding:16px 20px}
+    .c11 .i:hover{background:#0e1018}
+    .c11 .i .t{font-family:'Fraunces',serif;font-weight:700;font-size:1.05rem;color:#bbc}
+    .c11 .i .status{font-size:.6rem;color:var(--r);text-transform:uppercase;letter-spacing:.08em}
+    .c11 .i[data-on="1"] .t{color:var(--g)}
+    .c11 .i[data-on="1"] .status{color:var(--g)}
+
+    /* ============================================
+       CONCEPT 12: Grid of circles
+       ============================================ */
+    .c12 .i{display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 8px}
+    .c12 .i .circle{width:48px;height:48px;border-radius:50%;background:#1a1e28;border:2px solid #2a2e38;display:flex;align-items:center;justify-content:center;transition:.2s;font-weight:800;font-size:.7rem;color:#667}
+    .c12 .i:hover .circle{border-color:#444}
+    .c12 .i .t{font-weight:600;font-size:.78rem;color:#aab;text-align:center}
+    .c12 .i[data-on="1"] .circle{background:var(--gd);border-color:var(--g);color:var(--g)}
+    .c12 .i[data-on="1"] .t{color:var(--g)}
+
+    /* ============================================
+       CONCEPT 13: Compact row with switch
+       ============================================ */
+    .c13{display:flex;flex-direction:column;gap:2px;background:#0e1014;border-radius:12px;overflow:hidden;border:1px solid #1a1e28}
+    .c13 .i{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid #141820}
+    .c13 .i:last-child{border-bottom:none}
+    .c13 .i:hover{background:#12141e}
+    .c13 .i .t{font-weight:600;font-size:.9rem;color:#c8cad0}
+    .c13 .i .chip{font-family:'JetBrains Mono',monospace;font-size:.55rem;padding:2px 8px;border-radius:4px;background:#1a1020;color:var(--r);transition:.2s}
+    .c13 .i[data-on="1"] .t{color:var(--g)}
+    .c13 .i[data-on="1"] .chip{background:var(--gd);color:var(--g)}
+
+    /* ============================================
+       CONCEPT 14: Big bold stacked
+       ============================================ */
+    .c14{display:flex;flex-direction:column;gap:6px}
+    .c14 .i{padding:20px;background:#12141a;border-radius:12px;border:1px solid #1e2028}
+    .c14 .i:hover{background:#161820}
+    .c14 .i .t{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:#dde}
+    .c14 .i .s{font-size:.65rem;color:#444;margin-top:4px}
+    .c14 .i[data-on="1"]{background:var(--gd);border-color:rgba(34,197,94,.2)}
+    .c14 .i[data-on="1"] .t{color:var(--g)}
+
+    /* ============================================
+       CONCEPT 15: Notion-style toggles
+       ============================================ */
+    .c15{display:flex;flex-direction:column;gap:4px}
+    .c15 .i{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:6px}
+    .c15 .i:hover{background:#12141a}
+    .c15 .i .tri{width:0;height:0;border-left:6px solid #555;border-top:4px solid transparent;border-bottom:4px solid transparent;flex-shrink:0;transition:.2s}
+    .c15 .i .t{font-weight:500;font-size:.92rem;color:#c8cad0}
+    .c15 .i[data-on="1"] .tri{transform:rotate(90deg);border-left-color:var(--g)}
+    .c15 .i[data-on="1"] .t{color:var(--g)}
+
+    /* ============================================
+       CONCEPT 16: Power grid — just the essentials
+       ============================================ */
+    .c16 .i{padding:16px;background:#12141a;border-radius:10px;display:flex;align-items:center;gap:10px;border:1px solid transparent}
+    .c16 .i:hover{background:#161820}
+    .c16 .i .pw{width:8px;height:32px;border-radius:4px;background:var(--r);transition:.3s;flex-shrink:0;box-shadow:0 0 8px var(--rg)}
+    .c16 .i .t{font-weight:700;font-size:.9rem;color:#c8cad0}
+    .c16 .i .s{font-size:.58rem;color:#444}
+    .c16 .i[data-on="1"] .pw{background:var(--g);box-shadow:0 0 8px var(--gg)}
+    .c16 .i[data-on="1"] .t{color:var(--g)}
+    .c16 .i[data-on="1"]{border-color:rgba(34,197,94,.12)}
+
+    /* ============================================
+       CONCEPT 17: Playful color blocks
+       ============================================ */
+    .c17 .i{padding:20px 14px;border-radius:14px;text-align:center;background:#1a1420;border:1px solid #2a2030;transition:.2s}
+    .c17 .i:nth-child(2){background:#141a20;border-color:#1e2a30}
+    .c17 .i:nth-child(3){background:#1a1a14;border-color:#2a2a1e}
+    .c17 .i:nth-child(4){background:#1a1418;border-color:#2a1e22}
+    .c17 .i:hover{filter:brightness(1.1)}
+    .c17 .i .t{font-weight:700;font-size:.95rem;color:#dde}
+    .c17 .i .s{font-size:.6rem;color:#556;margin-top:4px}
+    .c17 .i[data-on="1"]{background:var(--gd)!important;border-color:rgba(34,197,94,.25)!important}
+    .c17 .i[data-on="1"] .t{color:var(--g)}
+
+    /* ============================================
+       CONCEPT 18: iOS Settings style
+       ============================================ */
+    .c18{display:flex;flex-direction:column;background:#12141a;border-radius:12px;overflow:hidden;border:1px solid #1e2028}
+    .c18 .i{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #1a1e28}
+    .c18 .i:last-child{border-bottom:none}
+    .c18 .i:hover{background:#161820}
+    .c18 .i .left{display:flex;align-items:center;gap:10px}
+    .c18 .i .ico{width:28px;height:28px;border-radius:6px;background:#2a2040;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:#aab;flex-shrink:0}
+    .c18 .i .t{font-weight:500;font-size:.9rem;color:#e0e2e6}
+    .c18 .i .sw{width:44px;height:24px;background:#333;border-radius:12px;position:relative;flex-shrink:0;transition:.2s}
+    .c18 .i .sw::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+    .c18 .i[data-on="1"] .sw{background:var(--g)}
+    .c18 .i[data-on="1"] .sw::after{transform:translateX(20px)}
+
+    /* ============================================
+       CONCEPT 19: Terminal / hacker
+       ============================================ */
+    .c19{background:#0a0c10;border:1px solid #1a1e28;border-radius:8px;padding:16px;font-family:'JetBrains Mono',monospace}
+    .c19 .i{padding:6px 0;font-size:.82rem;color:#667;display:flex;gap:8px}
+    .c19 .i:hover{color:#aab}
+    .c19 .i .prompt{color:#444}
+    .c19 .i .cmd{color:#aab}
+    .c19 .i[data-on="1"] .cmd{color:var(--g)}
+    .c19 .i[data-on="1"] .prompt{color:var(--g)}
+    .c19 .i .status-txt{margin-left:auto;font-size:.65rem}
+    .c19 .i[data-on="1"] .status-txt{color:var(--g)}
+    .c19 .i[data-on="0"] .status-txt{color:var(--r)}
+
+    /* ============================================
+       CONCEPT 20: Card with subtle wire accent
+       ============================================ */
+    .c20 .i{padding:18px 16px;background:#12141a;border:1px solid #1e2028;border-radius:12px;position:relative;overflow:hidden}
+    .c20 .i:hover{background:#161820}
+    .c20 .i .t{font-weight:700;font-size:.95rem;color:#c8cad0;position:relative;z-index:1}
+    .c20 .i .s{font-size:.6rem;color:#444;margin-top:4px;position:relative;z-index:1}
+    /* Subtle wire line running through */
+    .c20 .i::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#2a1010;transition:.3s;overflow:hidden}
+    .c20 .i::after{content:'';position:absolute;left:0;top:-8px;width:3px;height:8px;background:linear-gradient(180deg,transparent,var(--r),transparent);animation:wf .6s linear infinite;border-radius:2px}
+    @keyframes wf{0%{top:-8px}100%{top:calc(100% + 8px)}}
+    .c20 .i[data-on="1"]::before{background:#1a2a1a}
+    .c20 .i[data-on="1"]::after{display:none}
+    .c20 .i[data-on="1"] .t{color:var(--g)}
+    .c20 .i[data-on="1"]{border-color:rgba(34,197,94,.2)}
+    .c20 .i:nth-child(2)::after{animation-delay:.1s}
+    .c20 .i:nth-child(3)::after{animation-delay:.2s}
+    .c20 .i:nth-child(4)::after{animation-delay:.3s}
+    .c20 .i:nth-child(5)::after{animation-delay:.15s}
+
+    @media(max-width:600px){.g{grid-template-columns:repeat(2,1fr)}}
+  </style>
+</head>
+<body>
+  <h1>20 Design Concepts</h1>
+  <p class="sub">Text first, switch second. Click any item to toggle.</p>
+  <div id="app"></div>
+
+  <script>
+    const items = [
+      {t:'Social Media',s:'9 sites'},{t:'Video Stream',s:'6 sites'},
+      {t:'Ads & Trackers',s:'4 sites'},{t:'Adult Content',s:'category'},
+      {t:'Gambling',s:'category'},{t:'Gaming',s:'6 sites'},
+      {t:'News & Media',s:'category'},{t:'Security',s:'threats',on:true},
+    ];
+
+    const concepts = [
+      {name:'1 — Clean List + Toggle',cls:'c1',grid:false,
+        html:(d,on)=>`<div><div class="t">${d.t}</div><div class="s">${d.s}</div></div><div class="tog"></div>`},
+      {name:'2 — Big Typography Cards',cls:'c2',grid:true,
+        html:(d)=>`<div class="t">${d.t}</div><div class="s">${d.s}</div>`},
+      {name:'3 — Pill Tags',cls:'c3',grid:false,wrap:true,
+        html:(d)=>`${d.t}`},
+      {name:'4 — Status Cards + Dot',cls:'c4',grid:true,
+        html:(d)=>`<div class="dot"></div><div><div class="t">${d.t}</div></div>`},
+      {name:'5 — Left Bar Accent',cls:'c5',grid:false,
+        html:(d)=>`<div class="t">${d.t}</div><div class="badge">${d.s}</div>`},
+      {name:'6 — Checkbox Style',cls:'c6',grid:false,
+        html:(d)=>`<div class="cb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="t">${d.t}</div>`},
+      {name:'7 — Kanban: Allowed / Blocked',cls:'c7',grid:false,kanban:true},
+      {name:'8 — Minimal Strikethrough',cls:'c8',grid:false,wrap:true,
+        html:(d)=>`${d.t}`},
+      {name:'9 — Dashboard Meters',cls:'c9',grid:true,
+        html:(d)=>`<div class="t">${d.t}</div><div class="bar"><div class="bar-fill"></div></div><div class="s">${d.s}</div>`},
+      {name:'10 — Bottom Accent Bar',cls:'c10',grid:true,
+        html:(d)=>`<div class="t">${d.t}</div><div class="s">${d.s}</div>`},
+      {name:'11 — Serif Elegant',cls:'c11',grid:false,
+        html:(d,on)=>`<div class="t">${d.t}</div><div class="status">${on?'blocked':'exposed'}</div>`},
+      {name:'12 — Circle Grid',cls:'c12',grid:true,
+        html:(d)=>`<div class="circle">${d.t.charAt(0)}</div><div class="t">${d.t}</div>`},
+      {name:'13 — Compact Table',cls:'c13',grid:false,
+        html:(d,on)=>`<div class="t">${d.t}</div><div class="chip">${on?'BLOCKED':'EXPOSED'}</div>`},
+      {name:'14 — Bold Stacked',cls:'c14',grid:false,
+        html:(d)=>`<div class="t">${d.t}</div><div class="s">${d.s}</div>`},
+      {name:'15 — Notion Toggles',cls:'c15',grid:false,
+        html:(d)=>`<div class="tri"></div><div class="t">${d.t}</div>`},
+      {name:'16 — Power Bar',cls:'c16',grid:true,
+        html:(d)=>`<div class="pw"></div><div><div class="t">${d.t}</div><div class="s">${d.s}</div></div>`},
+      {name:'17 — Color Blocks',cls:'c17',grid:true,
+        html:(d)=>`<div class="t">${d.t}</div><div class="s">${d.s}</div>`},
+      {name:'18 — iOS Settings',cls:'c18',grid:false,
+        html:(d)=>`<div class="left"><div class="ico">${d.t.charAt(0)}</div><div class="t">${d.t}</div></div><div class="sw"></div>`},
+      {name:'19 — Terminal / Hacker',cls:'c19',grid:false,
+        html:(d,on)=>`<span class="prompt">$</span><span class="cmd">block ${d.t.toLowerCase().replace(/ /g,'-')}</span><span class="status-txt">${on?'[ACTIVE]':'[OFF]'}</span>`},
+      {name:'20 — Cards + Wire Accent',cls:'c20',grid:true,
+        html:(d)=>`<div class="t">${d.t}</div><div class="s">${d.s}</div>`},
+    ];
+
+    const app = document.getElementById('app');
+
+    concepts.forEach(c => {
+      const section = document.createElement('div');
+      section.className = 'concept';
+      section.innerHTML = `<div class="c-title">Concept</div><div class="c-name">${c.name}</div>`;
+
+      if (c.kanban) {
+        // Special kanban layout
+        const el = document.createElement('div');
+        el.className = c.cls;
+        const states = items.map(d => ({ ...d, on: !!d.on }));
+        function renderKanban() {
+          const allowed = states.filter(s => !s.on);
+          const blocked = states.filter(s => s.on);
+          el.innerHTML = `
+            <div class="col-allowed"><div class="col-title">Exposed</div>${allowed.map(s => `<div class="i" data-t="${s.t}">${s.t}</div>`).join('')}</div>
+            <div class="col-blocked"><div class="col-title">Blocked</div>${blocked.map(s => `<div class="i" data-t="${s.t}">${s.t}</div>`).join('')}</div>
+          `;
+          el.querySelectorAll('.i').forEach(i => {
+            i.addEventListener('click', () => {
+              const st = states.find(s => s.t === i.dataset.t);
+              st.on = !st.on;
+              renderKanban();
+            });
+          });
+        }
+        renderKanban();
+        section.appendChild(el);
+      } else {
+        const container = document.createElement('div');
+        container.className = c.grid ? `g ${c.cls}` : (c.wrap ? c.cls : c.cls);
+
+        items.forEach(d => {
+          const st = { on: !!d.on };
+          const el = document.createElement('div');
+          el.className = 'i';
+          el.dataset.on = st.on ? '1' : '0';
+
+          function render() {
+            el.dataset.on = st.on ? '1' : '0';
+            el.innerHTML = c.html(d, st.on);
+          }
+          render();
+          el.addEventListener('click', () => { st.on = !st.on; render(); });
+          container.appendChild(el);
+        });
+
+        section.appendChild(container);
+      }
+
+      app.appendChild(section);
+    });
+  </script>
+</body>
+</html>

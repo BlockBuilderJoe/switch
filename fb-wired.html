@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FuseBoard — Wired Variants</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Outfit',sans-serif;background:#07080a;color:#e4e6ea;padding:32px 12px}
+    h1{text-align:center;font-size:1.5rem;font-weight:800;margin-bottom:4px}
+    .sub{text-align:center;color:#555;font-size:.78rem;margin-bottom:32px}
+    .section{max-width:900px;margin:0 auto 44px;padding-bottom:44px;border-bottom:1px solid #1a1c20}
+    .section:last-child{border-bottom:none}
+    .stitle{font-family:'JetBrains Mono',monospace;font-size:.55rem;color:#444;text-transform:uppercase;letter-spacing:.1em;text-align:center;margin-bottom:14px}
+
+    :root{
+      --g:#22c55e;--gg:rgba(34,197,94,.2);--gd:rgba(34,197,94,.08);
+      --trk:#0c0d12;--bd:#1e2028;--bg:#12141a;
+      --lv1:#5a708a;--lv2:#3e5468;
+      --wl:#3a1414;--ws:#ef4444;--wh:#ff8888;--wd:#1a1a20;
+    }
+
+    /* 4-col grid */
+    .row{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;max-width:560px;margin:0 auto;background:#0c0e14;border:1.5px solid #1a1e28;border-radius:16px;overflow:hidden}
+
+    .f{display:flex;flex-direction:column;align-items:center;cursor:pointer;user-select:none;flex-shrink:0;background:#0a0b10;padding:10px 6px;transition:background .2s}
+    .f:hover{background:#0e1016}
+
+    /* Wire */
+    .w{width:6px;border-radius:4px;position:relative;overflow:hidden;transition:background .4s}
+    .wi{height:20px}.wo{height:20px}
+
+    /* Top wire — always live (internet feeds in) */
+    .wi{background:var(--wl)}
+    .wi::after{content:'';position:absolute;left:0;right:0;top:-14px;height:14px;background:linear-gradient(180deg,transparent,var(--ws),var(--wh),var(--ws),transparent);border-radius:4px;animation:fl .6s linear infinite}
+
+    /* Bottom wire — live by default */
+    .f[data-s="0"] .wo{background:var(--wl)}
+    .f[data-s="0"] .wo::after{content:'';position:absolute;left:0;right:0;top:-14px;height:14px;background:linear-gradient(180deg,transparent,var(--ws),var(--wh),var(--ws),transparent);border-radius:4px;animation:fl .6s linear infinite}
+
+    /* Bottom wire — dead when tripped (blocked) */
+    .f[data-s="1"] .wo{background:var(--wd)}
+    .f[data-s="1"] .wo::after{display:none}
+
+    @keyframes fl{0%{top:-14px}100%{top:calc(100% + 14px)}}
+    .f:nth-child(1) .w::after{animation-delay:0s}
+    .f:nth-child(2) .w::after{animation-delay:.06s}
+    .f:nth-child(3) .w::after{animation-delay:.12s}
+    .f:nth-child(4) .w::after{animation-delay:.18s}
+    .f:nth-child(5) .w::after{animation-delay:.24s}
+    .f:nth-child(6) .w::after{animation-delay:.3s}
+    .f:nth-child(7) .w::after{animation-delay:.36s}
+    .f:nth-child(8) .w::after{animation-delay:.42s}
+
+    /* Connector dot */
+    .cd{width:8px;height:8px;border-radius:50%;background:#080910;border:1.5px solid #1e2028;z-index:2}
+
+    /* Label + info */
+    .lb{font-weight:700;font-size:.72rem;color:#889;transition:.2s;text-align:center;line-height:1.15;margin-top:2px}
+    .f[data-s="1"] .lb{color:var(--g)}
+    .inf{font-size:.45rem;color:#333;font-family:'JetBrains Mono',monospace;transition:.2s}
+    .f[data-s="1"] .inf{color:rgba(34,197,94,.3)}
+
+    /* ===========================================
+       10J — Lever in Card (compact)
+       =========================================== */
+    .vJ .f{width:100%}
+    .vJ .bx{width:100%;background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:8px 6px 6px;display:flex;flex-direction:column;align-items:center;gap:4px;transition:.2s}
+    .vJ .f:hover .bx{border-color:#333}
+    .vJ .f[data-s="1"] .bx{border-color:rgba(34,197,94,.25);background:#0f1814}
+    .vJ .trk{width:24px;height:40px;background:var(--trk);border:1px solid #1a1e24;border-radius:10px;position:relative;overflow:hidden}
+    .vJ .lev{position:absolute;left:3px;right:3px;top:3px;height:14px;background:linear-gradient(180deg,var(--lv1),var(--lv2));border-radius:7px;transition:.2s cubic-bezier(.22,1,.36,1);box-shadow:0 2px 4px rgba(0,0,0,.4)}
+    .vJ .f[data-s="1"] .lev{top:auto;bottom:3px;background:linear-gradient(180deg,var(--g),#16a34a);box-shadow:0 0 10px var(--gg)}
+
+    /* ===========================================
+       10A — Slim Pill Lever (compact)
+       =========================================== */
+    .vA .f{width:100%}
+    .vA .bx{display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 0}
+    .vA .trk{width:22px;height:44px;background:var(--trk);border:1px solid #1a1e24;border-radius:11px;position:relative;overflow:hidden}
+    .vA .lev{position:absolute;left:3px;right:3px;top:3px;height:16px;background:linear-gradient(180deg,var(--lv1),var(--lv2));border-radius:8px;transition:.2s cubic-bezier(.22,1,.36,1);box-shadow:0 2px 4px rgba(0,0,0,.4)}
+    .vA .f[data-s="1"] .lev{top:auto;bottom:3px;background:linear-gradient(180deg,var(--g),#16a34a);box-shadow:0 0 10px var(--gg)}
+
+    /* ===========================================
+       10G — Ghost Outline Lever (compact)
+       =========================================== */
+    .vG .f{width:100%}
+    .vG .bx{display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 0}
+    .vG .trk{width:24px;height:44px;background:transparent;border:1.5px solid #222630;border-radius:12px;position:relative;overflow:hidden;transition:.2s}
+    .vG .lev{position:absolute;left:3px;right:3px;top:3px;height:16px;border:1.5px solid #3a4050;background:transparent;border-radius:8px;transition:.2s cubic-bezier(.22,1,.36,1)}
+    .vG .f[data-s="1"] .trk{border-color:rgba(34,197,94,.3)}
+    .vG .f[data-s="1"] .lev{top:auto;bottom:3px;border-color:var(--g);background:var(--gd);box-shadow:0 0 10px var(--gg)}
+
+    /* ===========================================
+       10H — Square Chunky 3D (compact)
+       =========================================== */
+    .vH .f{width:100%}
+    .vH .bx{display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 0}
+    .vH .trk{width:30px;height:44px;background:var(--trk);border:1.5px solid #1a1e24;border-radius:5px;position:relative;overflow:hidden}
+    .vH .lev{position:absolute;left:3px;right:3px;top:3px;height:16px;background:linear-gradient(180deg,var(--lv1),var(--lv2));border-radius:3px;transition:.2s cubic-bezier(.22,1,.36,1);box-shadow:0 3px 0 #1a2838,0 4px 6px rgba(0,0,0,.4)}
+    .vH .lev::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:12px;height:1px;background:rgba(255,255,255,.1);box-shadow:0 2px 0 rgba(255,255,255,.06)}
+    .vH .f[data-s="1"] .lev{top:auto;bottom:3px;background:linear-gradient(180deg,var(--g),#16a34a);box-shadow:0 -2px 0 #0a4a22,0 0 12px var(--gg)}
+
+    @media(max-width:500px){
+      .row{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(prefers-reduced-motion:reduce){.w::after{animation:none!important;display:none}}
+  </style>
+</head>
+<body>
+  <h1>FuseBoard — Wired Compact</h1>
+  <p class="sub">4 styles, packed tight with wires. Click to trip.</p>
+  <div id="app"></div>
+
+  <script>
+    const D=[
+      {t:'Social Media',s:'9 sites'},
+      {t:'Video Stream',s:'6 sites'},
+      {t:'Ads & Track',s:'4 sites'},
+      {t:'Adult',s:'category'},
+      {t:'Gambling',s:'category'},
+      {t:'Gaming',s:'6 sites'},
+      {t:'News',s:'category'},
+      {t:'Security',s:'threats',on:1},
+    ];
+
+    const variants=[
+      {n:'10J — Lever in Card + Wires',c:'vJ'},
+      {n:'10A — Slim Pill Lever + Wires',c:'vA'},
+      {n:'10G — Ghost Outline + Wires',c:'vG'},
+      {n:'10H — Square Chunky 3D + Wires',c:'vH'},
+    ];
+
+    const app=document.getElementById('app');
+
+    variants.forEach(v=>{
+      const sec=document.createElement('div');
+      sec.className='section';
+      sec.innerHTML=`<div class="stitle">${v.n}</div>`;
+
+      const row=document.createElement('div');
+      row.className=`row ${v.c}`;
+
+      D.forEach((d,i)=>{
+        const st={on:!!d.on};
+        const f=document.createElement('div');
+        f.className='f';
+        f.dataset.s=st.on?'1':'0';
+
+        function render(){
+          f.dataset.s=st.on?'1':'0';
+          f.innerHTML=`
+            <div class="cd"></div>
+            <div class="w wi"></div>
+            <div class="bx">
+              <div class="trk"><div class="lev"></div></div>
+              <div class="lb">${d.t}</div>
+              <div class="inf">${d.s}</div>
+            </div>
+            <div class="w wo"></div>
+            <div class="cd"></div>
+          `;
+        }
+        render();
+        f.addEventListener('click',()=>{st.on=!st.on;render()});
+        row.appendChild(f);
+      });
+
+      sec.appendChild(row);
+      app.appendChild(sec);
+    });
+  </script>
+</body>
+</html>
