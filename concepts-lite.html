@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FuseBoard Lite — Concepts</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#e8e8ed;color:#1d1d1f;padding:30px 16px;-webkit-font-smoothing:antialiased}
+h1{text-align:center;font-size:1.4rem;margin-bottom:6px;font-weight:800;letter-spacing:-.02em}
+p.sub{text-align:center;color:#86868b;font-size:.82rem;margin-bottom:36px}
+.row{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;max-width:1500px;margin:0 auto 36px}
+.row h2{width:100%;text-align:center;font-size:.85rem;color:#86868b;font-weight:600;margin-bottom:-12px}
+
+/* ═══════════════════ SHARED ═══════════════════ */
+
+.popup{
+  width:440px;padding:14px 12px 10px;
+  border-radius:14px;
+  box-shadow:0 0 0 .5px rgba(0,0,0,.06),0 4px 24px rgba(0,0,0,.06);
+  overflow:hidden;flex-shrink:0;position:relative
+}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:0 4px}
+.logo{font-weight:800;font-size:.95rem;letter-spacing:-.02em}
+.opts-btn{background:none;border:none;color:#86868b;cursor:pointer;padding:4px;border-radius:6px;transition:.15s}
+.fuse-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;align-items:stretch}
+.fuse-cell{display:flex;flex-direction:column;align-items:center;cursor:pointer;user-select:none;padding:6px 4px;border-radius:10px;transition:.1s}
+.fuse-icon{width:20px;height:20px;transition:.2s}
+.fuse-icon svg{width:100%;height:100%}
+.fuse-lb{font-weight:600;font-size:.78rem;text-align:center;line-height:1.15;transition:.2s}
+.fuse-inf{font-size:.6rem;transition:.2s}
+.fuse-cfg{font-size:.62rem;transition:.15s;cursor:pointer}
+.status{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px 8px 4px;font-size:.75rem;margin-top:4px}
+.status-dot{width:6px;height:6px;border-radius:50%}
+
+/* Wire flow animation */
+@keyframes fl{0%{top:calc(-1 * var(--wh))}100%{top:calc(100% + var(--wh))}}
+.fuse-cell:nth-child(1) .wire::after{animation-delay:0s}
+.fuse-cell:nth-child(2) .wire::after{animation-delay:.06s}
+.fuse-cell:nth-child(3) .wire::after{animation-delay:.12s}
+.fuse-cell:nth-child(4) .wire::after{animation-delay:.18s}
+.fuse-cell:nth-child(5) .wire::after{animation-delay:.03s}
+.fuse-cell:nth-child(6) .wire::after{animation-delay:.09s}
+.fuse-cell:nth-child(7) .wire::after{animation-delay:.15s}
+.fuse-cell:nth-child(8) .wire::after{animation-delay:.21s}
+.fuse-cell:nth-child(9) .wire::after{animation-delay:.06s}
+.fuse-cell:nth-child(10) .wire::after{animation-delay:.12s}
+.fuse-cell:nth-child(11) .wire::after{animation-delay:.18s}
+.fuse-cell:nth-child(12) .wire::after{animation-delay:.24s}
+
+/* ═══════════════════ LITE 1 — Clean light, hairline wires ═══════════════════ */
+
+.l1{background:#fff}
+.l1 .logo .dot{display:inline-block;width:5px;height:5px;background:#34c759;border-radius:50%;margin:0 .5px}
+
+.l1 .wire{width:3px;height:10px;border-radius:2px;position:relative;overflow:hidden;--wh:10px}
+.l1 .wire::after{content:'';position:absolute;left:0;right:0;top:-10px;height:10px;border-radius:2px}
+
+.l1 .fuse-cell[data-w="red"] .wire{background:#f0d8d8}
+.l1 .fuse-cell[data-w="red"] .wire::after{background:linear-gradient(180deg,transparent,#f87171,#fca5a5,#f87171,transparent);animation:fl .5s linear infinite}
+.l1 .fuse-cell[data-w="amber"] .wire{background:#f0e4c8}
+.l1 .fuse-cell[data-w="amber"] .wire::after{background:linear-gradient(180deg,transparent,#fbbf24,#fde68a,#fbbf24,transparent);animation:fl 1s linear infinite}
+.l1 .fuse-cell[data-w="green"] .wire{background:#d0ecd8}
+.l1 .fuse-cell[data-w="green"] .wire::after{background:linear-gradient(180deg,transparent,#34c759,#6ee7a0,#34c759,transparent);animation:fl .7s linear infinite}
+
+/* Lever — small, refined */
+.l1 .trk{width:22px;height:34px;background:#f0f0f2;border:1px solid #e0e0e4;border-radius:7px;position:relative;overflow:hidden;cursor:pointer}
+.l1 .lev{position:absolute;left:2px;right:2px;height:14px;border-radius:5px;transition:.2s cubic-bezier(.22,1,.36,1)}
+.l1 .fuse-cell[data-s="0"] .lev{top:2px;background:linear-gradient(180deg,#c8cad0,#a8aab4);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.l1 .fuse-cell[data-s="1"] .lev{bottom:2px;top:auto;background:linear-gradient(180deg,#34c759,#28a848);box-shadow:0 1px 4px rgba(52,199,89,.3)}
+.l1 .fuse-cell[data-w="amber"] .lev{bottom:2px;top:auto;background:linear-gradient(180deg,#fbbf24,#e0a010);box-shadow:0 1px 4px rgba(251,191,36,.25)}
+
+.l1 .fuse-cell:hover{background:rgba(0,0,0,.02)}
+.l1 .fuse-icon{color:#b0b4be}
+.l1 .fuse-cell[data-s="1"] .fuse-icon{color:#4a5060}
+.l1 .fuse-lb{color:#6a6e78}
+.l1 .fuse-cell[data-s="1"] .fuse-lb{color:#1d1d1f}
+.l1 .fuse-inf{color:#b0b4be}
+.l1 .fuse-cfg{color:#b0b4be}
+.l1 .fuse-cell:hover .fuse-cfg{color:#86868b}
+.l1 .status{color:#86868b;border-top:.5px solid rgba(0,0,0,.06)}
+.l1 .status-dot.off{background:#d0d0d4}
+.l1 .status-dot.on{background:#34c759}
+.l1 .status-dot.mix{background:#fbbf24}
+
+/* ═══════════════════ LITE 2 — Warm cream, thicker wires ═══════════════════ */
+
+.l2{background:#faf6f0}
+.l2 .logo .dot{display:inline-block;width:5px;height:5px;background:#4a9a40;border-radius:50%;margin:0 .5px}
+.l2 .logo{color:#4a3e2a}
+
+.l2 .wire{width:6px;height:14px;border-radius:3px;position:relative;overflow:hidden;--wh:14px;box-shadow:inset 1px 0 1px rgba(0,0,0,.06),inset -1px 0 1px rgba(0,0,0,.06)}
+.l2 .wire::after{content:'';position:absolute;left:0;right:0;top:-14px;height:14px;border-radius:3px}
+
+.l2 .fuse-cell[data-w="red"] .wire{background:#e0c0b0}
+.l2 .fuse-cell[data-w="red"] .wire::after{background:linear-gradient(180deg,transparent,#c87050,#e09070,#c87050,transparent);animation:fl .55s linear infinite}
+.l2 .fuse-cell[data-w="amber"] .wire{background:#e0d4b0}
+.l2 .fuse-cell[data-w="amber"] .wire::after{background:linear-gradient(180deg,transparent,#c8a030,#e0b840,#c8a030,transparent);animation:fl 1s linear infinite}
+.l2 .fuse-cell[data-w="green"] .wire{background:#b8d8b8}
+.l2 .fuse-cell[data-w="green"] .wire::after{background:linear-gradient(180deg,transparent,#4a9a40,#70c060,#4a9a40,transparent);animation:fl .75s linear infinite}
+
+/* Lever */
+.l2 .trk{width:24px;height:36px;background:#ece4d8;border:1px solid #d8ceb8;border-radius:7px;position:relative;overflow:hidden;cursor:pointer}
+.l2 .lev{position:absolute;left:2px;right:2px;height:14px;border-radius:5px;transition:.2s cubic-bezier(.22,1,.36,1)}
+.l2 .fuse-cell[data-s="0"] .lev{top:2px;background:linear-gradient(180deg,#a89878,#887858);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.l2 .fuse-cell[data-s="1"] .lev{bottom:2px;top:auto;background:linear-gradient(180deg,#4a9a40,#3a7a30);box-shadow:0 1px 4px rgba(74,154,64,.25)}
+.l2 .fuse-cell[data-w="amber"] .lev{bottom:2px;top:auto;background:linear-gradient(180deg,#c8a030,#a88020);box-shadow:0 1px 4px rgba(180,140,40,.2)}
+
+/* Small copper terminal dots */
+.l2 .cd{width:8px;height:8px;border-radius:50%;background:#d0c0a8;border:1.5px solid #b8a888;box-shadow:inset 0 1px 1px rgba(255,255,255,.4);transition:.2s}
+.l2 .fuse-cell[data-w="green"] .cd{border-color:#7aaa68;background:#c0d8b8}
+
+.l2 .fuse-cell:hover{background:rgba(0,0,0,.02)}
+.l2 .fuse-icon{color:#c0b498}
+.l2 .fuse-cell[data-s="1"] .fuse-icon{color:#5a4a2a}
+.l2 .fuse-lb{color:#7a6a4a}
+.l2 .fuse-cell[data-s="1"] .fuse-lb{color:#3a2a10}
+.l2 .fuse-inf{color:#c0b498}
+.l2 .fuse-cfg{color:#c0b498}
+.l2 .status{color:#9a8a68;border-top:.5px solid rgba(0,0,0,.06)}
+.l2 .status-dot.off{background:#d0c8b8}
+.l2 .status-dot.on{background:#4a9a40}
+.l2 .status-dot.mix{background:#c8a030}
+
+/* ═══════════════════ LITE 3 — Dark refined, minimal wires ═══════════════════ */
+
+.l3{background:#1a1c22}
+.l3 .logo .dot{display:inline-block;width:5px;height:5px;background:#22c55e;border-radius:50%;box-shadow:0 0 6px rgba(34,197,94,.3);margin:0 .5px}
+.l3 .logo{color:#d0d4de}
+.l3 .opts-btn{color:#4a5060}
+
+.l3 .wire{width:4px;height:12px;border-radius:2px;position:relative;overflow:hidden;--wh:12px}
+.l3 .wire::after{content:'';position:absolute;left:0;right:0;top:-12px;height:12px;border-radius:2px}
+
+.l3 .fuse-cell[data-w="red"] .wire{background:#2a1e22}
+.l3 .fuse-cell[data-w="red"] .wire::after{background:linear-gradient(180deg,transparent,#ef4444,#f87171,#ef4444,transparent);animation:fl .5s linear infinite}
+.l3 .fuse-cell[data-w="amber"] .wire{background:#2a2418}
+.l3 .fuse-cell[data-w="amber"] .wire::after{background:linear-gradient(180deg,transparent,#f59e0b,#fbbf24,#f59e0b,transparent);animation:fl 1s linear infinite}
+.l3 .fuse-cell[data-w="green"] .wire{background:#142a1a}
+.l3 .fuse-cell[data-w="green"] .wire::after{background:linear-gradient(180deg,transparent,#22c55e,#4ade80,#22c55e,transparent);animation:fl .7s linear infinite}
+
+/* Lever */
+.l3 .trk{width:22px;height:34px;background:#101218;border:1px solid #282c38;border-radius:7px;position:relative;overflow:hidden;cursor:pointer}
+.l3 .lev{position:absolute;left:2px;right:2px;height:14px;border-radius:5px;transition:.2s cubic-bezier(.22,1,.36,1)}
+.l3 .fuse-cell[data-s="0"] .lev{top:2px;background:linear-gradient(180deg,#4a5060,#343842);box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.l3 .fuse-cell[data-s="1"] .lev{bottom:2px;top:auto;background:linear-gradient(180deg,#22c55e,#16a34a);box-shadow:0 0 8px rgba(34,197,94,.25)}
+.l3 .fuse-cell[data-w="amber"] .lev{bottom:2px;top:auto;background:linear-gradient(180deg,#f59e0b,#d97706);box-shadow:0 0 8px rgba(245,158,11,.2)}
+
+.l3 .fuse-cell:hover{background:rgba(255,255,255,.02)}
+.l3 .fuse-icon{color:#343842}
+.l3 .fuse-cell[data-s="1"] .fuse-icon{color:#8a90a0}
+.l3 .fuse-lb{color:#5a6070}
+.l3 .fuse-cell[data-s="1"] .fuse-lb{color:#d0d4de}
+.l3 .fuse-inf{color:#2a2e38}
+.l3 .fuse-cfg{color:#2a2e38}
+.l3 .fuse-cell:hover .fuse-cfg{color:#4a5060}
+.l3 .status{color:#4a5060;border-top:.5px solid rgba(255,255,255,.04)}
+.l3 .status-dot.off{background:#2a2e38}
+.l3 .status-dot.on{background:#22c55e;box-shadow:0 0 6px rgba(34,197,94,.3)}
+.l3 .status-dot.mix{background:#f59e0b}
+
+/* ═══════════════════ LITE 4 — Cool gray glass ═══════════════════ */
+
+.l4{background:linear-gradient(135deg,#f0f2f8,#eceef4)}
+.l4 .logo .dot{display:inline-block;width:5px;height:5px;background:#22c55e;border-radius:50%;margin:0 .5px}
+.l4 .logo{color:#2a3040}
+
+.l4 .wire{width:5px;height:12px;border-radius:3px;position:relative;overflow:hidden;--wh:12px}
+.l4 .wire::after{content:'';position:absolute;left:0;right:0;top:-12px;height:12px;border-radius:3px}
+
+.l4 .fuse-cell[data-w="red"] .wire{background:#e4d0d0}
+.l4 .fuse-cell[data-w="red"] .wire::after{background:linear-gradient(180deg,transparent,#ef4444,#f87171,#ef4444,transparent);animation:fl .5s linear infinite}
+.l4 .fuse-cell[data-w="amber"] .wire{background:#e4dcc4}
+.l4 .fuse-cell[data-w="amber"] .wire::after{background:linear-gradient(180deg,transparent,#f59e0b,#fbbf24,#f59e0b,transparent);animation:fl 1s linear infinite}
+.l4 .fuse-cell[data-w="green"] .wire{background:#c4e0d0}
+.l4 .fuse-cell[data-w="green"] .wire::after{background:linear-gradient(180deg,transparent,#22c55e,#4ade80,#22c55e,transparent);animation:fl .7s linear infinite}
+
+/* Lever */
+.l4 .trk{width:22px;height:34px;background:rgba(0,0,0,.04);border:1px solid rgba(0,0,0,.06);border-radius:7px;position:relative;overflow:hidden;cursor:pointer}
+.l4 .lev{position:absolute;left:2px;right:2px;height:14px;border-radius:5px;transition:.2s cubic-bezier(.22,1,.36,1)}
+.l4 .fuse-cell[data-s="0"] .lev{top:2px;background:linear-gradient(180deg,#b0b8c8,#8a92a4);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.l4 .fuse-cell[data-s="1"] .lev{bottom:2px;top:auto;background:linear-gradient(180deg,#22c55e,#16a34a);box-shadow:0 1px 6px rgba(34,197,94,.25)}
+.l4 .fuse-cell[data-w="amber"] .lev{bottom:2px;top:auto;background:linear-gradient(180deg,#f59e0b,#d97706);box-shadow:0 1px 6px rgba(245,158,11,.2)}
+
+/* Frosted glass card — very subtle */
+.l4 .fuse-cell{background:rgba(255,255,255,.4);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:12px;border:1px solid rgba(255,255,255,.5)}
+.l4 .fuse-cell:hover{background:rgba(255,255,255,.6)}
+.l4 .fuse-cell[data-s="1"]{border-color:rgba(34,197,94,.15);background:rgba(240,255,245,.4)}
+.l4 .fuse-cell[data-w="amber"]{border-color:rgba(245,158,11,.12);background:rgba(255,252,240,.4)}
+
+.l4 .fuse-icon{color:#a0a8b8}
+.l4 .fuse-cell[data-s="1"] .fuse-icon{color:#4a5a68}
+.l4 .fuse-lb{color:#5a6478}
+.l4 .fuse-cell[data-s="1"] .fuse-lb{color:#1a2030}
+.l4 .fuse-inf{color:#a0a8b8}
+.l4 .fuse-cfg{color:#a0a8b8}
+.l4 .status{color:#8090a0;border-top:.5px solid rgba(0,0,0,.05)}
+.l4 .status-dot.off{background:#c8ccd4}
+.l4 .status-dot.on{background:#22c55e}
+.l4 .status-dot.mix{background:#f59e0b}
+</style>
+</head>
+<body>
+
+<h1>FuseBoard Lite</h1>
+<p class="sub">The fuseboard metaphor distilled — wires, levers, flow — but clean and approachable. Click levers to toggle.</p>
+
+<div class="row">
+  <div class="popup l1" id="p1"></div>
+  <div class="popup l2" id="p2"></div>
+</div>
+<div class="row">
+  <div class="popup l3" id="p3"></div>
+  <div class="popup l4" id="p4"></div>
+</div>
+
+<script>
+const cats = [
+  {name:'Social Media',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',on:true,w:'green',sites:8},
+  {name:'Video',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17 2 12 7 7 2"/></svg>',on:false,w:'red',sites:5},
+  {name:'News',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/></svg>',on:true,w:'amber',sites:9},
+  {name:'Shopping',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>',on:true,w:'green',sites:7},
+  {name:'Gaming',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="6"/><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/></svg>',on:false,w:'red',sites:4},
+  {name:'Dating',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',on:true,w:'green',sites:3},
+  {name:'Security',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',on:false,w:'red',sites:6},
+  {name:'Ads',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>',on:true,w:'green',sites:4},
+  {name:'Gambling',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="4"/><circle cx="8" cy="8" r="1.5" fill="currentColor"/><circle cx="16" cy="16" r="1.5" fill="currentColor"/></svg>',on:true,w:'green',sites:5},
+  {name:'AI',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z"/><path d="M12 18v4"/><path d="M8 22h8"/></svg>',on:false,w:'red',sites:3},
+  {name:'Crypto',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',on:false,w:'red',sites:4},
+  {name:'Adult',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',on:false,w:'red',sites:8},
+];
+
+function buildPopup(containerId, variant) {
+  const popup = document.getElementById(containerId);
+  const hasCd = variant === 'l2';
+  const labels = {l1:'Lite 1 — Clean White',l2:'Lite 2 — Warm Cream',l3:'Lite 3 — Dark Refined',l4:'Lite 4 — Cool Glass'};
+
+  let html = `
+    <div class="header">
+      <div class="logo">Fuse<span class="dot"></span>Board <span style="font-size:.5rem;font-weight:500;color:inherit;opacity:.35;margin-left:3px">LITE</span></div>
+      <button class="opts-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+    </div>
+    <div style="text-align:center;font-size:.65rem;font-weight:600;opacity:.35;margin:-6px 0 10px">${labels[variant]}</div>
+    <div class="fuse-grid">`;
+
+  cats.forEach(cat => {
+    html += `
+      <div class="fuse-cell" data-s="${cat.on?1:0}" data-w="${cat.w}">
+        ${hasCd?'<div class="cd"></div>':''}
+        <div class="wire"></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px 4px;flex:1;justify-content:center">
+          <div class="fuse-icon">${cat.icon}</div>
+          <div class="fuse-lb">${cat.name}</div>
+          <div class="trk"><div class="lev"></div></div>
+          <div class="fuse-inf">${cat.sites} sites</div>
+          <div class="fuse-cfg">details ›</div>
+        </div>
+        <div class="wire"></div>
+        ${hasCd?'<div class="cd"></div>':''}
+      </div>`;
+  });
+
+  const tripped = cats.filter(c=>c.on).length;
+  const dotCls = tripped===0?'off':tripped===cats.length?'on':'mix';
+  html += `</div><div class="status"><span class="status-dot ${dotCls}"></span><span>${tripped} of ${cats.length} blocked</span></div>`;
+  popup.innerHTML = html;
+
+  // Toggle handlers
+  popup.querySelectorAll('.trk').forEach(trk => {
+    trk.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const cell = trk.closest('.fuse-cell');
+      const on = cell.dataset.s === '1';
+      cell.dataset.s = on ? '0' : '1';
+      cell.dataset.w = on ? 'red' : 'green';
+    });
+  });
+}
+
+buildPopup('p1','l1');
+buildPopup('p2','l2');
+buildPopup('p3','l3');
+buildPopup('p4','l4');
+</script>
+</body>
+</html>

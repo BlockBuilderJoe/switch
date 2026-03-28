@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FuseBoard — Vaporwave Borderless</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;600;700;800&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+body{font-family:'DM Sans',sans-serif;background:#080410;color:#e0c0e8;padding:40px 20px}
+h1{text-align:center;font-size:1.4rem;margin-bottom:30px;font-weight:800;color:#e080c0}
+
+.popup{
+  width:440px;margin:0 auto;padding:14px 12px 10px;
+  background:linear-gradient(135deg,#1a0828,#0a0820,#180828);
+  border-radius:16px;position:relative;overflow:hidden
+}
+/* Ambient glow */
+.popup::before{content:'';position:absolute;top:10%;left:15%;width:250px;height:250px;background:radial-gradient(circle,rgba(168,85,247,.08),transparent 60%);pointer-events:none}
+.popup::after{content:'';position:absolute;bottom:10%;right:10%;width:200px;height:200px;background:radial-gradient(circle,rgba(236,72,153,.06),transparent 60%);pointer-events:none}
+
+/* Header */
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:0 4px;position:relative;z-index:2}
+.logo{font-family:'Space Mono',monospace;font-weight:700;font-size:1rem;letter-spacing:-.01em;color:#e080c0}
+.logo .dot{display:inline-block;width:6px;height:6px;background:#a855f7;border-radius:50%;box-shadow:0 0 8px rgba(168,85,247,.4);margin:0 1px}
+.logo .ver{font-size:.5rem;font-weight:400;color:#5a2070;margin-left:4px;vertical-align:middle}
+.opts-btn{background:none;border:none;color:#5a2070;cursor:pointer;padding:4px}
+.opts-btn:hover{color:#a855f7}
+
+/* Grid */
+.fuse-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;align-items:stretch;position:relative;z-index:2}
+
+/* Cell — NO surround */
+.fuse-cell{display:flex;flex-direction:column;align-items:center;cursor:pointer;user-select:none;padding:6px 4px;transition:.15s}
+.fuse-cell:hover{background:rgba(168,85,247,.04);border-radius:10px}
+
+/* Connector terminal */
+.fuse-cd{width:10px;height:10px;border-radius:50%;background:#201038;border:2px solid #3a2058;z-index:2;transition:.3s;box-shadow:inset 0 1px 2px rgba(0,0,0,.4)}
+.fuse-cell[data-w="green"] .fuse-cd{background:#1a1848;border-color:rgba(168,85,247,.6);box-shadow:inset 0 1px 2px rgba(0,0,0,.3),0 0 6px rgba(168,85,247,.3)}
+.fuse-cell[data-w="amber"] .fuse-cd{background:#2a1840;border-color:rgba(236,72,153,.5);box-shadow:0 0 4px rgba(236,72,153,.2)}
+
+/* Wire — thick cable */
+.fuse-wire{width:8px;border-radius:4px;position:relative;overflow:hidden}
+.fuse-wi{height:16px;background:#2a1030;box-shadow:inset 1px 0 2px rgba(0,0,0,.3),inset -1px 0 2px rgba(0,0,0,.3)}
+.fuse-wi::after{content:'';position:absolute;left:0;right:0;top:-14px;height:14px;border-radius:4px;background:linear-gradient(180deg,transparent,#ec4899,#f472b6,#ec4899,transparent);animation:fl .6s linear infinite}
+.fuse-wo{height:16px;box-shadow:inset 1px 0 2px rgba(0,0,0,.3),inset -1px 0 2px rgba(0,0,0,.3)}
+
+.fuse-cell[data-w="red"] .fuse-wo{background:#2a1030}
+.fuse-cell[data-w="red"] .fuse-wo::after{content:'';position:absolute;left:0;right:0;top:-14px;height:14px;border-radius:4px;background:linear-gradient(180deg,transparent,#ec4899,#f472b6,#ec4899,transparent);animation:fl .6s linear infinite}
+.fuse-cell[data-w="amber"] .fuse-wo{background:#201030}
+.fuse-cell[data-w="amber"] .fuse-wo::after{content:'';position:absolute;left:0;right:0;top:-14px;height:14px;border-radius:4px;background:linear-gradient(180deg,transparent,#c06ae0,#d090f0,#c06ae0,transparent);animation:fl 1.2s linear infinite}
+.fuse-cell[data-w="green"] .fuse-wo{background:#101840}
+.fuse-cell[data-w="green"] .fuse-wo::after{content:'';position:absolute;left:0;right:0;top:-14px;height:14px;border-radius:4px;background:linear-gradient(180deg,transparent,#a855f7,#c084fc,#a855f7,transparent);animation:fl .9s linear infinite}
+
+@keyframes fl{0%{top:-14px}100%{top:calc(100% + 14px)}}
+.fuse-cell:nth-child(1) .fuse-wire::after{animation-delay:0s}
+.fuse-cell:nth-child(2) .fuse-wire::after{animation-delay:.08s}
+.fuse-cell:nth-child(3) .fuse-wire::after{animation-delay:.16s}
+.fuse-cell:nth-child(4) .fuse-wire::after{animation-delay:.24s}
+.fuse-cell:nth-child(5) .fuse-wire::after{animation-delay:.04s}
+.fuse-cell:nth-child(6) .fuse-wire::after{animation-delay:.12s}
+.fuse-cell:nth-child(7) .fuse-wire::after{animation-delay:.20s}
+.fuse-cell:nth-child(8) .fuse-wire::after{animation-delay:.28s}
+.fuse-cell:nth-child(9) .fuse-wire::after{animation-delay:.08s}
+.fuse-cell:nth-child(10) .fuse-wire::after{animation-delay:.16s}
+.fuse-cell:nth-child(11) .fuse-wire::after{animation-delay:.24s}
+.fuse-cell:nth-child(12) .fuse-wire::after{animation-delay:.32s}
+
+/* Content area — NO border, NO background */
+.fuse-box{
+  width:100%;flex:1;
+  background:transparent;border:none;
+  border-radius:0;
+  padding:8px 4px 6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px
+}
+
+/* Icon */
+.fuse-icon{width:20px;height:20px;color:#4a2060;transition:.25s}
+.fuse-icon svg{width:100%;height:100%}
+.fuse-cell[data-s="1"] .fuse-icon{color:#c084fc}
+.fuse-cell[data-w="amber"] .fuse-icon{color:#e080b0}
+
+/* Label */
+.fuse-lb{font-weight:700;font-size:.82rem;color:#8a6aa0;text-align:center;line-height:1.15;margin-bottom:1px;transition:.25s}
+.fuse-cell[data-s="1"] .fuse-lb{color:#e0c0f0}
+.fuse-cell[data-w="amber"] .fuse-lb{color:#f0a0c0!important}
+
+/* Track + Lever */
+.fuse-trk{width:26px;height:40px;background:#0a0818;border:1px solid #2a1848;border-radius:8px;position:relative;overflow:hidden;cursor:pointer}
+.fuse-lev{position:absolute;left:2px;right:2px;top:2px;height:16px;background:linear-gradient(180deg,#6a4a8a,#4a2a6a);border-radius:6px;transition:.2s cubic-bezier(.22,1,.36,1);box-shadow:0 2px 4px rgba(0,0,0,.5)}
+.fuse-cell[data-s="1"] .fuse-lev{top:auto;bottom:2px;background:linear-gradient(180deg,#a855f7,#7c3aed);box-shadow:0 0 12px rgba(168,85,247,.3)}
+.fuse-cell[data-w="amber"] .fuse-lev{top:auto;bottom:2px;background:linear-gradient(180deg,#ec4899,#c026a0);box-shadow:0 0 10px rgba(236,72,153,.25)}
+
+/* Info */
+.fuse-inf{font-size:.65rem;color:#3a2050;transition:.2s}
+.fuse-cell[data-s="1"] .fuse-inf{color:rgba(168,85,247,.4)}
+
+/* Details link */
+.fuse-cfg{font-size:.68rem;color:#3a2050;transition:.15s;cursor:pointer}
+.fuse-cell:hover .fuse-cfg{color:#7a4aa0}
+
+/* Status bar */
+.status{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px 8px 4px;font-size:.8rem;color:#6a4a8a;border-top:1px solid rgba(168,85,247,.1);margin-top:6px;position:relative;z-index:2}
+.status-dot{width:7px;height:7px;border-radius:50%;background:#3a2050}
+.status-dot.active{background:#a855f7;box-shadow:0 0 8px rgba(168,85,247,.4)}
+.status-dot.partial{background:#ec4899;box-shadow:0 0 8px rgba(236,72,153,.3)}
+</style>
+</head>
+<body>
+
+<h1>Vaporwave + Classic Lever + No Surround</h1>
+
+<div class="popup">
+  <div class="header">
+    <div class="logo">Fuse<span class="dot"></span>Board <span class="ver">v1.5.0</span></div>
+    <button class="opts-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+  </div>
+
+  <div class="fuse-grid" id="board"></div>
+
+  <div class="status">
+    <span class="status-dot partial"></span>
+    <span>5 of 12 blocked</span>
+  </div>
+</div>
+
+<script>
+const cats = [
+  {name:'Social Media',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',on:true,w:'green',sites:8},
+  {name:'Video',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17 2 12 7 7 2"/></svg>',on:false,w:'red',sites:5},
+  {name:'News',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/></svg>',on:true,w:'amber',sites:9},
+  {name:'Shopping',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>',on:true,w:'green',sites:7},
+  {name:'Gaming',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="6"/><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/></svg>',on:false,w:'red',sites:4},
+  {name:'Dating',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',on:true,w:'green',sites:3},
+  {name:'Security',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',on:false,w:'red',sites:6},
+  {name:'Ads',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>',on:true,w:'green',sites:4},
+  {name:'Gambling',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="4"/><circle cx="8" cy="8" r="1.5" fill="currentColor"/><circle cx="16" cy="16" r="1.5" fill="currentColor"/></svg>',on:true,w:'green',sites:5},
+  {name:'AI',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z"/><path d="M12 18v4"/><path d="M8 22h8"/></svg>',on:false,w:'red',sites:3},
+  {name:'Crypto',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',on:false,w:'red',sites:4},
+  {name:'Adult',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',on:false,w:'red',sites:8},
+];
+
+const board = document.getElementById('board');
+
+cats.forEach(cat => {
+  const cell = document.createElement('div');
+  cell.className = 'fuse-cell';
+  cell.dataset.s = cat.on ? '1' : '0';
+  cell.dataset.w = cat.w;
+
+  cell.innerHTML = `
+    <div class="fuse-cd"></div>
+    <div class="fuse-wire fuse-wi"></div>
+    <div class="fuse-box">
+      <div class="fuse-icon">${cat.icon}</div>
+      <div class="fuse-lb">${cat.name}</div>
+      <div class="fuse-trk"><div class="fuse-lev"></div></div>
+      <div class="fuse-inf">${cat.sites} sites</div>
+      ${cat.sites > 0 ? '<div class="fuse-cfg">details ›</div>' : ''}
+    </div>
+    <div class="fuse-wire fuse-wo"></div>
+    <div class="fuse-cd"></div>
+  `;
+
+  cell.querySelector('.fuse-trk').addEventListener('click', (e) => {
+    e.stopPropagation();
+    const on = cell.dataset.s === '1';
+    cell.dataset.s = on ? '0' : '1';
+    cell.dataset.w = on ? 'red' : 'green';
+  });
+
+  board.appendChild(cell);
+});
+</script>
+</body>
+</html>

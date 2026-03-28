@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "FuseBoard",
+  "name": "FuseBox",
   "version": "1.5.0",
-  "description": "Your digital fuseboard. Block distracting sites and features.",
+  "description": "Your digital fusebox. Block distracting sites and features.",
   "permissions": [
     "storage",
     "declarativeNetRequest",

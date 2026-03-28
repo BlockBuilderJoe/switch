@@ -1,4 +1,4 @@
-// FuseBoard — Background Service Worker v1.5.0
+// FuseBox — Background Service Worker v1.5.0
 importScripts('../sync/sync.js');
 
 chrome.runtime.onInstalled.addListener(async () => {
@@ -36,7 +36,7 @@ async function applyRules() {
     // 2. Verify they're gone
     const check = await chrome.declarativeNetRequest.getDynamicRules();
     if (check.length) {
-      console.warn('FuseBoard: stale rules remain, forcing clear');
+      console.warn('FuseBox: stale rules remain, forcing clear');
       await chrome.declarativeNetRequest.updateDynamicRules({
         removeRuleIds: check.map(r => r.id),
       });
@@ -73,9 +73,9 @@ async function applyRules() {
 
     chrome.action.setBadgeText({ text: String(addRules.length) });
     chrome.action.setBadgeBackgroundColor({ color: '#22c55e' });
-    console.log('FuseBoard:', addRules.length, 'rules applied');
+    console.log('FuseBox:', addRules.length, 'rules applied');
   } catch (e) {
-    console.error('FuseBoard:', e.message);
+    console.error('FuseBox:', e.message);
   }
 
   applying = false;

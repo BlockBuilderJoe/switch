@@ -1,4 +1,4 @@
-// FuseBoard — Options Page Logic (full drill-down)
+// FuseBox — Options Page Logic (full drill-down)
 
 const board = document.getElementById('fuseboard');
 const nav = document.getElementById('nav');
@@ -45,9 +45,31 @@ function render() {
   else renderSites(currentView);
 }
 
-function renderMain() {
+function renderBreadcrumb(crumbs) {
   nav.innerHTML = '';
-  titleEl.textContent = 'Your FuseBoard';
+  const bc = document.createElement('div');
+  bc.className = 'breadcrumb';
+  crumbs.forEach((c, i) => {
+    if (i > 0) {
+      const sep = document.createElement('span');
+      sep.className = 'sep';
+      sep.textContent = '›';
+      bc.appendChild(sep);
+    }
+    const btn = document.createElement('button');
+    btn.className = 'crumb' + (i === crumbs.length - 1 ? ' current' : '');
+    btn.textContent = c.label;
+    if (c.view !== undefined && i < crumbs.length - 1) {
+      btn.addEventListener('click', () => { currentView = c.view; render(); });
+    }
+    bc.appendChild(btn);
+  });
+  nav.appendChild(bc);
+}
+
+function renderMain() {
+  renderBreadcrumb([{ label: 'FuseBox', view: 'main' }]);
+  titleEl.textContent = '';
   board.innerHTML = '';
   const grid = document.createElement('div');
   grid.className = 'fuse-grid';
@@ -56,10 +78,9 @@ function renderMain() {
     const isTripped = selections[cat.id]?.enabled || false;
     const wire = getWireColor(cat.id);
     const hasSites = (cat.sites || []).length > 0;
-    const cell = createFuseCell(cat.name, isTripped, wire, hasSites ? (cat.sites.length + ' sites') : 'category', hasSites);
+    const cell = createFuseCell(cat.name, isTripped, wire, hasSites ? (cat.sites.length + ' sites') : '', hasSites, cat.icon);
 
-    cell.querySelector('.fuse-trk').addEventListener('click', (e) => {
-      e.stopPropagation();
+    function toggleCat() {
       if (document.body.classList.contains('client-locked')) return;
       const s = selections[cat.id];
       s.enabled = !s.enabled;
@@ -67,8 +88,14 @@ function renderMain() {
         s.sites[site.id] = s.enabled;
         (site.features || []).forEach(f => { s.features[f.id] = s.enabled; });
       });
+      cell.classList.add('just-toggled');
+      setTimeout(() => cell.classList.remove('just-toggled'), 250);
       saveAndRender();
-    });
+    }
+
+    const trk = cell.querySelector('.fuse-trk');
+    trk.addEventListener('click', (e) => { e.stopPropagation(); toggleCat(); });
+    trk.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); toggleCat(); } });
 
     cell.addEventListener('click', (e) => {
       if (e.target.closest('.fuse-trk')) return;
@@ -85,14 +112,11 @@ function renderSites(catId) {
   const cat = categories.find(c => c.id === catId);
   if (!cat) { currentView = 'main'; render(); return; }
 
-  nav.innerHTML = '';
-  const back = document.createElement('button');
-  back.className = 'back-btn';
-  back.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg> Back to FuseBoard';
-  back.addEventListener('click', () => { currentView = 'main'; render(); });
-  nav.appendChild(back);
-
-  titleEl.textContent = cat.name;
+  renderBreadcrumb([
+    { label: 'FuseBox', view: 'main' },
+    { label: cat.name, view: cat.id },
+  ]);
+  titleEl.textContent = '';
   board.innerHTML = '';
   const grid = document.createElement('div');
   grid.className = 'fuse-grid';
@@ -110,10 +134,9 @@ function renderSites(catId) {
       else if (anyFeatOn) wire = 'amber';
     }
     const showTripped = isTripped || wire !== 'red';
-    const cell = createFuseCell(site.name, showTripped, wire, hasFeatures ? (site.features.length + ' features') : '', hasFeatures);
+    const cell = createFuseCell(site.name, showTripped, wire, hasFeatures ? (site.features.length + ' features') : '', hasFeatures, '');
 
-    cell.querySelector('.fuse-trk').addEventListener('click', (e) => {
-      e.stopPropagation();
+    function toggleSite() {
       if (document.body.classList.contains('client-locked')) return;
       selections[cat.id].sites[site.id] = !selections[cat.id].sites[site.id];
       const anySiteOn = Object.values(selections[cat.id].sites).some(v => v);
@@ -121,8 +144,14 @@ function renderSites(catId) {
       (site.features || []).forEach(f => {
         selections[cat.id].features[f.id] = selections[cat.id].sites[site.id];
       });
+      cell.classList.add('just-toggled');
+      setTimeout(() => cell.classList.remove('just-toggled'), 250);
       saveAndRender();
-    });
+    }
+
+    const trk = cell.querySelector('.fuse-trk');
+    trk.addEventListener('click', (e) => { e.stopPropagation(); toggleSite(); });
+    trk.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); toggleSite(); } });
 
     cell.addEventListener('click', (e) => {
       if (e.target.closest('.fuse-trk')) return;
@@ -141,14 +170,12 @@ function renderFeatures(path) {
   const site = cat?.sites?.find(s => s.id === siteId);
   if (!cat || !site) { currentView = 'main'; render(); return; }
 
-  nav.innerHTML = '';
-  const back = document.createElement('button');
-  back.className = 'back-btn';
-  back.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg> Back to ${cat.name}`;
-  back.addEventListener('click', () => { currentView = catId; render(); });
-  nav.appendChild(back);
-
-  titleEl.textContent = site.name + ' — Features';
+  renderBreadcrumb([
+    { label: 'FuseBox', view: 'main' },
+    { label: cat.name, view: catId },
+    { label: site.name, view: catId + '/' + siteId },
+  ]);
+  titleEl.textContent = '';
   board.innerHTML = '';
   const grid = document.createElement('div');
   grid.className = 'fuse-grid';
@@ -156,10 +183,12 @@ function renderFeatures(path) {
   (site.features || []).forEach(feat => {
     const isTripped = selections[cat.id].features[feat.id] || false;
     const wire = isTripped ? 'green' : 'red';
-    const cell = createFuseCell(feat.name, isTripped, wire, feat.type === 'allowlist' ? 'allow list' : feat.type, false);
+    const cell = createFuseCell(feat.name, isTripped, wire, feat.type === 'allowlist' ? 'allow list' : feat.type, false, '');
 
     cell.addEventListener('click', () => {
       if (document.body.classList.contains('client-locked')) return;
+      cell.classList.add('just-toggled');
+      setTimeout(() => cell.classList.remove('just-toggled'), 250);
       selections[cat.id].features[feat.id] = !selections[cat.id].features[feat.id];
 
       // Special handling for Subs Only Mode
@@ -306,31 +335,30 @@ function renderFeatures(path) {
   updateStatus();
 }
 
-function createFuseCell(label, isTripped, wireColor, info, canDrill) {
+function createFuseCell(label, isTripped, wireColor, info, canDrill, icon) {
   const cell = document.createElement('div');
   cell.className = 'fuse-cell';
   cell.dataset.s = isTripped ? '1' : '0';
   cell.dataset.w = wireColor;
   cell.innerHTML = `
-    <div class="fuse-cd"></div>
-    <div class="fuse-wire fuse-wi"></div>
+    <div class="fuse-wire"></div>
     <div class="fuse-box">
+      ${icon ? '<div class="fuse-icon">' + icon + '</div>' : ''}
       <div class="fuse-lb">${label}</div>
-      <div class="fuse-trk"><div class="fuse-lev"></div></div>
+      <div class="fuse-trk" role="switch" aria-checked="${isTripped}" aria-label="Block ${label}" tabindex="0"><div class="fuse-lev"></div></div>
       ${info ? '<div class="fuse-inf">' + info + '</div>' : ''}
-      ${canDrill ? '<div class="fuse-cfg">configure</div>' : ''}
+      ${canDrill ? '<div class="fuse-cfg">details ›</div>' : ''}
     </div>
-    <div class="fuse-wire fuse-wo"></div>
-    <div class="fuse-cd"></div>
+    <div class="fuse-wire"></div>
   `;
   return cell;
 }
 
 function updateStatus() {
   const tripped = categories.filter(c => selections[c.id]?.enabled).length;
-  if (tripped === 0) { statusDot.className = 'status-dot'; statusText.textContent = 'All fuses open'; }
-  else if (tripped === categories.length) { statusDot.className = 'status-dot active'; statusText.textContent = `All ${tripped} fuses tripped`; }
-  else { statusDot.className = 'status-dot partial'; statusText.textContent = `${tripped} of ${categories.length} fuses tripped`; }
+  if (tripped === 0) { statusDot.className = 'status-dot'; statusText.textContent = 'Nothing blocked yet'; }
+  else if (tripped === categories.length) { statusDot.className = 'status-dot active'; statusText.textContent = `All ${tripped} categories blocked`; }
+  else { statusDot.className = 'status-dot partial'; statusText.textContent = `${tripped} of ${categories.length} blocked`; }
 }
 
 function saveAndRender() {
@@ -396,7 +424,7 @@ function renderSignedOut() {
   syncContent.innerHTML = `
     <div style="text-align:center;margin-bottom:14px">
       <div style="font-weight:700;font-size:.95rem;margin-bottom:4px">Sync across devices</div>
-      <div style="font-size:.78rem;color:#666">FuseBoard works perfectly on its own. Want your fuses on all your devices?</div>
+      <div style="font-size:.78rem;color:#666">FuseBox works perfectly on its own. Want your fuses on all your devices?</div>
     </div>
     <div style="display:flex;gap:8px;margin-bottom:14px">
       <button id="sync-hosted-btn" style="flex:1;padding:10px;background:#12141a;border:1px solid #1e2028;border-radius:8px;color:#ccd;font-size:.78rem;font-weight:600;cursor:pointer;transition:.15s;font-family:inherit">
@@ -682,7 +710,7 @@ document.getElementById('changelog').innerHTML = `
     <div style="font-weight:700;color:#ccd;margin-bottom:4px">v1.1 — Browser Extension</div>
     <ul style="padding-left:16px;color:#777">
       <li>Pivoted from Cloudflare DNS to Chrome extension</li>
-      <li>FuseBoard UI in extension popup</li>
+      <li>FuseBox UI in extension popup</li>
       <li>12 categories, domain blocking, element hiding</li>
       <li>Branded blocked page</li>
     </ul>
@@ -691,7 +719,7 @@ document.getElementById('changelog').innerHTML = `
   <div>
     <div style="font-weight:700;color:#ccd;margin-bottom:4px">v1.0 — Initial Release</div>
     <ul style="padding-left:16px;color:#777">
-      <li>FuseBoard web app with fuseboard visual metaphor</li>
+      <li>FuseBox web app with fuseboard visual metaphor</li>
       <li>Cloudflare Zero Trust Gateway DNS integration</li>
       <li>PIN-encrypted token storage</li>
       <li>Device setup guides for all platforms</li>

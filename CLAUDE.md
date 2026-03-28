@@ -1,4 +1,4 @@
-# FuseBoard — Project Notes
+# FuseBox — Project Notes
 
 ## Versioning
 - Current version: **1.4.1**
@@ -34,7 +34,7 @@
 - `extension/options/options.js` — full config with 3-level drill-down
 
 ## Branding
-- Name: FuseBoard
-- Tagline: Your digital fuseboard
+- Name: FuseBox
+- Tagline: Your digital fusebox
 - Visual: 10J lever-in-card fuse style with animated wire pulses
 - Wire colors: Red = unprotected, Amber = partial, Green = fully blocked

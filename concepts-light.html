@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FuseBoard — Light Theme Concepts</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',system-ui,sans-serif;background:#e8eaee;color:#1a1c24;padding:40px 20px}
+
+h1{text-align:center;font-size:1.6rem;margin-bottom:6px;font-weight:800;letter-spacing:-.02em;color:#1a1c24}
+p.sub{text-align:center;color:#6b7280;font-size:.85rem;margin-bottom:40px}
+
+.concepts{display:flex;flex-wrap:wrap;gap:36px;justify-content:center;max-width:1500px;margin:0 auto}
+.concept{width:440px;padding:16px 14px 12px;border-radius:16px;flex-shrink:0;position:relative;overflow:hidden}
+.concept h2{font-size:.9rem;font-weight:700;margin-bottom:3px;text-align:center;position:relative;z-index:2}
+.concept .desc{font-size:.7rem;color:rgba(0,0,0,.4);margin-bottom:14px;text-align:center;position:relative;z-index:2;line-height:1.5}
+
+/* Grid */
+.fuse-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-items:stretch;position:relative;z-index:2}
+.fuse-cell{display:flex;flex-direction:column;align-items:center;cursor:pointer;user-select:none;padding:6px 6px}
+
+/* Wire */
+.fuse-wire{width:8px;border-radius:4px;position:relative;overflow:hidden}
+.fuse-wi{height:16px}.fuse-wo{height:16px}
+.fuse-wi::after,.fuse-wo::after{content:'';position:absolute;left:0;right:0;top:-14px;height:14px;border-radius:4px}
+@keyframes fl{0%{top:-14px}100%{top:calc(100% + 14px)}}
+.fuse-cell:nth-child(1) .fuse-wire::after{animation-delay:0s}
+.fuse-cell:nth-child(2) .fuse-wire::after{animation-delay:.08s}
+.fuse-cell:nth-child(3) .fuse-wire::after{animation-delay:.16s}
+.fuse-cell:nth-child(4) .fuse-wire::after{animation-delay:.04s}
+.fuse-cell:nth-child(5) .fuse-wire::after{animation-delay:.12s}
+.fuse-cell:nth-child(6) .fuse-wire::after{animation-delay:.20s}
+
+/* Track + Lever */
+.fuse-trk{width:26px;height:40px;border-radius:8px;position:relative;overflow:hidden;cursor:pointer}
+.fuse-lev{position:absolute;left:2px;right:2px;top:2px;height:16px;border-radius:6px;transition:.2s cubic-bezier(.22,1,.36,1)}
+
+/* Icon */
+.fuse-icon{width:20px;height:20px;transition:.25s}
+.fuse-icon svg{width:100%;height:100%}
+/* Label */
+.fuse-lb{font-weight:700;font-size:.82rem;text-align:center;line-height:1.15;margin-bottom:1px;transition:.25s}
+/* Info + Config */
+.fuse-inf{font-size:.65rem;transition:.2s}
+.fuse-cfg{font-size:.68rem;transition:.15s;cursor:pointer}
+/* Connector */
+.fuse-cd{width:10px;height:10px;border-radius:50%;z-index:2;transition:.3s}
+/* Card */
+.fuse-box{width:100%;flex:1;border-radius:12px;padding:10px 6px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:.25s;position:relative;overflow:hidden}
+
+@keyframes fuse-pop{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+
+/* ═══════════════════════════════════════════
+   L1 — Clean White
+   Bright, airy, minimal. Colour in wires + levers.
+   ═══════════════════════════════════════════ */
+.l1{background:#f4f5f7}
+
+.l1 .fuse-cd{background:#dde0e6;border:2px solid #c0c4cc;box-shadow:inset 0 1px 1px rgba(255,255,255,.6)}
+.l1 .fuse-cell[data-w="green"] .fuse-cd{background:#d0f0dc;border-color:#86d9a0;box-shadow:0 0 4px rgba(34,197,94,.2)}
+.l1 .fuse-cell[data-w="amber"] .fuse-cd{background:#fae8c8;border-color:#e0b860}
+
+.l1 .fuse-wi{background:#e8c8c8;box-shadow:inset 1px 0 2px rgba(0,0,0,.08),inset -1px 0 2px rgba(0,0,0,.08)}
+.l1 .fuse-wi::after{background:linear-gradient(180deg,transparent,#ef4444,#f87171,#ef4444,transparent);animation:fl .6s linear infinite}
+.l1 .fuse-cell[data-w="red"] .fuse-wo{background:#e8c8c8;box-shadow:inset 1px 0 2px rgba(0,0,0,.08),inset -1px 0 2px rgba(0,0,0,.08)}
+.l1 .fuse-cell[data-w="red"] .fuse-wo::after{background:linear-gradient(180deg,transparent,#ef4444,#f87171,#ef4444,transparent);animation:fl .6s linear infinite}
+.l1 .fuse-cell[data-w="amber"] .fuse-wo{background:#e8dcc0;box-shadow:inset 1px 0 2px rgba(0,0,0,.08),inset -1px 0 2px rgba(0,0,0,.08)}
+.l1 .fuse-cell[data-w="amber"] .fuse-wo::after{background:linear-gradient(180deg,transparent,#f59e0b,#fbbf24,#f59e0b,transparent);animation:fl 1.2s linear infinite}
+.l1 .fuse-cell[data-w="green"] .fuse-wo{background:#c0e8d0;box-shadow:inset 1px 0 2px rgba(0,0,0,.08),inset -1px 0 2px rgba(0,0,0,.08)}
+.l1 .fuse-cell[data-w="green"] .fuse-wo::after{background:linear-gradient(180deg,transparent,#22c55e,#4ade80,#22c55e,transparent);animation:fl .9s linear infinite}
+
+.l1 .fuse-trk{background:#dde0e6;border:1px solid #c8ccd4}
+.l1 .fuse-lev{background:linear-gradient(180deg,#8a9ab0,#6a7a90);box-shadow:0 2px 4px rgba(0,0,0,.15)}
+.l1 .fuse-cell[data-w="green"] .fuse-lev{top:auto;bottom:2px;background:linear-gradient(180deg,#34d472,#1aaa4a);box-shadow:0 2px 8px rgba(34,197,94,.3)}
+.l1 .fuse-cell[data-w="amber"] .fuse-lev{top:auto;bottom:2px;background:linear-gradient(180deg,#f5a623,#d48a10);box-shadow:0 2px 8px rgba(245,158,11,.25)}
+
+.l1 .fuse-box{background:#fff;border:1px solid #e2e5ea;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.l1 .fuse-cell:hover .fuse-box{border-color:#d0d4da;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.l1 .fuse-cell[data-w="green"] .fuse-box{border-color:#b8e8c8;background:#fafffe}
+.l1 .fuse-cell[data-w="amber"] .fuse-box{border-color:#e8dcc0;background:#fffdf8}
+
+.l1 .fuse-icon{color:#a0a8b4}
+.l1 .fuse-cell[data-s="1"] .fuse-icon{color:#4a5568}
+.l1 .fuse-lb{color:#3a3e48}
+.l1 .fuse-cell[data-s="1"] .fuse-lb{color:#1a1c24}
+.l1 .fuse-inf{color:#9ca3b0}
+.l1 .fuse-cfg{color:#a0a8b4}
+.l1 .fuse-cell:hover .fuse-cfg{color:#6a7280}
+
+/* ═══════════════════════════════════════════
+   L2 — Warm Stone
+   Off-white with warm undertones, earthy feel
+   ═══════════════════════════════════════════ */
+.l2{background:#f0ece6}
+
+.l2 .fuse-cd{background:#ddd8d0;border:2px solid #c0b8ae;box-shadow:inset 0 1px 1px rgba(255,255,255,.5)}
+.l2 .fuse-cell[data-w="green"] .fuse-cd{background:#c8e0cc;border-color:#7abc8a;box-shadow:0 0 4px rgba(34,197,94,.15)}
+.l2 .fuse-cell[data-w="amber"] .fuse-cd{background:#e8dcc0;border-color:#c8a860}
+
+.l2 .fuse-wi{background:#dcc0b8;box-shadow:inset 1px 0 2px rgba(0,0,0,.06),inset -1px 0 2px rgba(0,0,0,.06)}
+.l2 .fuse-wi::after{background:linear-gradient(180deg,transparent,#dc5858,#e87878,#dc5858,transparent);animation:fl .6s linear infinite}
+.l2 .fuse-cell[data-w="red"] .fuse-wo{background:#dcc0b8;box-shadow:inset 1px 0 2px rgba(0,0,0,.06),inset -1px 0 2px rgba(0,0,0,.06)}
+.l2 .fuse-cell[data-w="red"] .fuse-wo::after{background:linear-gradient(180deg,transparent,#dc5858,#e87878,#dc5858,transparent);animation:fl .6s linear infinite}
+.l2 .fuse-cell[data-w="amber"] .fuse-wo{background:#e0d0b0;box-shadow:inset 1px 0 2px rgba(0,0,0,.06),inset -1px 0 2px rgba(0,0,0,.06)}
+.l2 .fuse-cell[data-w="amber"] .fuse-wo::after{background:linear-gradient(180deg,transparent,#e8a020,#f0b840,#e8a020,transparent);animation:fl 1.2s linear infinite}
+.l2 .fuse-cell[data-w="green"] .fuse-wo{background:#b8d8c0;box-shadow:inset 1px 0 2px rgba(0,0,0,.06),inset -1px 0 2px rgba(0,0,0,.06)}
+.l2 .fuse-cell[data-w="green"] .fuse-wo::after{background:linear-gradient(180deg,transparent,#2aaa50,#48c870,#2aaa50,transparent);animation:fl .9s linear infinite}
+
+.l2 .fuse-trk{background:#d8d0c8;border:1px solid #c0b8ae}
+.l2 .fuse-lev{background:linear-gradient(180deg,#8a8070,#6a6050);box-shadow:0 2px 4px rgba(0,0,0,.12)}
+.l2 .fuse-cell[data-w="green"] .fuse-lev{top:auto;bottom:2px;background:linear-gradient(180deg,#2ab858,#1a8a38);box-shadow:0 2px 8px rgba(34,197,94,.25)}
+.l2 .fuse-cell[data-w="amber"] .fuse-lev{top:auto;bottom:2px;background:linear-gradient(180deg,#e0a020,#c08010);box-shadow:0 2px 8px rgba(245,158,11,.2)}
+
+.l2 .fuse-box{background:#faf7f2;border:1px solid #e0dbd4;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.l2 .fuse-cell:hover .fuse-box{border-color:#d0c8c0;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.l2 .fuse-cell[data-w="green"] .fuse-box{border-color:#b0d8b8;background:#f8fcf8}
+.l2 .fuse-cell[data-w="amber"] .fuse-box{border-color:#dcd0b0;background:#fdfbf4}
+
+.l2 .fuse-icon{color:#a09888}
+.l2 .fuse-cell[data-s="1"] .fuse-icon{color:#5a5040}
+.l2 .fuse-lb{color:#3a3428}
+.l2 .fuse-cell[data-s="1"] .fuse-lb{color:#1a1810}
+.l2 .fuse-inf{color:#a09888}
+.l2 .fuse-cfg{color:#a09888}
+
+/* ═══════════════════════════════════════════
+   L3 — Cool Silver
+   Light gray-blue, technical but light
+   ═══════════════════════════════════════════ */
+.l3{background:#eaecf2}
+
+.l3 .fuse-cd{background:#d4d8e2;border:2px solid #b8bcc8;box-shadow:inset 0 1px 1px rgba(255,255,255,.6)}
+.l3 .fuse-cell[data-w="green"] .fuse-cd{background:#c8e4d4;border-color:#78c09a;box-shadow:0 0 4px rgba(34,197,94,.18)}
+.l3 .fuse-cell[data-w="amber"] .fuse-cd{background:#e4dac4;border-color:#c8a858}
+
+.l3 .fuse-wi{background:#d8c4c4;box-shadow:inset 1px 0 2px rgba(0,0,0,.08),inset -1px 0 2px rgba(0,0,0,.08)}
+.l3 .fuse-wi::after{background:linear-gradient(180deg,transparent,#e04848,#e87070,#e04848,transparent);animation:fl .6s linear infinite}
+.l3 .fuse-cell[data-w="red"] .fuse-wo{background:#d8c4c4;box-shadow:inset 1px 0 2px rgba(0,0,0,.08),inset -1px 0 2px rgba(0,0,0,.08)}
+.l3 .fuse-cell[data-w="red"] .fuse-wo::after{background:linear-gradient(180deg,transparent,#e04848,#e87070,#e04848,transparent);animation:fl .6s linear infinite}
+.l3 .fuse-cell[data-w="amber"] .fuse-wo{background:#dcd4b8;box-shadow:inset 1px 0 2px rgba(0,0,0,.08),inset -1px 0 2px rgba(0,0,0,.08)}
+.l3 .fuse-cell[data-w="amber"] .fuse-wo::after{background:linear-gradient(180deg,transparent,#e8a020,#f0b840,#e8a020,transparent);animation:fl 1.2s linear infinite}
+.l3 .fuse-cell[data-w="green"] .fuse-wo{background:#b8dcc8;box-shadow:inset 1px 0 2px rgba(0,0,0,.08),inset -1px 0 2px rgba(0,0,0,.08)}
+.l3 .fuse-cell[data-w="green"] .fuse-wo::after{background:linear-gradient(180deg,transparent,#20b050,#40d070,#20b050,transparent);animation:fl .9s linear infinite}
+
+.l3 .fuse-trk{background:#d0d4de;border:1px solid #b8bcc8}
+.l3 .fuse-lev{background:linear-gradient(180deg,#7888a0,#5a6a80);box-shadow:0 2px 4px rgba(0,0,0,.12)}
+.l3 .fuse-cell[data-w="green"] .fuse-lev{top:auto;bottom:2px;background:linear-gradient(180deg,#28c058,#18a038);box-shadow:0 2px 8px rgba(34,197,94,.3)}
+.l3 .fuse-cell[data-w="amber"] .fuse-lev{top:auto;bottom:2px;background:linear-gradient(180deg,#e0a020,#c08010);box-shadow:0 2px 8px rgba(245,158,11,.2)}
+
+.l3 .fuse-box{background:rgba(255,255,255,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(0,0,0,.06);box-shadow:0 1px 4px rgba(0,0,0,.03)}
+.l3 .fuse-cell:hover .fuse-box{background:rgba(255,255,255,.85);border-color:rgba(0,0,0,.1);box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.l3 .fuse-cell[data-w="green"] .fuse-box{border-color:rgba(34,197,94,.2);background:rgba(240,255,245,.7)}
+.l3 .fuse-cell[data-w="amber"] .fuse-box{border-color:rgba(245,158,11,.2);background:rgba(255,252,240,.7)}
+
+.l3 .fuse-icon{color:#8898b0}
+.l3 .fuse-cell[data-s="1"] .fuse-icon{color:#4a5a70}
+.l3 .fuse-lb{color:#2a3040}
+.l3 .fuse-cell[data-s="1"] .fuse-lb{color:#101828}
+.l3 .fuse-inf{color:#8898b0}
+.l3 .fuse-cfg{color:#8898b0}
+
+/* ═══════════════════════════════════════════
+   L4 — Soft Cream with frosted glass
+   Warm cream bg, glass cards, organic
+   ═══════════════════════════════════════════ */
+.l4{background:linear-gradient(135deg,#f2ede4,#eee8de,#f0eae0)}
+.l4::before{content:'';position:absolute;top:20%;right:20%;width:200px;height:200px;background:radial-gradient(circle,rgba(34,197,94,.06),transparent 60%);pointer-events:none}
+
+.l4 .fuse-cd{background:#dcd4c8;border:2px solid #c4baa8;box-shadow:inset 0 1px 1px rgba(255,255,255,.4)}
+.l4 .fuse-cell[data-w="green"] .fuse-cd{background:#c4e0cc;border-color:#78b488;box-shadow:0 0 5px rgba(34,197,94,.15)}
+.l4 .fuse-cell[data-w="amber"] .fuse-cd{background:#e4d8b8;border-color:#c0a458}
+
+.l4 .fuse-wi{background:#d8beb8;box-shadow:inset 1px 0 2px rgba(0,0,0,.06),inset -1px 0 2px rgba(0,0,0,.06)}
+.l4 .fuse-wi::after{background:linear-gradient(180deg,transparent,#d85050,#e07070,#d85050,transparent);animation:fl .6s linear infinite}
+.l4 .fuse-cell[data-w="red"] .fuse-wo{background:#d8beb8;box-shadow:inset 1px 0 2px rgba(0,0,0,.06),inset -1px 0 2px rgba(0,0,0,.06)}
+.l4 .fuse-cell[data-w="red"] .fuse-wo::after{background:linear-gradient(180deg,transparent,#d85050,#e07070,#d85050,transparent);animation:fl .6s linear infinite}
+.l4 .fuse-cell[data-w="amber"] .fuse-wo{background:#dcd0b0;box-shadow:inset 1px 0 2px rgba(0,0,0,.06),inset -1px 0 2px rgba(0,0,0,.06)}
+.l4 .fuse-cell[data-w="amber"] .fuse-wo::after{background:linear-gradient(180deg,transparent,#d89820,#e8b040,#d89820,transparent);animation:fl 1.2s linear infinite}
+.l4 .fuse-cell[data-w="green"] .fuse-wo{background:#b4d4bc;box-shadow:inset 1px 0 2px rgba(0,0,0,.06),inset -1px 0 2px rgba(0,0,0,.06)}
+.l4 .fuse-cell[data-w="green"] .fuse-wo::after{background:linear-gradient(180deg,transparent,#22a848,#40c868,#22a848,transparent);animation:fl .9s linear infinite}
+
+.l4 .fuse-trk{background:#d4ccc0;border:1px solid #c0b8aa}
+.l4 .fuse-lev{background:linear-gradient(180deg,#887868,#685848);box-shadow:0 2px 4px rgba(0,0,0,.1)}
+.l4 .fuse-cell[data-w="green"] .fuse-lev{top:auto;bottom:2px;background:linear-gradient(180deg,#28b050,#189038);box-shadow:0 2px 8px rgba(34,197,94,.25)}
+.l4 .fuse-cell[data-w="amber"] .fuse-lev{top:auto;bottom:2px;background:linear-gradient(180deg,#d89820,#b87808);box-shadow:0 2px 8px rgba(245,158,11,.2)}
+
+.l4 .fuse-box{background:rgba(255,255,252,.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(0,0,0,.05);box-shadow:0 1px 4px rgba(0,0,0,.03);border-radius:14px}
+.l4 .fuse-cell:hover .fuse-box{background:rgba(255,255,252,.8);box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.l4 .fuse-cell[data-w="green"] .fuse-box{border-color:rgba(34,197,94,.18);background:rgba(244,255,248,.6)}
+.l4 .fuse-cell[data-w="amber"] .fuse-box{border-color:rgba(200,160,60,.18);background:rgba(255,252,240,.6)}
+
+.l4 .fuse-icon{color:#a09080}
+.l4 .fuse-cell[data-s="1"] .fuse-icon{color:#5a4a38}
+.l4 .fuse-lb{color:#38302a}
+.l4 .fuse-cell[data-s="1"] .fuse-lb{color:#1a1410}
+.l4 .fuse-inf{color:#a09080}
+.l4 .fuse-cfg{color:#a09080}
+</style>
+</head>
+<body>
+
+<h1>FuseBoard — Light Themes</h1>
+<p class="sub">Same frosted glass + colour signals, flipped to light. Click to cycle: red → amber → green.</p>
+
+<div class="concepts">
+
+<div class="concept l1">
+  <h2>L1 — Clean White</h2>
+  <div class="desc">Bright, airy, minimal. Crisp borders.<br>Colour in wires, levers, and faint card tint.</div>
+  <div class="fuse-grid" id="g1"></div>
+</div>
+
+<div class="concept l2">
+  <h2>L2 — Warm Stone</h2>
+  <div class="desc">Off-white with warm undertones. Earthy, calm.<br>Feels like linen + wood.</div>
+  <div class="fuse-grid" id="g2"></div>
+</div>
+
+<div class="concept l3">
+  <h2>L3 — Cool Silver</h2>
+  <div class="desc">Gray-blue tint, frosted glass cards.<br>Technical but light. Closest to slate-dark inverted.</div>
+  <div class="fuse-grid" id="g3"></div>
+</div>
+
+<div class="concept l4">
+  <h2>L4 — Soft Cream</h2>
+  <div class="desc">Warm cream background, glass cards, organic curves.<br>Approachable, non-technical, friendly.</div>
+  <div class="fuse-grid" id="g4"></div>
+</div>
+
+</div>
+
+<script>
+const items = [
+  { name: 'Social Media', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>', w: 'green' },
+  { name: 'Video', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>', w: 'red' },
+  { name: 'News', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/></svg>', w: 'amber' },
+  { name: 'Shopping', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>', w: 'red' },
+  { name: 'Gaming', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="6"/><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/></svg>', w: 'green' },
+  { name: 'Dating', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>', w: 'red' },
+];
+
+function buildGrid(id) {
+  const grid = document.getElementById(id);
+  items.forEach(item => {
+    const on = item.w !== 'red';
+    const cell = document.createElement('div');
+    cell.className = 'fuse-cell';
+    cell.dataset.s = on ? '1' : '0';
+    cell.dataset.w = item.w;
+    cell.innerHTML = `
+      <div class="fuse-cd"></div>
+      <div class="fuse-wire fuse-wi"></div>
+      <div class="fuse-box">
+        <div class="fuse-icon">${item.icon}</div>
+        <div class="fuse-lb">${item.name}</div>
+        <div class="fuse-trk"><div class="fuse-lev"></div></div>
+        <div class="fuse-inf">6 sites</div>
+        <div class="fuse-cfg">details ›</div>
+      </div>
+      <div class="fuse-wire fuse-wo"></div>
+      <div class="fuse-cd"></div>
+    `;
+    const states = ['red','amber','green'];
+    cell.addEventListener('click', () => {
+      let idx = states.indexOf(cell.dataset.w);
+      idx = (idx + 1) % states.length;
+      cell.dataset.w = states[idx];
+      cell.dataset.s = states[idx] === 'red' ? '0' : '1';
+    });
+    grid.appendChild(cell);
+  });
+}
+
+['g1','g2','g3','g4'].forEach(id => buildGrid(id));
+</script>
+</body>
+</html>

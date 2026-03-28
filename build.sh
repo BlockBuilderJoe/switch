@@ -1,5 +1,5 @@
 #!/bin/bash
-# FuseBoard — Build script for Chrome, Firefox, and Safari
+# FuseBox — Build script for Chrome, Firefox, and Safari
 # Usage: ./build.sh [chrome|firefox|safari|all]
 
 set -e
@@ -12,8 +12,9 @@ DIST="$ROOT/dist"
 # Shared files to copy
 copy_shared() {
   local dest=$1
-  mkdir -p "$dest/background" "$dest/blocked" "$dest/content" "$dest/data" "$dest/icons" "$dest/options" "$dest/popup" "$dest/sync"
+  mkdir -p "$dest/background" "$dest/blocked" "$dest/content" "$dest/data" "$dest/fonts" "$dest/icons" "$dest/options" "$dest/popup" "$dest/sync"
 
+  cp "$EXT/fonts/"*.woff2 "$dest/fonts/" 2>/dev/null || true
   cp "$EXT/data/blocklists.js" "$dest/data/"
   cp "$EXT/content/content.js" "$dest/content/"
   cp "$EXT/content/content.css" "$dest/content/"
@@ -59,12 +60,12 @@ build_firefox() {
   cat > "$dest/manifest.json" << 'MANIFEST'
 {
   "manifest_version": 3,
-  "name": "FuseBoard",
+  "name": "FuseBox",
   "version": "1.5.0",
-  "description": "Your digital fuseboard. Block distracting sites and features.",
+  "description": "Your digital fusebox. Block distracting sites and features.",
   "browser_specific_settings": {
     "gecko": {
-      "id": "fuseboard@josephpalmer.co.uk",
+      "id": "fusebox@josephpalmer.co.uk",
       "strict_min_version": "109.0"
     }
   },
@@ -122,9 +123,9 @@ build_safari() {
   cat > "$dest/manifest.json" << 'MANIFEST'
 {
   "manifest_version": 3,
-  "name": "FuseBoard",
+  "name": "FuseBox",
   "version": "1.5.0",
-  "description": "Your digital fuseboard. Block distracting sites and features.",
+  "description": "Your digital fusebox. Block distracting sites and features.",
   "permissions": [
     "storage",
     "declarativeNetRequest",
@@ -160,7 +161,7 @@ MANIFEST
   echo "Safari source build: $dest"
   echo ""
   echo "To create the Safari extension Xcode project, run:"
-  echo "  xcrun safari-web-extension-converter $dest --project-location $DIST/safari-xcode --app-name FuseBoard --bundle-identifier co.uk.josephpalmer.FuseBoard"
+  echo "  xcrun safari-web-extension-converter $dest --project-location $DIST/safari-xcode --app-name FuseBox --bundle-identifier co.uk.josephpalmer.FuseBox"
 }
 
 case "$TARGET" in

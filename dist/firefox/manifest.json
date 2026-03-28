@@ -1,11 +1,11 @@
 {
   "manifest_version": 3,
-  "name": "FuseBoard",
+  "name": "FuseBox",
   "version": "1.5.0",
-  "description": "Your digital fuseboard. Block distracting sites and features.",
+  "description": "Your digital fusebox. Block distracting sites and features.",
   "browser_specific_settings": {
     "gecko": {
-      "id": "fuseboard@josephpalmer.co.uk",
+      "id": "fusebox@josephpalmer.co.uk",
       "strict_min_version": "109.0"
     }
   },

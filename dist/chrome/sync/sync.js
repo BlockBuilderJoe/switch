@@ -1,4 +1,4 @@
-// FuseBoard Sync Layer
+// FuseBox Sync Layer
 // Runs in the background service worker. Syncs local settings to/from the server.
 
 const SYNC_KEYS = ['selections', 'blockedDomains', 'blockedUrls', 'hiddenSelectors', 'allowedChannels', 'subsOnlyMode'];
@@ -60,13 +60,13 @@ async function pull() {
     localVersion = data.version;
     await chrome.storage.local.set({ sync_version: localVersion });
 
-    console.log('FuseBoard Sync: pulled version', localVersion);
+    console.log('FuseBox Sync: pulled version', localVersion);
 
     // Refresh device role every 5th pull
     pullCount++;
     if (pullCount % 5 === 0) refreshDeviceRole();
   } catch (e) {
-    console.log('FuseBoard Sync: pull failed', e.message);
+    console.log('FuseBox Sync: pull failed', e.message);
   }
 }
 
@@ -98,10 +98,10 @@ async function push() {
       const result = await res.json();
       localVersion = result.version;
       await chrome.storage.local.set({ sync_version: localVersion });
-      console.log('FuseBoard Sync: pushed version', localVersion);
+      console.log('FuseBox Sync: pushed version', localVersion);
     }
   } catch (e) {
-    console.log('FuseBoard Sync: push failed', e.message);
+    console.log('FuseBox Sync: push failed', e.message);
   }
 
   isPushing = false;
@@ -207,7 +207,7 @@ async function refreshDeviceRole() {
     if (thisDevice && thisDevice.role !== deviceRole) {
       deviceRole = thisDevice.role;
       await chrome.storage.local.set({ sync_device_role: deviceRole });
-      console.log('FuseBoard Sync: role updated to', deviceRole);
+      console.log('FuseBox Sync: role updated to', deviceRole);
     }
   } catch {}
 }

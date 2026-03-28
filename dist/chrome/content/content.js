@@ -1,4 +1,4 @@
-// FuseBoard — Content Script
+// FuseBox — Content Script
 // 1. Hides elements based on selectors
 // 2. Watches for SPA URL changes and blocks matching paths
 
@@ -78,11 +78,11 @@ function checkUrl() {
       isRedirecting = true;
       // Replace current history entry so back button doesn't loop
       window.stop();
-      document.title = 'Blocked by FuseBoard';
+      document.title = 'Blocked by FuseBox';
       document.body.innerHTML = `
         <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#07080a;color:#e4e6ea;font-family:system-ui,sans-serif;text-align:center">
           <div>
-            <div style="font-size:2rem;margin-bottom:8px">Blocked by <span style="color:#22c55e">FuseBoard</span></div>
+            <div style="font-size:2rem;margin-bottom:8px">Blocked by <span style="color:#22c55e">FuseBox</span></div>
             <div style="color:#666;margin-bottom:16px">This content has been switched off.</div>
             <a href="javascript:history.back()" style="color:#22c55e;text-decoration:none;padding:8px 20px;border:1px solid rgba(34,197,94,.3);border-radius:8px;font-size:.85rem">Go Back</a>
           </div>
@@ -133,13 +133,13 @@ function checkChannel() {
     if (!isAllowed) {
       isRedirecting = true;
       window.stop();
-      document.title = 'Channel not in allow list — FuseBoard';
+      document.title = 'Channel not in allow list — FuseBox';
       document.body.innerHTML = `
         <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#07080a;color:#e4e6ea;font-family:system-ui,sans-serif;text-align:center">
           <div style="max-width:400px">
             <div style="font-size:1.5rem;font-weight:800;margin-bottom:8px">Subs Only Mode</div>
             <div style="color:#888;margin-bottom:8px"><strong style="color:#e4e6ea">${channelEl.textContent.trim()}</strong> is not in your allowed channels list.</div>
-            <div style="color:#555;font-size:.8rem;margin-bottom:20px">Add this channel in FuseBoard settings to allow it.</div>
+            <div style="color:#555;font-size:.8rem;margin-bottom:20px">Add this channel in FuseBox settings to allow it.</div>
             <div style="display:flex;gap:8px;justify-content:center">
               <a href="javascript:history.back()" style="color:#22c55e;text-decoration:none;padding:8px 20px;border:1px solid rgba(34,197,94,.3);border-radius:8px;font-size:.85rem">Go Back</a>
               <button id="fb-allow-channel" style="color:#fff;background:#22c55e;border:none;padding:8px 20px;border-radius:8px;font-size:.85rem;cursor:pointer;font-weight:600">Allow this channel</button>

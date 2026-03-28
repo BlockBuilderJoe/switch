@@ -3,29 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FuseBoard — Configuration</title>
+  <title>FuseBox — Configuration</title>
   <link rel="stylesheet" href="../popup/popup.css">
   <style>
     body { width: 100%; max-width: 700px; margin: 0 auto; padding: 32px 20px; }
     .header { margin-bottom: 20px; }
     .logo { font-size: 1.3rem; }
-    .back-btn { display: inline-flex; align-items: center; gap: 6px; background: none; border: none; color: var(--text-sec); font-size: .82rem; font-weight: 600; cursor: pointer; padding: 8px 12px; border-radius: 8px; margin-bottom: 12px; transition: .15s; }
-    .back-btn:hover { color: var(--text); background: var(--surface); }
-    .back-btn svg { width: 16px; height: 16px; }
     .section-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 14px; }
+
+    /* Breadcrumb nav */
+    .breadcrumb { display: flex; align-items: center; gap: 0; margin-bottom: 14px; flex-wrap: wrap; }
+    .breadcrumb .crumb { background: none; border: none; color: var(--text-tri); font-size: .78rem; font-weight: 600; cursor: pointer; padding: 4px 0; font-family: inherit; transition: .15s; }
+    .breadcrumb .crumb:hover { color: var(--text); }
+    .breadcrumb .crumb.current { color: var(--text); cursor: default; }
+    .breadcrumb .sep { color: var(--text-tri); font-size: .7rem; margin: 0 6px; opacity: .5; }
     .fuse-box { min-height: 110px; }
     .fuse-cell { padding: 10px 6px; }
-    .fuse-cfg { font-size: .5rem; color: #2a2e36; transition: .15s; cursor: pointer; }
-    .fuse-cell:hover .fuse-cfg { color: #555; }
+
+    /* Sync section — adapts to color scheme */
+    #sync-section { margin-top: 28px; padding: 20px; background: var(--cell-bg); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid var(--cell-border); border-radius: 14px; }
+    #changelog { display: none; margin-top: 12px; padding: 20px; background: var(--cell-bg); backdrop-filter: blur(8px); border: 1px solid var(--cell-border); border-radius: 12px; max-height: 400px; overflow-y: auto; font-size: .78rem; line-height: 1.6; color: var(--text-sec); }
+    #changelog-toggle { background: none; border: none; color: var(--text-tri); font-size: .72rem; cursor: pointer; padding: 6px 12px; border-radius: 6px; transition: .15s; font-family: inherit; }
   </style>
 </head>
 <body>
   <div class="header">
-    <div class="logo">Fuse<span class="dot"></span>Board <span class="version">v1.5.0</span></div>
+    <div class="logo">Fuse<span class="dot"></span>Box <span class="version">v1.5.0</span></div>
   </div>
 
   <div id="nav"></div>
-  <div id="title" class="section-title">Your FuseBoard</div>
+  <div id="title" class="section-title">Your FuseBox</div>
   <div id="fuseboard"></div>
 
   <div class="status" id="status">
@@ -33,17 +40,15 @@
     <span id="status-text"></span>
   </div>
 
-  <!-- Sync Section -->
-  <div id="sync-section" style="margin-top:28px;padding:20px;background:#0c0e14;border:1px solid #1a1e28;border-radius:14px">
+  <div id="sync-section">
     <div id="sync-content"></div>
   </div>
 
   <div style="margin-top:24px;text-align:center">
-    <button id="changelog-toggle" style="background:none;border:none;color:#3a3e48;font-size:.72rem;cursor:pointer;padding:6px 12px;border-radius:6px;transition:.15s;font-family:inherit">Changelog</button>
+    <button id="changelog-toggle">Changelog</button>
   </div>
 
-  <div id="changelog" style="display:none;margin-top:12px;padding:20px;background:#0c0e14;border:1px solid #1a1e28;border-radius:12px;max-height:400px;overflow-y:auto;font-size:.78rem;line-height:1.6;color:#888">
-  </div>
+  <div id="changelog"></div>
 
   <script src="../data/blocklists.js"></script>
   <script src="options.js"></script>

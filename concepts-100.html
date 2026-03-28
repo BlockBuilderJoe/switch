@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FuseBoard — 100 Concepts</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&family=Outfit:wght@400;600;700;800&family=Sora:wght@400;600;700;800&family=Crimson+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#0a0c10;color:#e8eaf0;padding:30px 20px}
+h1{text-align:center;font-size:1.8rem;margin-bottom:6px;font-weight:800;letter-spacing:-.03em}
+p.sub{text-align:center;color:#6b7280;font-size:.85rem;margin-bottom:30px}
+.controls{display:flex;justify-content:center;gap:8px;margin-bottom:30px;flex-wrap:wrap}
+.controls button{padding:6px 16px;border-radius:20px;border:1px solid #2a2e38;background:#14161c;color:#9ca3b4;font-size:.75rem;cursor:pointer;font-family:inherit;transition:.15s}
+.controls button:hover,.controls button.active{background:#22c55e;color:#000;border-color:#22c55e}
+#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;max-width:1600px;margin:0 auto}
+.card{border-radius:14px;padding:12px 10px;position:relative;overflow:hidden;cursor:pointer;transition:transform .15s}
+.card:hover{transform:scale(1.02)}
+.card-num{position:absolute;top:6px;left:8px;font-size:.55rem;font-weight:700;opacity:.3;z-index:10}
+.card-name{text-align:center;font-size:.6rem;font-weight:600;margin-bottom:8px;opacity:.5;position:relative;z-index:2}
+.mini-grid{display:flex;gap:6px;justify-content:center;align-items:stretch;position:relative;z-index:2}
+.mini-fuse{display:flex;flex-direction:column;align-items:center;gap:0;width:56px}
+
+/* Base elements */
+.m-cd{width:var(--cd-s,8px);height:var(--cd-s,8px);border-radius:var(--cd-r,50%);transition:.3s}
+.m-wire{width:var(--wire-w,6px);height:var(--wire-h,14px);border-radius:var(--wire-r,3px);position:relative;overflow:hidden}
+.m-wire::after{content:'';position:absolute;left:0;right:0;top:calc(-1 * var(--wire-h,14px));height:var(--wire-h,14px);border-radius:var(--wire-r,3px)}
+.m-box{width:100%;flex:1;border-radius:var(--box-r,10px);padding:8px 4px 6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;transition:.2s;position:relative;overflow:hidden}
+.m-icon{width:16px;height:16px;transition:.2s}
+.m-icon svg{width:100%;height:100%}
+.m-lb{font-weight:var(--lb-w,700);font-size:var(--lb-s,.72rem);text-align:center;line-height:1.15;transition:.2s}
+.m-trk{width:var(--trk-w,22px);height:var(--trk-h,34px);border-radius:var(--trk-r,7px);position:relative;overflow:hidden;cursor:pointer}
+.m-lev{position:absolute;left:2px;right:2px;height:var(--lev-h,13px);border-radius:var(--lev-r,5px);transition:.2s cubic-bezier(.22,1,.36,1)}
+.m-inf{font-size:.55rem;opacity:.5}
+
+@keyframes fl{0%{top:calc(-1 * var(--wire-h,14px))}100%{top:calc(100% + var(--wire-h,14px))}}
+.mini-fuse:nth-child(1) .m-wire::after{animation-delay:0s}
+.mini-fuse:nth-child(2) .m-wire::after{animation-delay:.1s}
+.mini-fuse:nth-child(3) .m-wire::after{animation-delay:.2s}
+
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<h1>100 FuseBoard Concepts</h1>
+<p class="sub">Click any concept to see it enlarged. Radically different styles, palettes, and moods.</p>
+<div class="controls">
+  <button class="active" data-f="all">All</button>
+  <button data-f="dark">Dark</button>
+  <button data-f="light">Light</button>
+  <button data-f="colored">Coloured</button>
+  <button data-f="minimal">Minimal</button>
+  <button data-f="bold">Bold</button>
+  <button data-f="retro">Retro</button>
+  <button data-f="glass">Glass</button>
+</div>
+<div id="grid"></div>
+
+<!-- Enlarged overlay -->
+<div id="overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:100;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);cursor:pointer;overflow-y:auto" onclick="this.style.display='none'">
+  <div id="overlay-content" style="max-width:460px;margin:60px auto;pointer-events:none"></div>
+</div>
+
+<script>
+const icons = [
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17 2 12 7 7 2"/></svg>',
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>',
+];
+const names = ['Social','Video','Shop'];
+
+const fonts = [
+  "'DM Sans',sans-serif","'Outfit',sans-serif","'Sora',sans-serif",
+  "'Space Mono',monospace","'JetBrains Mono',monospace","'Crimson Pro',serif",
+  "system-ui,sans-serif","Georgia,serif"
+];
+
+function hsl(h,s,l){return `hsl(${h},${s}%,${l}%)`}
+function hsla(h,s,l,a){return `hsla(${h},${s}%,${l}%,${a})`}
+
+// Generate 100 radically different concepts
+const concepts = [];
+
+// Helper to create a concept config
+function C(name,tags,cfg){concepts.push({name,tags,cfg})}
+
+// ---- DARK THEMES ----
+C('Obsidian',['dark','minimal'],{bg:'#0e0e10',cardBg:'rgba(255,255,255,.03)',cardBorder:'rgba(255,255,255,.06)',text:'#c8cad0',textOn:'#fff',wireOff:'#1a1216',wireOn:'#0a1a10',pulseOff:'#ef4444,#f87171',pulseOn:'#22c55e,#4ade80',levOff:'#3a3e48,#2a2e34',levOn:'#22c55e,#16a34a',cdBg:'#1a1c20',cdBorder:'#2a2e34',trkBg:'#08080a',iconOff:'#3a3e48',iconOn:'#22c55e',font:fonts[0],boxR:'10px',wireW:'6px',wireH:'14px'});
+C('Bone White',['light','minimal'],{bg:'#f8f7f4',cardBg:'#fff',cardBorder:'rgba(0,0,0,.08)',text:'#3a3830',textOn:'#1a1810',wireOff:'#e0c8c0',wireOn:'#c0e0c8',pulseOff:'#d05050,#e07070',pulseOn:'#28a848,#48c868',levOff:'#a0a098,#808078',levOn:'#28b850,#189838',cdBg:'#e0dcd4',cdBorder:'#c8c0b8',trkBg:'#e8e4dc',iconOff:'#a0a098',iconOn:'#4a5040',font:fonts[1],boxR:'10px',wireW:'6px',wireH:'14px'});
+C('Neon Noir',['dark','bold'],{bg:'#08080c',cardBg:'rgba(0,255,100,.03)',cardBorder:'rgba(0,255,100,.1)',text:'#80ff80',textOn:'#00ff66',wireOff:'#1a0a0a',wireOn:'#0a1a0a',pulseOff:'#ff2020,#ff6060',pulseOn:'#00ff44,#66ff88',levOff:'#1a3a1a,#0a2a0a',levOn:'#00ff44,#00cc33',cdBg:'#0a1a0a',cdBorder:'#00ff44',trkBg:'#040804',iconOff:'#1a4a1a',iconOn:'#00ff44',font:fonts[3],boxR:'2px',wireW:'4px',wireH:'12px'});
+C('Midnight Blue',['dark','glass'],{bg:'linear-gradient(135deg,#0a1428,#101830)',cardBg:'rgba(20,40,80,.4)',cardBorder:'rgba(60,120,255,.12)',text:'#8ab0e0',textOn:'#c0d8f8',wireOff:'#1a2040',wireOn:'#102838',pulseOff:'#4080e0,#60a0ff',pulseOn:'#20c8e0,#40e8ff',levOff:'#2a4a7a,#1a3a6a',levOn:'#20b8d8,#1090b0',cdBg:'#142040',cdBorder:'#2a4a80',trkBg:'#0a1020',iconOff:'#2a4a7a',iconOn:'#40d0f0',font:fonts[2],boxR:'12px',wireW:'8px',wireH:'16px'});
+C('Rust Industrial',['dark','retro'],{bg:'#181210',cardBg:'rgba(60,40,30,.4)',cardBorder:'rgba(180,120,60,.15)',text:'#c8a880',textOn:'#f0d0a0',wireOff:'#3a2010',wireOn:'#2a3018',pulseOff:'#c85020,#e07040',pulseOn:'#a0c040,#c0e060',levOff:'#6a4a30,#4a3020',levOn:'#b8a030,#908020',cdBg:'#2a2018',cdBorder:'#5a4030',trkBg:'#100c08',iconOff:'#5a4030',iconOn:'#d0b060',font:fonts[4],boxR:'4px',wireW:'10px',wireH:'18px'});
+C('Cotton Candy',['light','bold','colored'],{bg:'linear-gradient(135deg,#fce4ec,#e8eaf6,#e0f7fa)',cardBg:'rgba(255,255,255,.7)',cardBorder:'rgba(0,0,0,.06)',text:'#5a4a6a',textOn:'#2a1a3a',wireOff:'#f0b0c0',wireOn:'#b0e0c0',pulseOff:'#e06090,#f080a0',pulseOn:'#40c868,#60e888',levOff:'#c0a0d0,#a080b8',levOn:'#40c860,#28a840',cdBg:'#e0d0e8',cdBorder:'#c0b0d0',trkBg:'#ece0f0',iconOff:'#b0a0c0',iconOn:'#3a2a4a',font:fonts[1],boxR:'16px',wireW:'8px',wireH:'14px'});
+C('Terminal Green',['dark','retro'],{bg:'#0a0c08',cardBg:'rgba(0,40,0,.3)',cardBorder:'rgba(0,200,0,.1)',text:'#40a040',textOn:'#60e060',wireOff:'#0a1a08',wireOn:'#082808',pulseOff:'#40a040,#60c060',pulseOn:'#00ff00,#80ff80',levOff:'#204020,#183018',levOn:'#00e000,#00b000',cdBg:'#0a1a08',cdBorder:'#206020',trkBg:'#060a04',iconOff:'#206020',iconOn:'#00ff00',font:fonts[4],boxR:'0px',wireW:'4px',wireH:'10px'});
+C('Polar Ice',['light','glass','minimal'],{bg:'#eef2f8',cardBg:'rgba(255,255,255,.6)',cardBorder:'rgba(100,140,200,.1)',text:'#5a6a80',textOn:'#1a2a40',wireOff:'#c8d0e0',wireOn:'#b0d8d8',pulseOff:'#6090c0,#80b0e0',pulseOn:'#20a0b0,#40c0d0',levOff:'#7088a0,#5870888',levOn:'#20a8c0,#1888a0',cdBg:'#d0d8e4',cdBorder:'#a0b0c8',trkBg:'#dce4f0',iconOff:'#8090a8',iconOn:'#2a4a60',font:fonts[0],boxR:'14px',wireW:'6px',wireH:'14px'});
+C('Sunset Blaze',['dark','bold','colored'],{bg:'linear-gradient(135deg,#1a0c10,#1a1008)',cardBg:'rgba(80,30,20,.3)',cardBorder:'rgba(255,120,40,.12)',text:'#e8a080',textOn:'#ffd0a0',wireOff:'#3a1810',wireOn:'#2a2010',pulseOff:'#e04020,#f06040',pulseOn:'#f0a020,#ffc040',levOff:'#8a3828,#6a2818',levOn:'#e09020,#c07010',cdBg:'#2a1810',cdBorder:'#5a3020',trkBg:'#100808',iconOff:'#6a3820',iconOn:'#f0b040',font:fonts[2],boxR:'8px',wireW:'8px',wireH:'16px'});
+C('Paper Minimal',['light','minimal'],{bg:'#fafafa',cardBg:'transparent',cardBorder:'rgba(0,0,0,.06)',text:'#888',textOn:'#222',wireOff:'#e0d0d0',wireOn:'#d0e0d4',pulseOff:'#ccc,#ddd',pulseOn:'#888,#aaa',levOff:'#bbb,#999',levOn:'#555,#333',cdBg:'#ddd',cdBorder:'#ccc',trkBg:'#eee',iconOff:'#bbb',iconOn:'#444',font:fonts[5],boxR:'0px',wireW:'4px',wireH:'10px'});
+C('Aurora',['dark','glass','colored'],{bg:'linear-gradient(135deg,#080818,#0a1020,#080c18)',cardBg:'rgba(30,40,80,.35)',cardBorder:'rgba(120,200,255,.08)',text:'#8090c0',textOn:'#c0d0ff',wireOff:'#1a1830',wireOn:'#0a2028',pulseOff:'#8040e0,#a060ff',pulseOn:'#20e0a0,#40ffc0',levOff:'#3a3070,#2a2060',levOn:'#20d090,#10a070',cdBg:'#141830',cdBorder:'#2a3060',trkBg:'#080810',iconOff:'#3a3a6a',iconOn:'#40e0b0',font:fonts[2],boxR:'12px',wireW:'8px',wireH:'16px'});
+C('Sandstone',['light','retro'],{bg:'#e8ddd0',cardBg:'#f0e8d8',cardBorder:'rgba(120,100,60,.15)',text:'#6a5a40',textOn:'#3a2a10',wireOff:'#c8a888',wireOn:'#a8c898',pulseOff:'#b87040,#d09060',pulseOn:'#60a050,#80c070',levOff:'#8a7858,#6a5838',levOn:'#5a9848,#3a7828',cdBg:'#c8b898',cdBorder:'#a89878',trkBg:'#d8ccb8',iconOff:'#9a8a68',iconOn:'#4a3a18',font:fonts[5],boxR:'6px',wireW:'10px',wireH:'18px'});
+C('Vaporwave',['dark','bold','retro','colored'],{bg:'linear-gradient(135deg,#1a0828,#0a0820,#180828)',cardBg:'rgba(60,20,80,.35)',cardBorder:'rgba(255,80,200,.12)',text:'#e080c0',textOn:'#ffa0e0',wireOff:'#2a1030',wireOn:'#101840',pulseOff:'#ff40a0,#ff70c0',pulseOn:'#40a0ff,#70c0ff',levOff:'#6a2080,#4a1060',levOn:'#4080ff,#2060e0',cdBg:'#201038',cdBorder:'#4a2060',trkBg:'#0c0418',iconOff:'#5a2070',iconOn:'#70b0ff',font:fonts[3],boxR:'20px',wireW:'6px',wireH:'12px'});
+C('Slate Glass',['dark','glass','minimal'],{bg:'linear-gradient(135deg,#16181e,#1a1c24)',cardBg:'rgba(30,32,42,.5)',cardBorder:'rgba(148,163,184,.08)',text:'#94a3b8',textOn:'#e2e8f0',wireOff:'#2a1e22',wireOn:'#162a1e',pulseOff:'#ef4444,#f87171',pulseOn:'#22c55e,#4ade80',levOff:'#5a6070,#3e4450',levOn:'#4a8a5a,#2a6a3a',cdBg:'#22242a',cdBorder:'#3a3e48',trkBg:'#101114',iconOff:'#4a5060',iconOn:'#cbd5e1',font:fonts[0],boxR:'12px',wireW:'8px',wireH:'16px'});
+C('Bubblegum',['light','bold','colored'],{bg:'#fff0f4',cardBg:'rgba(255,255,255,.8)',cardBorder:'rgba(255,80,120,.12)',text:'#c06080',textOn:'#8a2040',wireOff:'#f0b0c0',wireOn:'#c0e8d0',pulseOff:'#ff4080,#ff70a0',pulseOn:'#30c060,#50e080',levOff:'#e080a0,#c06080',levOn:'#30b858,#209838',cdBg:'#f0d0d8',cdBorder:'#e0a0b0',trkBg:'#f8e0e8',iconOff:'#d090a8',iconOn:'#802040',font:fonts[1],boxR:'18px',wireW:'8px',wireH:'14px'});
+C('Concrete',['dark','retro','minimal'],{bg:'#1a1a1a',cardBg:'#222',cardBorder:'#333',text:'#888',textOn:'#ccc',wireOff:'#2a1818',wireOn:'#182a18',pulseOff:'#aa3030,#cc5050',pulseOn:'#30aa30,#50cc50',levOff:'#555,#444',levOn:'#40a040,#308030',cdBg:'#2a2a2a',cdBorder:'#444',trkBg:'#141414',iconOff:'#555',iconOn:'#aaa',font:fonts[6],boxR:'4px',wireW:'6px',wireH:'12px'});
+C('Deep Purple',['dark','colored'],{bg:'#140e20',cardBg:'rgba(40,20,60,.5)',cardBorder:'rgba(150,80,220,.1)',text:'#a080c8',textOn:'#d0b0f0',wireOff:'#2a1838',wireOn:'#182838',pulseOff:'#a040e0,#c060ff',pulseOn:'#4080f0,#60a0ff',levOff:'#5a3880,#3a2060',levOn:'#4070e0,#2850c0',cdBg:'#1e1430',cdBorder:'#3a2858',trkBg:'#0c0818',iconOff:'#4a3068',iconOn:'#8060e0',font:fonts[2],boxR:'10px',wireW:'6px',wireH:'14px'});
+C('Forest',['dark','colored'],{bg:'#0c1408',cardBg:'rgba(20,40,15,.5)',cardBorder:'rgba(60,140,60,.1)',text:'#6a9a60',textOn:'#a0d090',wireOff:'#1a2210',wireOn:'#0a2a0c',pulseOff:'#b85030,#d87050',pulseOn:'#30b840,#50d860',levOff:'#3a5a30,#2a4a20',levOn:'#30c048,#20a038',cdBg:'#1a2810',cdBorder:'#2a4820',trkBg:'#080e06',iconOff:'#3a5a30',iconOn:'#60c060',font:fonts[0],boxR:'8px',wireW:'8px',wireH:'16px'});
+C('Ivory Deco',['light','retro'],{bg:'#f4f0e4',cardBg:'#faf6ec',cardBorder:'#d8d0b8',text:'#7a7060',textOn:'#3a3020',wireOff:'#d0b898',wireOn:'#98c8a0',pulseOff:'#c07838,#d89858',pulseOn:'#48a050,#68c070',levOff:'#a09070,#807050',levOn:'#48a050,#308030',cdBg:'#d0c8b0',cdBorder:'#b0a888',trkBg:'#e0d8c4',iconOff:'#a09878',iconOn:'#4a4030',font:fonts[5],boxR:'2px',wireW:'6px',wireH:'14px'});
+C('Electric Blue',['dark','bold'],{bg:'#060c18',cardBg:'rgba(0,40,100,.3)',cardBorder:'rgba(0,150,255,.15)',text:'#4090d0',textOn:'#80c0ff',wireOff:'#0a1830',wireOn:'#081828',pulseOff:'#0060e0,#2080ff',pulseOn:'#00c0ff,#40e0ff',levOff:'#1a4080,#0a3070',levOn:'#00b0e0,#0090c0',cdBg:'#0a1828',cdBorder:'#1a3868',trkBg:'#040810',iconOff:'#1a3a68',iconOn:'#40c0ff',font:fonts[3],boxR:'6px',wireW:'6px',wireH:'14px'});
+
+// Generate more procedurally
+const palettes = [
+  {name:'Rose Gold',tags:['light','colored'],hue:350,sat:40,bg:'l',accent:'warm'},
+  {name:'Mint Fresh',tags:['light','minimal'],hue:160,sat:35,bg:'l',accent:'cool'},
+  {name:'Lavender',tags:['light','colored'],hue:270,sat:30,bg:'l',accent:'cool'},
+  {name:'Peach',tags:['light','bold'],hue:20,sat:50,bg:'l',accent:'warm'},
+  {name:'Sky',tags:['light','glass'],hue:200,sat:40,bg:'l',accent:'cool'},
+  {name:'Sage',tags:['light','minimal'],hue:140,sat:20,bg:'l',accent:'cool'},
+  {name:'Blush',tags:['light','colored'],hue:340,sat:35,bg:'l',accent:'warm'},
+  {name:'Oat Milk',tags:['light','minimal'],hue:40,sat:15,bg:'l',accent:'warm'},
+  {name:'Glacier',tags:['light','glass'],hue:190,sat:25,bg:'l',accent:'cool'},
+  {name:'Terracotta',tags:['light','retro'],hue:15,sat:45,bg:'l',accent:'warm'},
+  {name:'Cobalt Night',tags:['dark','bold'],hue:230,sat:60,bg:'d',accent:'cool'},
+  {name:'Wine Dark',tags:['dark','colored'],hue:340,sat:40,bg:'d',accent:'warm'},
+  {name:'Teal Depth',tags:['dark','glass'],hue:180,sat:45,bg:'d',accent:'cool'},
+  {name:'Magenta',tags:['dark','bold','colored'],hue:310,sat:55,bg:'d',accent:'warm'},
+  {name:'Jade',tags:['dark','colored'],hue:155,sat:40,bg:'d',accent:'cool'},
+  {name:'Blood Orange',tags:['dark','bold'],hue:15,sat:60,bg:'d',accent:'warm'},
+  {name:'Sapphire',tags:['dark','glass'],hue:215,sat:50,bg:'d',accent:'cool'},
+  {name:'Copper',tags:['dark','retro'],hue:25,sat:50,bg:'d',accent:'warm'},
+  {name:'Emerald',tags:['dark','colored'],hue:145,sat:50,bg:'d',accent:'cool'},
+  {name:'Crimson',tags:['dark','bold'],hue:350,sat:55,bg:'d',accent:'warm'},
+  {name:'Storm',tags:['dark','minimal'],hue:220,sat:10,bg:'d',accent:'cool'},
+  {name:'Charcoal',tags:['dark','minimal'],hue:0,sat:0,bg:'d',accent:'cool'},
+  {name:'Dust',tags:['light','retro'],hue:35,sat:12,bg:'l',accent:'warm'},
+  {name:'Pearl',tags:['light','glass'],hue:0,sat:0,bg:'l',accent:'cool'},
+  {name:'Moss',tags:['dark','retro'],hue:100,sat:25,bg:'d',accent:'cool'},
+  {name:'Plum',tags:['dark','colored'],hue:290,sat:35,bg:'d',accent:'warm'},
+  {name:'Honey',tags:['light','bold'],hue:45,sat:55,bg:'l',accent:'warm'},
+  {name:'Ocean Floor',tags:['dark','glass'],hue:200,sat:40,bg:'d',accent:'cool'},
+  {name:'Cherry Blossom',tags:['light','colored'],hue:335,sat:40,bg:'l',accent:'warm'},
+  {name:'Graphite',tags:['dark','minimal'],hue:210,sat:8,bg:'d',accent:'cool'},
+  {name:'Clay',tags:['light','retro'],hue:10,sat:30,bg:'l',accent:'warm'},
+  {name:'Arctic Fox',tags:['light','minimal'],hue:200,sat:10,bg:'l',accent:'cool'},
+  {name:'Indigo',tags:['dark','bold'],hue:245,sat:50,bg:'d',accent:'cool'},
+  {name:'Champagne',tags:['light','glass'],hue:40,sat:25,bg:'l',accent:'warm'},
+  {name:'Steel',tags:['dark','minimal'],hue:215,sat:12,bg:'d',accent:'cool'},
+  {name:'Pistachio',tags:['light','colored'],hue:120,sat:30,bg:'l',accent:'cool'},
+  {name:'Cocoa',tags:['dark','retro'],hue:20,sat:30,bg:'d',accent:'warm'},
+  {name:'Turquoise',tags:['dark','bold','colored'],hue:175,sat:55,bg:'d',accent:'cool'},
+  {name:'Apricot',tags:['light','bold'],hue:30,sat:55,bg:'l',accent:'warm'},
+  {name:'Ink',tags:['dark','minimal'],hue:230,sat:20,bg:'d',accent:'cool'},
+  {name:'Lemon',tags:['light','bold','colored'],hue:55,sat:55,bg:'l',accent:'warm'},
+  {name:'Smoke',tags:['dark','glass'],hue:0,sat:5,bg:'d',accent:'cool'},
+  {name:'Amethyst',tags:['dark','glass','colored'],hue:275,sat:40,bg:'d',accent:'cool'},
+  {name:'Sand',tags:['light','minimal'],hue:35,sat:18,bg:'l',accent:'warm'},
+  {name:'Onyx',tags:['dark','bold'],hue:0,sat:0,bg:'d',accent:'cool'},
+  {name:'Seafoam',tags:['light','glass'],hue:165,sat:35,bg:'l',accent:'cool'},
+  {name:'Merlot',tags:['dark','retro','colored'],hue:345,sat:45,bg:'d',accent:'warm'},
+  {name:'Cloud',tags:['light','glass','minimal'],hue:220,sat:8,bg:'l',accent:'cool'},
+  {name:'Amber',tags:['dark','bold','colored'],hue:38,sat:60,bg:'d',accent:'warm'},
+  {name:'Mauve',tags:['light','colored'],hue:310,sat:20,bg:'l',accent:'warm'},
+  {name:'Obsidian Blue',tags:['dark','glass'],hue:225,sat:30,bg:'d',accent:'cool'},
+  {name:'Parchment',tags:['light','retro'],hue:42,sat:20,bg:'l',accent:'warm'},
+  {name:'Neon Mint',tags:['dark','bold','colored'],hue:160,sat:70,bg:'d',accent:'cool'},
+  {name:'Slate Warm',tags:['dark','minimal'],hue:20,sat:8,bg:'d',accent:'warm'},
+  {name:'Coral',tags:['light','bold','colored'],hue:5,sat:55,bg:'l',accent:'warm'},
+  {name:'Titanium',tags:['dark','glass','minimal'],hue:210,sat:6,bg:'d',accent:'cool'},
+  {name:'Marigold',tags:['light','colored'],hue:42,sat:60,bg:'l',accent:'warm'},
+  {name:'Moonstone',tags:['light','glass'],hue:230,sat:15,bg:'l',accent:'cool'},
+  {name:'Volcanic',tags:['dark','bold','retro'],hue:10,sat:50,bg:'d',accent:'warm'},
+  {name:'Frost',tags:['light','minimal'],hue:195,sat:15,bg:'l',accent:'cool'},
+  {name:'Walnut',tags:['dark','retro'],hue:25,sat:25,bg:'d',accent:'warm'},
+  {name:'Electric Lime',tags:['dark','bold','colored'],hue:80,sat:65,bg:'d',accent:'cool'},
+  {name:'Porcelain',tags:['light','glass','minimal'],hue:30,sat:8,bg:'l',accent:'warm'},
+  {name:'Deep Teal',tags:['dark','glass'],hue:185,sat:35,bg:'d',accent:'cool'},
+  {name:'Candy',tags:['light','bold','colored'],hue:320,sat:50,bg:'l',accent:'warm'},
+  {name:'Gunmetal',tags:['dark','minimal'],hue:200,sat:10,bg:'d',accent:'cool'},
+  {name:'Olive',tags:['dark','retro'],hue:80,sat:20,bg:'d',accent:'warm'},
+  {name:'Ice Blue',tags:['light','glass'],hue:200,sat:30,bg:'l',accent:'cool'},
+  {name:'Brick',tags:['dark','retro','bold'],hue:5,sat:40,bg:'d',accent:'warm'},
+  {name:'Cotton',tags:['light','minimal'],hue:0,sat:0,bg:'l',accent:'cool'},
+  {name:'Midnight Purple',tags:['dark','glass','colored'],hue:265,sat:40,bg:'d',accent:'cool'},
+  {name:'Sunflower',tags:['light','bold'],hue:48,sat:65,bg:'l',accent:'warm'},
+  {name:'Ash',tags:['dark','minimal'],hue:0,sat:3,bg:'d',accent:'cool'},
+  {name:'Aqua Glass',tags:['light','glass','colored'],hue:185,sat:40,bg:'l',accent:'cool'},
+  {name:'Rum',tags:['dark','retro','colored'],hue:30,sat:40,bg:'d',accent:'warm'},
+  {name:'Powder',tags:['light','minimal'],hue:210,sat:15,bg:'l',accent:'cool'},
+  {name:'Matrix',tags:['dark','bold','retro'],hue:130,sat:80,bg:'d',accent:'cool'},
+  {name:'Bone',tags:['light','retro','minimal'],hue:40,sat:10,bg:'l',accent:'warm'},
+  {name:'Nebula',tags:['dark','bold','glass','colored'],hue:280,sat:50,bg:'d',accent:'cool'},
+];
+
+// Convert palette configs to full concept configs
+palettes.forEach(p => {
+  const h = p.hue, s = p.sat;
+  const isDark = p.bg === 'd';
+  const fi = Math.floor(Math.random()*fonts.length);
+  const brs = [0,4,8,12,16,20];
+  const br = brs[Math.floor(Math.random()*brs.length)];
+  const wws = [4,6,8,10];
+  const ww = wws[Math.floor(Math.random()*wws.length)];
+
+  let cfg;
+  if (isDark) {
+    const bgL = 6 + Math.floor(Math.random()*6);
+    cfg = {
+      bg: s > 15 ? `linear-gradient(135deg,${hsl(h,s,bgL)},${hsl(h+10,s-5,bgL+2)})` : hsl(h,s,bgL),
+      cardBg: hsla(h,s*0.4,bgL+8,.45),
+      cardBorder: hsla(h,s*0.6,50,.08+Math.random()*.08),
+      text: hsl(h,s*0.4,65),
+      textOn: hsl(h,s*0.3,88),
+      wireOff: hsl((h+180)%360,20,14),
+      wireOn: hsl(h,25,14),
+      pulseOff: `${hsl(0,70,58)},${hsl(0,70,68)}`,
+      pulseOn: `${hsl(h,60,50)},${hsl(h,55,65)}`,
+      levOff: `${hsl(h,s*0.3,35)},${hsl(h,s*0.3,25)}`,
+      levOn: `${hsl(h,s*0.7,48)},${hsl(h,s*0.7,38)}`,
+      cdBg: hsl(h,s*0.3,12),
+      cdBorder: hsl(h,s*0.4,22),
+      trkBg: hsl(h,s*0.2,5),
+      iconOff: hsl(h,s*0.3,28),
+      iconOn: hsl(h,s*0.5,60),
+      font: fonts[fi],
+      boxR: br+'px',
+      wireW: ww+'px',
+      wireH: (ww+8)+'px',
+    };
+  } else {
+    const bgL = 92 + Math.floor(Math.random()*5);
+    cfg = {
+      bg: s > 15 ? `linear-gradient(135deg,${hsl(h,s*0.4,bgL)},${hsl(h+10,s*0.3,bgL-2)})` : hsl(h,s*0.3,bgL),
+      cardBg: hsla(h,s*0.2,99,.7),
+      cardBorder: hsla(h,s*0.3,40,.08+Math.random()*.06),
+      text: hsl(h,s*0.3,38),
+      textOn: hsl(h,s*0.3,15),
+      wireOff: hsl(0,s*0.3,82),
+      wireOn: hsl(140,25,80),
+      pulseOff: `${hsl(0,60,55)},${hsl(0,55,65)}`,
+      pulseOn: `${hsl(140,55,42)},${hsl(140,50,55)}`,
+      levOff: `${hsl(h,s*0.2,62)},${hsl(h,s*0.2,50)}`,
+      levOn: `${hsl(140,50,42)},${hsl(140,55,32)}`,
+      cdBg: hsl(h,s*0.2,85),
+      cdBorder: hsl(h,s*0.2,75),
+      trkBg: hsl(h,s*0.15,88),
+      iconOff: hsl(h,s*0.2,70),
+      iconOn: hsl(h,s*0.3,30),
+      font: fonts[fi],
+      boxR: br+'px',
+      wireW: ww+'px',
+      wireH: (ww+8)+'px',
+    };
+  }
+  C(p.name, p.tags, cfg);
+});
+
+function renderConcept(c, idx) {
+  const cfg = c.cfg;
+  const id = `c${idx}`;
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.dataset.tags = c.tags.join(' ');
+  card.style.cssText = `background:${cfg.bg};font-family:${cfg.font};--box-r:${cfg.boxR};--wire-w:${cfg.wireW};--wire-h:${cfg.wireH}`;
+
+  const states = [
+    {w:'green',s:'1'},
+    {w:'red',s:'0'},
+    {w:'amber',s:'1'},
+  ];
+
+  let fusesHtml = '';
+  states.forEach((st,i) => {
+    const isOn = st.s==='1';
+    const wireCol = st.w==='green'?cfg.wireOn:st.w==='amber'?cfg.wireOff:cfg.wireOff;
+    const pulseCols = st.w==='green'?cfg.pulseOn:st.w==='amber'?
+      (cfg.pulseOff.replace(/ef4444|d05050|e04848|e06090|ff4080|ff2020|40a040|0060e0|a040e0|8040e0|c85020|aa3030|b87040|d85050|4080e0|6090c0|a040e0|c07838/g,m=>'f59e0b').replace(/f87171|e07070|e87878|f080a0|ff70a0|ff6060|60c060|2080ff|c060ff|a060ff|e07040|cc5050|d89858|e07070|60a0ff|80b0e0|c060ff|d09060/g,m=>'fbbf24'))
+      :cfg.pulseOff;
+    const levCols = isOn?cfg.levOn:cfg.levOff;
+    const [l1,l2] = levCols.split(',');
+    const iconCol = isOn?cfg.iconOn:cfg.iconOff;
+    const textCol = isOn?cfg.textOn:cfg.text;
+    const [p1,p2] = pulseCols.split(',');
+
+    // Terminal glow for green
+    const cdExtra = st.w==='green'?`box-shadow:0 0 4px ${cfg.iconOn}33`:
+                    st.w==='amber'?`box-shadow:0 0 3px rgba(245,158,11,.2)`:'';
+    const cdBorderCol = st.w==='green'?cfg.iconOn+'80':st.w==='amber'?'rgba(245,158,11,.4)':cfg.cdBorder;
+
+    fusesHtml += `
+      <div class="mini-fuse" data-s="${st.s}" data-w="${st.w}">
+        <div class="m-cd" style="background:${cfg.cdBg};border:2px solid ${cdBorderCol};${cdExtra}"></div>
+        <div class="m-wire m-wi" style="background:${cfg.wireOff};box-shadow:inset 1px 0 1px rgba(0,0,0,.15),inset -1px 0 1px rgba(0,0,0,.15)">
+          <div style="position:absolute;left:0;right:0;top:calc(-1*var(--wire-h,14px));height:var(--wire-h,14px);border-radius:var(--wire-r,3px);background:linear-gradient(180deg,transparent,${cfg.pulseOff.split(',')[0]},${cfg.pulseOff.split(',')[1]},${cfg.pulseOff.split(',')[0]},transparent);animation:fl .6s linear infinite;animation-delay:${i*0.1}s"></div>
+        </div>
+        <div class="m-box" style="background:${cfg.cardBg};border:1px solid ${st.w==='green'?cfg.iconOn+'20':st.w==='amber'?'rgba(245,158,11,.15)':cfg.cardBorder}">
+          <div class="m-icon" style="color:${iconCol}">${icons[i]}</div>
+          <div class="m-lb" style="color:${textCol}">${names[i]}</div>
+          <div class="m-trk" style="background:${cfg.trkBg};border:1px solid ${cfg.cardBorder}">
+            <div class="m-lev" style="background:linear-gradient(180deg,${l1},${l2});${isOn?'top:auto;bottom:2px':'top:2px'};${isOn?`box-shadow:0 0 8px ${cfg.iconOn}40`:'box-shadow:0 2px 3px rgba(0,0,0,.3)'}"></div>
+          </div>
+          <div class="m-inf" style="color:${cfg.text}">6 sites</div>
+        </div>
+        <div class="m-wire" style="background:${wireCol};box-shadow:inset 1px 0 1px rgba(0,0,0,.15),inset -1px 0 1px rgba(0,0,0,.15)">
+          <div style="position:absolute;left:0;right:0;top:calc(-1*var(--wire-h,14px));height:var(--wire-h,14px);border-radius:var(--wire-r,3px);background:linear-gradient(180deg,transparent,${p1},${p2},${p1},transparent);animation:fl ${st.w==='amber'?'1.2':st.w==='green'?'.9':'.6'}s linear infinite;animation-delay:${i*0.1}s"></div>
+        </div>
+        <div class="m-cd" style="background:${cfg.cdBg};border:2px solid ${cdBorderCol};${cdExtra}"></div>
+      </div>`;
+  });
+
+  card.innerHTML = `
+    <div class="card-num">#${idx+1}</div>
+    <div class="card-name">${c.name}</div>
+    <div class="mini-grid">${fusesHtml}</div>
+  `;
+
+  card.addEventListener('click', () => {
+    const ov = document.getElementById('overlay');
+    const oc = document.getElementById('overlay-content');
+    const clone = card.cloneNode(true);
+    clone.style.transform = 'scale(1.6)';
+    clone.style.transformOrigin = 'top center';
+    clone.style.borderRadius = '14px';
+    clone.style.pointerEvents = 'none';
+    oc.innerHTML = '';
+    oc.appendChild(clone);
+    ov.style.display = 'block';
+  });
+
+  return card;
+}
+
+const grid = document.getElementById('grid');
+concepts.forEach((c,i) => grid.appendChild(renderConcept(c,i)));
+
+// Filter
+document.querySelectorAll('.controls button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.controls button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.f;
+    document.querySelectorAll('.card').forEach(card => {
+      if (f === 'all') { card.classList.remove('hidden'); return; }
+      card.classList.toggle('hidden', !card.dataset.tags.includes(f));
+    });
+  });
+});
+</script>
+</body>
+</html>

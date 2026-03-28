@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FuseBoard — Switch Designs</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#0c0e14;color:#e8eaf0;padding:30px 16px}
+h1{text-align:center;font-size:1.6rem;margin-bottom:6px;font-weight:800}
+p.sub{text-align:center;color:#6b7280;font-size:.85rem;margin-bottom:36px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;max-width:1500px;margin:0 auto}
+.concept{border-radius:14px;padding:16px 12px;position:relative;overflow:hidden}
+.concept h3{font-size:.78rem;font-weight:700;margin-bottom:2px;text-align:center;position:relative;z-index:2}
+.concept .desc{font-size:.62rem;color:rgba(255,255,255,.35);margin-bottom:12px;text-align:center;position:relative;z-index:2}
+.fuses{display:flex;gap:10px;justify-content:center;position:relative;z-index:2}
+.fuse{display:flex;flex-direction:column;align-items:center;width:72px;cursor:pointer;user-select:none;gap:0}
+.fuse-label{font-size:.68rem;font-weight:600;margin-bottom:4px;text-align:center;transition:.2s}
+.fuse-info{font-size:.52rem;opacity:.4;margin-top:2px}
+
+/* Shared wire */
+.wire{width:8px;height:14px;border-radius:4px;position:relative;overflow:hidden}
+.wire::after{content:'';position:absolute;left:0;right:0;top:-14px;height:14px;border-radius:4px;animation:fl .7s linear infinite}
+@keyframes fl{0%{top:-14px}100%{top:calc(100% + 14px)}}
+.fuse:nth-child(1) .wire::after{animation-delay:0s}
+.fuse:nth-child(2) .wire::after{animation-delay:.1s}
+.fuse:nth-child(3) .wire::after{animation-delay:.2s}
+/* Connector */
+.cd{width:10px;height:10px;border-radius:50%;background:#1e2028;border:2px solid #2e3240;transition:.3s}
+
+/* ═══════════════════ SWITCH DESIGNS ═══════════════════ */
+
+/* 1. CLASSIC LEVER (current) */
+.sw-lever{width:26px;height:40px;background:#0c0e12;border:1px solid #252a34;border-radius:8px;position:relative;overflow:hidden}
+.sw-lever .knob{position:absolute;left:2px;right:2px;height:16px;border-radius:6px;transition:.25s cubic-bezier(.22,1,.36,1);box-shadow:0 2px 4px rgba(0,0,0,.5)}
+.sw-lever[data-on="0"] .knob{top:2px;background:linear-gradient(180deg,#6a7a90,#4a5a70)}
+.sw-lever[data-on="1"] .knob{bottom:2px;top:auto;background:linear-gradient(180deg,#22c55e,#16a34a);box-shadow:0 0 10px rgba(34,197,94,.3)}
+
+/* 2. PILL TOGGLE (iOS style) */
+.sw-pill{width:36px;height:20px;border-radius:10px;position:relative;transition:.25s;cursor:pointer}
+.sw-pill[data-on="0"]{background:#2a2e38}
+.sw-pill[data-on="1"]{background:#22c55e}
+.sw-pill .knob{position:absolute;top:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.25s cubic-bezier(.22,1,.36,1);box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.sw-pill[data-on="0"] .knob{left:2px}
+.sw-pill[data-on="1"] .knob{left:18px}
+
+/* 3. ROCKER SWITCH (wide tilting) */
+.sw-rocker{width:36px;height:24px;background:#0c0e12;border:1px solid #252a34;border-radius:4px;position:relative;overflow:hidden}
+.sw-rocker .knob{position:absolute;inset:2px;border-radius:2px;transition:.2s;transform-origin:center center}
+.sw-rocker[data-on="0"] .knob{background:linear-gradient(180deg,#5a6070 0%,#3a4050 40%,#4a5060 41%,#3a4050 100%);transform:perspective(60px) rotateX(-12deg)}
+.sw-rocker[data-on="1"] .knob{background:linear-gradient(180deg,#18a845 0%,#22c55e 40%,#1aaa48 41%,#169a3a 100%);transform:perspective(60px) rotateX(12deg);box-shadow:0 0 8px rgba(34,197,94,.25)}
+
+/* 4. PUSH BUTTON (circular, press in/out) */
+.sw-push{width:32px;height:32px;border-radius:50%;background:#1a1e28;border:2px solid #2a3040;position:relative;display:flex;align-items:center;justify-content:center}
+.sw-push .knob{width:20px;height:20px;border-radius:50%;transition:.2s;box-shadow:0 2px 4px rgba(0,0,0,.4)}
+.sw-push[data-on="0"] .knob{background:radial-gradient(circle at 40% 35%,#6a7a90,#3e4e60);transform:translateY(-1px)}
+.sw-push[data-on="1"] .knob{background:radial-gradient(circle at 40% 35%,#34d472,#1a9a3a);transform:translateY(1px);box-shadow:0 0 10px rgba(34,197,94,.3),inset 0 1px 2px rgba(0,0,0,.2)}
+
+/* 5. CIRCUIT BREAKER (wide, labeled) */
+.sw-breaker{width:40px;height:28px;background:#0a0c10;border:2px solid #2a2e38;border-radius:3px;position:relative;overflow:hidden;display:flex;align-items:center}
+.sw-breaker .knob{width:50%;height:calc(100% - 4px);margin:2px;border-radius:2px;transition:.2s;display:flex;align-items:center;justify-content:center;font-size:.45rem;font-weight:800;letter-spacing:.02em}
+.sw-breaker[data-on="0"] .knob{background:#3a3e48;color:#888;margin-left:2px}
+.sw-breaker[data-on="1"] .knob{background:#22c55e;color:#052e10;margin-left:auto}
+
+/* 6. KNIFE SWITCH (Frankenstein) */
+.sw-knife{width:20px;height:44px;position:relative}
+.sw-knife .base{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:14px;height:10px;background:#3a3020;border-radius:2px;border:1px solid #5a4a30}
+.sw-knife .arm{position:absolute;bottom:6px;left:50%;width:4px;border-radius:2px;background:linear-gradient(180deg,#8a7a60,#6a5a40);transition:.3s cubic-bezier(.22,1,.36,1);transform-origin:bottom center}
+.sw-knife[data-on="0"] .arm{height:30px;transform:translateX(-50%) rotate(-25deg)}
+.sw-knife[data-on="1"] .arm{height:34px;transform:translateX(-50%) rotate(0deg)}
+.sw-knife .contact{position:absolute;top:0;left:50%;transform:translateX(-50%);width:10px;height:6px;background:#5a4a30;border-radius:2px 2px 0 0;border:1px solid #7a6a50;border-bottom:none}
+.sw-knife[data-on="1"] .arm{background:linear-gradient(180deg,#c0a040,#a08830);box-shadow:0 0 6px rgba(200,160,40,.3)}
+
+/* 7. DIAL / ROTARY */
+.sw-dial{width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 45% 40%,#2a3040,#14181e);border:2px solid #2a3040;position:relative}
+.sw-dial .knob{position:absolute;inset:4px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#4a5a70,#2a3a4a);transition:.3s}
+.sw-dial .knob::after{content:'';position:absolute;top:4px;left:50%;transform:translateX(-50%);width:3px;height:8px;border-radius:2px;background:#8a9ab0;transition:.3s}
+.sw-dial[data-on="0"] .knob{transform:rotate(-45deg)}
+.sw-dial[data-on="1"] .knob{transform:rotate(45deg)}
+.sw-dial[data-on="1"] .knob::after{background:#4ade80;box-shadow:0 0 4px rgba(34,197,94,.4)}
+
+/* 8. FADER / SLIDER (mixing board) */
+.sw-fader{width:16px;height:48px;background:#0a0c10;border:1px solid #1e2028;border-radius:3px;position:relative}
+.sw-fader .track{position:absolute;left:50%;transform:translateX(-50%);width:2px;top:6px;bottom:6px;background:#1a1e28;border-radius:1px}
+.sw-fader .knob{position:absolute;left:1px;right:1px;height:12px;background:linear-gradient(180deg,#6a7a90,#4a5a70);border-radius:2px;transition:.25s;box-shadow:0 1px 3px rgba(0,0,0,.4)}
+.sw-fader .knob::after{content:'';position:absolute;left:3px;right:3px;top:50%;height:1px;background:rgba(255,255,255,.2)}
+.sw-fader[data-on="0"] .knob{top:4px}
+.sw-fader[data-on="1"] .knob{bottom:4px;top:auto;background:linear-gradient(180deg,#34d472,#1aaa48);box-shadow:0 0 6px rgba(34,197,94,.2)}
+
+/* 9. TOGGLE WITH LED */
+.sw-led{display:flex;flex-direction:column;align-items:center;gap:4px}
+.sw-led .toggle{width:22px;height:36px;background:#0c0e12;border:1px solid #252a34;border-radius:6px;position:relative;overflow:hidden}
+.sw-led .toggle .knob{position:absolute;left:2px;right:2px;height:14px;border-radius:4px;transition:.2s cubic-bezier(.22,1,.36,1);box-shadow:0 2px 3px rgba(0,0,0,.4)}
+.sw-led[data-on="0"] .toggle .knob{top:2px;background:linear-gradient(180deg,#5a6070,#3e4450)}
+.sw-led[data-on="1"] .toggle .knob{bottom:2px;top:auto;background:linear-gradient(180deg,#e2e8f0,#94a3b8)}
+.sw-led .led{width:6px;height:6px;border-radius:50%;transition:.3s}
+.sw-led[data-on="0"] .led{background:#3a1818;box-shadow:0 0 2px rgba(239,68,68,.2)}
+.sw-led[data-on="1"] .led{background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,.5)}
+
+/* 10. MINIMAL DOT */
+.sw-dot{width:28px;height:28px;border-radius:50%;border:2px solid #2a3040;display:flex;align-items:center;justify-content:center;transition:.25s;cursor:pointer}
+.sw-dot[data-on="0"]{background:transparent}
+.sw-dot[data-on="1"]{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.4)}
+.sw-dot .knob{width:10px;height:10px;border-radius:50%;transition:.25s}
+.sw-dot[data-on="0"] .knob{background:#3a4050;transform:scale(.8)}
+.sw-dot[data-on="1"] .knob{background:#22c55e;transform:scale(1);box-shadow:0 0 8px rgba(34,197,94,.4)}
+
+/* 11. FLIP SWITCH (3D realistic) */
+.sw-flip{width:24px;height:40px;background:linear-gradient(180deg,#1a1e28,#101418);border:1px solid #2a3040;border-radius:4px;position:relative;overflow:hidden;perspective:80px}
+.sw-flip .knob{position:absolute;left:3px;right:3px;height:20px;border-radius:3px;transition:.3s cubic-bezier(.22,1,.36,1)}
+.sw-flip[data-on="0"] .knob{top:3px;background:linear-gradient(180deg,#5a6878,#3a4858);transform:perspective(80px) rotateX(10deg);box-shadow:0 3px 4px rgba(0,0,0,.4)}
+.sw-flip[data-on="1"] .knob{bottom:3px;top:auto;background:linear-gradient(180deg,#22c55e,#18a848);transform:perspective(80px) rotateX(-10deg);box-shadow:0 -2px 4px rgba(0,0,0,.3),0 0 8px rgba(34,197,94,.2)}
+
+/* 12. SQUARE BUTTON (mechanical keyboard) */
+.sw-mech{width:30px;height:30px;border-radius:4px;background:#0e1018;border:1px solid #2a3040;position:relative;display:flex;align-items:center;justify-content:center}
+.sw-mech .knob{width:22px;height:22px;border-radius:3px;transition:.15s;font-size:.5rem;font-weight:800;display:flex;align-items:center;justify-content:center}
+.sw-mech[data-on="0"] .knob{background:linear-gradient(180deg,#3a4050,#2a3040);color:#5a6070;box-shadow:0 3px 0 #1a1e28,0 3px 4px rgba(0,0,0,.3);transform:translateY(-1px)}
+.sw-mech[data-on="1"] .knob{background:linear-gradient(180deg,#1a9a3a,#168830);color:#a0ffb0;box-shadow:0 1px 0 #0a4a1a,0 1px 2px rgba(0,0,0,.3);transform:translateY(1px)}
+
+/* 13. HORIZONTAL SLIDE */
+.sw-slide{width:40px;height:18px;background:#0c0e12;border:1px solid #252a34;border-radius:9px;position:relative}
+.sw-slide .knob{position:absolute;top:2px;width:14px;height:12px;border-radius:6px;transition:.25s cubic-bezier(.22,1,.36,1);box-shadow:0 1px 3px rgba(0,0,0,.4)}
+.sw-slide[data-on="0"] .knob{left:2px;background:linear-gradient(180deg,#5a6070,#3e4450)}
+.sw-slide[data-on="1"] .knob{right:2px;left:auto;background:linear-gradient(180deg,#22c55e,#16a34a);box-shadow:0 0 6px rgba(34,197,94,.25)}
+.sw-slide[data-on="1"]{background:#0a1a10;border-color:rgba(34,197,94,.2)}
+
+/* 14. PULL CHAIN (cord) */
+.sw-chain{width:20px;height:48px;position:relative;display:flex;flex-direction:column;align-items:center}
+.sw-chain .mount{width:14px;height:8px;background:#3a3e48;border-radius:2px 2px 4px 4px;border:1px solid #4a5060}
+.sw-chain .cord{width:2px;background:#6a7080;transition:.25s;position:relative}
+.sw-chain[data-on="0"] .cord{height:22px}
+.sw-chain[data-on="1"] .cord{height:30px}
+.sw-chain .handle{width:10px;height:10px;border-radius:50%;transition:.25s;box-shadow:0 2px 3px rgba(0,0,0,.3)}
+.sw-chain[data-on="0"] .handle{background:linear-gradient(180deg,#6a7a90,#4a5a70)}
+.sw-chain[data-on="1"] .handle{background:linear-gradient(180deg,#34d472,#1aaa48);box-shadow:0 0 8px rgba(34,197,94,.3)}
+
+/* 15. EMERGENCY STOP (mushroom button) */
+.sw-estop{width:36px;height:36px;position:relative;display:flex;align-items:center;justify-content:center}
+.sw-estop .base{position:absolute;bottom:2px;width:32px;height:10px;background:#1a1e28;border-radius:4px;border:1px solid #2a3040}
+.sw-estop .knob{width:28px;height:28px;border-radius:50%;transition:.2s;position:relative;z-index:1}
+.sw-estop[data-on="0"] .knob{background:radial-gradient(circle at 40% 35%,#7a8a9a,#4a5a6a);transform:translateY(0);box-shadow:0 4px 6px rgba(0,0,0,.3)}
+.sw-estop[data-on="1"] .knob{background:radial-gradient(circle at 40% 35%,#34d472,#18a840);transform:translateY(3px);box-shadow:0 1px 2px rgba(0,0,0,.3),0 0 12px rgba(34,197,94,.3)}
+
+/* 16. KEYHOLE SWITCH */
+.sw-key{width:30px;height:38px;background:#141820;border:2px solid #2a3040;border-radius:4px;position:relative;display:flex;align-items:center;justify-content:center}
+.sw-key .hole{width:8px;height:14px;background:#080a0e;border-radius:4px 4px 2px 2px;position:relative}
+.sw-key .hole::after{content:'';position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);width:3px;height:6px;background:#080a0e}
+.sw-key .indicator{position:absolute;top:4px;right:4px;width:5px;height:5px;border-radius:50%;transition:.3s}
+.sw-key[data-on="0"] .indicator{background:#ef4444;box-shadow:0 0 4px rgba(239,68,68,.4)}
+.sw-key[data-on="1"] .indicator{background:#22c55e;box-shadow:0 0 4px rgba(34,197,94,.4)}
+
+/* 17. THUMB WHEEL */
+.sw-wheel{width:12px;height:42px;background:#0e1018;border:1px solid #2a3040;border-radius:6px;position:relative;overflow:hidden}
+.sw-wheel .knob{position:absolute;left:0;right:0;height:100%;transition:.3s;background:repeating-linear-gradient(0deg,#3a4050 0px,#3a4050 3px,#2a3040 3px,#2a3040 6px)}
+.sw-wheel[data-on="0"] .knob{top:0}
+.sw-wheel[data-on="1"] .knob{top:-6px;background:repeating-linear-gradient(0deg,#1a8a3a 0px,#1a8a3a 3px,#168830 3px,#168830 6px)}
+
+/* 18. PADDLE SWITCH */
+.sw-paddle{width:18px;height:44px;position:relative}
+.sw-paddle .housing{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:16px;height:14px;background:#1a1e28;border:1px solid #2a3040;border-radius:3px}
+.sw-paddle .arm{position:absolute;left:50%;width:10px;height:20px;border-radius:5px;transition:.25s cubic-bezier(.22,1,.36,1);transform-origin:center bottom;box-shadow:0 2px 4px rgba(0,0,0,.3)}
+.sw-paddle[data-on="0"] .arm{bottom:50%;transform:translateX(-50%);background:linear-gradient(180deg,#5a6878,#3a4858)}
+.sw-paddle[data-on="1"] .arm{top:50%;bottom:auto;transform:translateX(-50%) rotate(180deg);background:linear-gradient(180deg,#22c55e,#18a848);box-shadow:0 -2px 4px rgba(0,0,0,.3),0 0 6px rgba(34,197,94,.2)}
+
+/* 19. DIP SWITCH (tiny) */
+.sw-dip{width:12px;height:22px;background:#0e1018;border:1px solid #2a3040;border-radius:2px;position:relative}
+.sw-dip .knob{position:absolute;left:1px;right:1px;height:9px;border-radius:1px;transition:.2s}
+.sw-dip[data-on="0"] .knob{top:1px;background:#4a5060}
+.sw-dip[data-on="1"] .knob{bottom:1px;top:auto;background:#22c55e;box-shadow:0 0 4px rgba(34,197,94,.3)}
+
+/* 20. TOUCH PAD (capacitive) */
+.sw-touch{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#14181e,#1a1e28);border:1px solid #2a3040;position:relative;display:flex;align-items:center;justify-content:center;transition:.3s}
+.sw-touch[data-on="1"]{border-color:rgba(34,197,94,.25);box-shadow:0 0 12px rgba(34,197,94,.08)}
+.sw-touch .ring{width:20px;height:20px;border-radius:50%;border:2px solid #2a3040;transition:.3s;display:flex;align-items:center;justify-content:center}
+.sw-touch[data-on="1"] .ring{border-color:rgba(34,197,94,.4)}
+.sw-touch .knob{width:8px;height:8px;border-radius:50%;transition:.3s}
+.sw-touch[data-on="0"] .knob{background:#2a3040}
+.sw-touch[data-on="1"] .knob{background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,.5)}
+
+/* 21. SPRING TOGGLE */
+.sw-spring{width:20px;height:44px;position:relative;display:flex;flex-direction:column;align-items:center}
+.sw-spring .coil{width:12px;transition:.25s;background:repeating-linear-gradient(0deg,transparent 0px,transparent 2px,#4a5060 2px,#4a5060 3px);border-radius:2px}
+.sw-spring[data-on="0"] .coil{height:14px}
+.sw-spring[data-on="1"] .coil{height:24px}
+.sw-spring .knob{width:16px;height:16px;border-radius:50%;transition:.25s;box-shadow:0 2px 4px rgba(0,0,0,.4)}
+.sw-spring[data-on="0"] .knob{background:radial-gradient(circle at 40% 35%,#6a7a90,#3e4e60)}
+.sw-spring[data-on="1"] .knob{background:radial-gradient(circle at 40% 35%,#34d472,#1a9a3a);box-shadow:0 0 8px rgba(34,197,94,.3)}
+.sw-spring .plate{width:18px;height:4px;background:#2a3040;border-radius:2px}
+
+/* 22. ARC GAUGE */
+.sw-arc{width:40px;height:28px;position:relative;overflow:hidden}
+.sw-arc .track{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:36px;height:18px;border-radius:18px 18px 0 0;background:#1a1e28;border:2px solid #2a3040;border-bottom:none}
+.sw-arc .needle{position:absolute;bottom:2px;left:50%;width:3px;height:14px;background:#5a6878;border-radius:2px;transform-origin:bottom center;transition:.3s}
+.sw-arc[data-on="0"] .needle{transform:translateX(-50%) rotate(-40deg)}
+.sw-arc[data-on="1"] .needle{transform:translateX(-50%) rotate(40deg);background:#22c55e;box-shadow:0 0 4px rgba(34,197,94,.3)}
+.sw-arc .pivot{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:6px;height:6px;border-radius:50%;background:#3a4050;z-index:1}
+
+/* 23. PLUNGER */
+.sw-plunger{width:22px;height:46px;position:relative;display:flex;flex-direction:column;align-items:center}
+.sw-plunger .cylinder{width:18px;height:28px;background:#141820;border:1px solid #2a3040;border-radius:4px;position:relative;overflow:hidden}
+.sw-plunger .piston{position:absolute;left:2px;right:2px;height:14px;border-radius:2px;transition:.25s;box-shadow:0 2px 3px rgba(0,0,0,.4)}
+.sw-plunger[data-on="0"] .piston{top:2px;background:linear-gradient(180deg,#5a6878,#3a4858)}
+.sw-plunger[data-on="1"] .piston{bottom:2px;top:auto;background:linear-gradient(180deg,#22c55e,#18a848);box-shadow:0 0 6px rgba(34,197,94,.2)}
+.sw-plunger .handle{width:8px;height:12px;background:#3a4050;border-radius:2px 2px 4px 4px;margin-top:-1px}
+.sw-plunger[data-on="1"] .handle{background:#1a8a3a}
+
+/* 24. RING TOGGLE */
+.sw-ring{width:32px;height:32px;border-radius:50%;border:3px solid #2a3040;position:relative;transition:.3s;display:flex;align-items:center;justify-content:center}
+.sw-ring[data-on="1"]{border-color:#22c55e;box-shadow:0 0 12px rgba(34,197,94,.15)}
+.sw-ring .knob{width:14px;height:14px;border-radius:50%;transition:.3s}
+.sw-ring[data-on="0"] .knob{background:#2a3040}
+.sw-ring[data-on="1"] .knob{background:#22c55e;box-shadow:0 0 6px rgba(34,197,94,.4)}
+
+</style>
+</head>
+<body>
+
+<h1>24 Switch Designs</h1>
+<p class="sub">Each with a different mechanism. Click any switch to toggle. Which feel right for FuseBoard?</p>
+
+<div class="grid" id="grid"></div>
+
+<script>
+const switches = [
+  {name:'Classic Lever',desc:'The original. Vertical slider.',cls:'sw-lever',html:'<div class="knob"></div>'},
+  {name:'Pill Toggle',desc:'iOS-style horizontal pill.',cls:'sw-pill',html:'<div class="knob"></div>'},
+  {name:'Rocker',desc:'Wide tilting rocker plate.',cls:'sw-rocker',html:'<div class="knob"></div>'},
+  {name:'Push Button',desc:'Circular press in/out.',cls:'sw-push',html:'<div class="knob"></div>'},
+  {name:'Circuit Breaker',desc:'Wide panel breaker with label.',cls:'sw-breaker',html:'<div class="knob"></div>',label:true},
+  {name:'Knife Switch',desc:'Frankenstein-style throw arm.',cls:'sw-knife',html:'<div class="contact"></div><div class="arm"></div><div class="base"></div>'},
+  {name:'Rotary Dial',desc:'Turn to activate.',cls:'sw-dial',html:'<div class="knob"></div>'},
+  {name:'Fader',desc:'Mixing-board vertical slider.',cls:'sw-fader',html:'<div class="track"></div><div class="knob"></div>'},
+  {name:'Toggle + LED',desc:'Classic lever with status light.',cls:'sw-led',html:'<div class="toggle"><div class="knob"></div></div><div class="led"></div>'},
+  {name:'Minimal Dot',desc:'Just a circle. Tap to fill.',cls:'sw-dot',html:'<div class="knob"></div>'},
+  {name:'Flip Switch',desc:'3D perspective flip.',cls:'sw-flip',html:'<div class="knob"></div>'},
+  {name:'Mechanical Key',desc:'Cherry MX style keycap.',cls:'sw-mech',html:'<div class="knob"></div>',label:true},
+  {name:'Horizontal Slide',desc:'Left-right pill track.',cls:'sw-slide',html:'<div class="knob"></div>'},
+  {name:'Pull Chain',desc:'Ceiling fan cord pull.',cls:'sw-chain',html:'<div class="mount"></div><div class="cord"></div><div class="handle"></div>'},
+  {name:'Emergency Stop',desc:'Mushroom push button.',cls:'sw-estop',html:'<div class="base"></div><div class="knob"></div>'},
+  {name:'Keyhole',desc:'Key-operated with indicator.',cls:'sw-key',html:'<div class="hole"></div><div class="indicator"></div>'},
+  {name:'Thumb Wheel',desc:'Scroll wheel selector.',cls:'sw-wheel',html:'<div class="knob"></div>'},
+  {name:'Paddle',desc:'Up/down paddle toggle.',cls:'sw-paddle',html:'<div class="housing"></div><div class="arm"></div>'},
+  {name:'DIP Switch',desc:'Tiny circuit-board style.',cls:'sw-dip',html:'<div class="knob"></div>'},
+  {name:'Touch Pad',desc:'Capacitive touch surface.',cls:'sw-touch',html:'<div class="ring"><div class="knob"></div></div>'},
+  {name:'Spring Loaded',desc:'Coil spring with ball top.',cls:'sw-spring',html:'<div class="knob"></div><div class="coil"></div><div class="plate"></div>'},
+  {name:'Arc Gauge',desc:'Needle sweeps an arc.',cls:'sw-arc',html:'<div class="track"></div><div class="needle"></div><div class="pivot"></div>'},
+  {name:'Plunger',desc:'Piston in cylinder.',cls:'sw-plunger',html:'<div class="handle"></div><div class="cylinder"><div class="piston"></div></div>'},
+  {name:'Ring Toggle',desc:'Glowing ring indicator.',cls:'sw-ring',html:'<div class="knob"></div>'},
+];
+
+const names = ['Social','Video','Shop'];
+const icons = [
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17 2 12 7 7 2"/></svg>',
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>',
+];
+
+const grid = document.getElementById('grid');
+
+switches.forEach((sw, idx) => {
+  const concept = document.createElement('div');
+  concept.className = 'concept';
+  concept.style.background = 'linear-gradient(135deg,#16181e,#1a1c24)';
+
+  let fusesHtml = '';
+  const states = [true, false, true];
+
+  states.forEach((on, i) => {
+    const wireOffBg = on ? '#162a1e' : '#2a1e22';
+    const wireAnim = on
+      ? 'background:linear-gradient(180deg,transparent,#22c55e,#4ade80,#22c55e,transparent);animation:fl .9s linear infinite'
+      : 'background:linear-gradient(180deg,transparent,#ef4444,#f87171,#ef4444,transparent);animation:fl .6s linear infinite';
+    const labelColor = on ? '#e2e8f0' : '#6b7280';
+    const iconColor = on ? '#cbd5e1' : '#3a4050';
+    const cdGlow = on ? 'border-color:rgba(34,197,94,.5);box-shadow:0 0 4px rgba(34,197,94,.2);background:#1a3828' : '';
+
+    const breakerLabel = sw.label ? (on ? 'ON' : 'OFF') : '';
+    const mechLabel = sw.cls === 'sw-mech' ? (on ? '1' : '0') : '';
+    let swInner = sw.html;
+    if (sw.label && sw.cls === 'sw-breaker') swInner = `<div class="knob">${breakerLabel}</div>`;
+    if (sw.cls === 'sw-mech') swInner = `<div class="knob">${mechLabel}</div>`;
+
+    fusesHtml += `
+      <div class="fuse">
+        <div class="cd" style="${cdGlow}"></div>
+        <div class="wire" style="background:#2a1e22;box-shadow:inset 1px 0 1px rgba(0,0,0,.2),inset -1px 0 1px rgba(0,0,0,.2)"><div style="position:absolute;left:0;right:0;top:-14px;height:14px;border-radius:4px;${wireAnim};animation-delay:${i*.1}s"></div></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 4px;background:rgba(30,32,42,.5);border:1px solid rgba(148,163,184,.07);border-radius:10px;backdrop-filter:blur(8px);min-height:90px;justify-content:center;width:100%">
+          <div class="fuse-icon" style="width:16px;height:16px;color:${iconColor}">${icons[i]}</div>
+          <div class="fuse-label" style="color:${labelColor}">${names[i]}</div>
+          <div class="${sw.cls}" data-on="${on?1:0}" onclick="event.stopPropagation();const s=this;s.dataset.on=s.dataset.on==='1'?'0':'1';${sw.label?`s.querySelector('.knob').textContent=s.dataset.on==='1'?'ON':'OFF'`:(sw.cls==='sw-mech'?`s.querySelector('.knob').textContent=s.dataset.on==='1'?'1':'0'`:'')}">${swInner}</div>
+        </div>
+        <div class="wire" style="background:${wireOffBg};box-shadow:inset 1px 0 1px rgba(0,0,0,.2),inset -1px 0 1px rgba(0,0,0,.2)"><div style="position:absolute;left:0;right:0;top:-14px;height:14px;border-radius:4px;${wireAnim};animation-delay:${i*.1}s"></div></div>
+        <div class="cd" style="${cdGlow}"></div>
+      </div>`;
+  });
+
+  concept.innerHTML = `
+    <h3>${idx+1}. ${sw.name}</h3>
+    <div class="desc">${sw.desc}</div>
+    <div class="fuses">${fusesHtml}</div>
+  `;
+
+  grid.appendChild(concept);
+});
+</script>
+</body>
+</html>
