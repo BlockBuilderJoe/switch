@@ -1,0 +1,1011 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D8F6F2D92F7848B800704180 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6F2D82F7848B800704180 /* AppDelegate.swift */; };
+		D8F6F2DB2F7848B800704180 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6F2DA2F7848B800704180 /* SceneDelegate.swift */; };
+		D8F6F2DE2F7848B800704180 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F2DC2F7848B800704180 /* LaunchScreen.storyboard */; };
+		D8F6F2E12F7848B800704180 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F2DF2F7848B800704180 /* Main.storyboard */; };
+		D8F6F2EA2F7848B800704180 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6F2E92F7848B800704180 /* AppDelegate.swift */; };
+		D8F6F2ED2F7848B800704180 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F2EB2F7848B800704180 /* Main.storyboard */; };
+		D8F6F2F42F7848B800704180 /* FuseBoard Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D8F6F2F32F7848B800704180 /* FuseBoard Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		D8F6F2FE2F7848B800704180 /* FuseBoard Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D8F6F2FD2F7848B800704180 /* FuseBoard Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		D8F6F3032F7848B800704180 /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F2C82F7848B700704180 /* Main.html */; };
+		D8F6F3042F7848B800704180 /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F2C82F7848B700704180 /* Main.html */; };
+		D8F6F3052F7848B800704180 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F2CA2F7848B700704180 /* Icon.png */; };
+		D8F6F3062F7848B800704180 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F2CA2F7848B700704180 /* Icon.png */; };
+		D8F6F3072F7848B800704180 /* Style.css in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F2CB2F7848B700704180 /* Style.css */; };
+		D8F6F3082F7848B800704180 /* Style.css in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F2CB2F7848B700704180 /* Style.css */; };
+		D8F6F3092F7848B800704180 /* Script.js in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F2CC2F7848B700704180 /* Script.js */; };
+		D8F6F30A2F7848B800704180 /* Script.js in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F2CC2F7848B700704180 /* Script.js */; };
+		D8F6F30B2F7848B800704180 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6F2CD2F7848B700704180 /* ViewController.swift */; };
+		D8F6F30C2F7848B800704180 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6F2CD2F7848B700704180 /* ViewController.swift */; };
+		D8F6F30D2F7848B800704180 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F2CE2F7848B800704180 /* Assets.xcassets */; };
+		D8F6F30E2F7848B800704180 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F2CE2F7848B800704180 /* Assets.xcassets */; };
+		D8F6F30F2F7848B800704180 /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6F2D02F7848B800704180 /* SafariWebExtensionHandler.swift */; };
+		D8F6F3102F7848B800704180 /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6F2D02F7848B800704180 /* SafariWebExtensionHandler.swift */; };
+		D8F6F32B2F7848B900704180 /* background in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F3222F7848B900704180 /* background */; };
+		D8F6F32C2F7848B900704180 /* options in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F3232F7848B900704180 /* options */; };
+		D8F6F32D2F7848B900704180 /* popup in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F3242F7848B900704180 /* popup */; };
+		D8F6F32E2F7848B900704180 /* content in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F3252F7848B900704180 /* content */; };
+		D8F6F32F2F7848B900704180 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F3262F7848B900704180 /* icons */; };
+		D8F6F3302F7848B900704180 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F3272F7848B900704180 /* manifest.json */; };
+		D8F6F3312F7848B900704180 /* sync in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F3282F7848B900704180 /* sync */; };
+		D8F6F3322F7848B900704180 /* blocked in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F3292F7848B900704180 /* blocked */; };
+		D8F6F3332F7848B900704180 /* data in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F32A2F7848B900704180 /* data */; };
+		D8F6F3342F7848B900704180 /* background in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F3222F7848B900704180 /* background */; };
+		D8F6F3352F7848B900704180 /* options in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F3232F7848B900704180 /* options */; };
+		D8F6F3362F7848B900704180 /* popup in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F3242F7848B900704180 /* popup */; };
+		D8F6F3372F7848B900704180 /* content in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F3252F7848B900704180 /* content */; };
+		D8F6F3382F7848B900704180 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F3262F7848B900704180 /* icons */; };
+		D8F6F3392F7848B900704180 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F3272F7848B900704180 /* manifest.json */; };
+		D8F6F33A2F7848B900704180 /* sync in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F3282F7848B900704180 /* sync */; };
+		D8F6F33B2F7848B900704180 /* blocked in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F3292F7848B900704180 /* blocked */; };
+		D8F6F33C2F7848B900704180 /* data in Resources */ = {isa = PBXBuildFile; fileRef = D8F6F32A2F7848B900704180 /* data */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D8F6F2F52F7848B800704180 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D8F6F2C22F7848B700704180 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D8F6F2F22F7848B800704180;
+			remoteInfo = "FuseBoard Extension (iOS)";
+		};
+		D8F6F2FF2F7848B800704180 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D8F6F2C22F7848B700704180 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D8F6F2FC2F7848B800704180;
+			remoteInfo = "FuseBoard Extension (macOS)";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D8F6F3162F7848B800704180 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				D8F6F2F42F7848B800704180 /* FuseBoard Extension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8F6F31D2F7848B800704180 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				D8F6F2FE2F7848B800704180 /* FuseBoard Extension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		D8F6F2C92F7848B700704180 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/Main.html; sourceTree = "<group>"; };
+		D8F6F2CA2F7848B700704180 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		D8F6F2CB2F7848B700704180 /* Style.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = Style.css; sourceTree = "<group>"; };
+		D8F6F2CC2F7848B700704180 /* Script.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = Script.js; sourceTree = "<group>"; };
+		D8F6F2CD2F7848B700704180 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		D8F6F2CE2F7848B800704180 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D8F6F2D02F7848B800704180 /* SafariWebExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebExtensionHandler.swift; sourceTree = "<group>"; };
+		D8F6F2D52F7848B800704180 /* FuseBoard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FuseBoard.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D8F6F2D82F7848B800704180 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		D8F6F2DA2F7848B800704180 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		D8F6F2DD2F7848B800704180 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		D8F6F2E02F7848B800704180 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		D8F6F2E22F7848B800704180 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D8F6F2E72F7848B800704180 /* FuseBoard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FuseBoard.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D8F6F2E92F7848B800704180 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		D8F6F2EC2F7848B800704180 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		D8F6F2EE2F7848B800704180 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D8F6F2F32F7848B800704180 /* FuseBoard Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "FuseBoard Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D8F6F2F82F7848B800704180 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D8F6F2FD2F7848B800704180 /* FuseBoard Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "FuseBoard Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D8F6F3022F7848B800704180 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D8F6F3222F7848B900704180 /* background */ = {isa = PBXFileReference; lastKnownFileType = folder; name = background; path = "../../../safari-src/background"; sourceTree = "<group>"; };
+		D8F6F3232F7848B900704180 /* options */ = {isa = PBXFileReference; lastKnownFileType = folder; name = options; path = "../../../safari-src/options"; sourceTree = "<group>"; };
+		D8F6F3242F7848B900704180 /* popup */ = {isa = PBXFileReference; lastKnownFileType = folder; name = popup; path = "../../../safari-src/popup"; sourceTree = "<group>"; };
+		D8F6F3252F7848B900704180 /* content */ = {isa = PBXFileReference; lastKnownFileType = folder; name = content; path = "../../../safari-src/content"; sourceTree = "<group>"; };
+		D8F6F3262F7848B900704180 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = "../../../safari-src/icons"; sourceTree = "<group>"; };
+		D8F6F3272F7848B900704180 /* manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = manifest.json; path = "../../../safari-src/manifest.json"; sourceTree = "<group>"; };
+		D8F6F3282F7848B900704180 /* sync */ = {isa = PBXFileReference; lastKnownFileType = folder; name = sync; path = "../../../safari-src/sync"; sourceTree = "<group>"; };
+		D8F6F3292F7848B900704180 /* blocked */ = {isa = PBXFileReference; lastKnownFileType = folder; name = blocked; path = "../../../safari-src/blocked"; sourceTree = "<group>"; };
+		D8F6F32A2F7848B900704180 /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = data; path = "../../../safari-src/data"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D8F6F2D22F7848B800704180 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8F6F2E42F7848B800704180 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8F6F2F02F7848B800704180 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8F6F2FA2F7848B800704180 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D8F6F2C12F7848B700704180 = {
+			isa = PBXGroup;
+			children = (
+				D8F6F2C62F7848B700704180 /* Shared (App) */,
+				D8F6F2CF2F7848B800704180 /* Shared (Extension) */,
+				D8F6F2D72F7848B800704180 /* iOS (App) */,
+				D8F6F2E82F7848B800704180 /* macOS (App) */,
+				D8F6F2F72F7848B800704180 /* iOS (Extension) */,
+				D8F6F3012F7848B800704180 /* macOS (Extension) */,
+				D8F6F2D62F7848B800704180 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D8F6F2C62F7848B700704180 /* Shared (App) */ = {
+			isa = PBXGroup;
+			children = (
+				D8F6F2CD2F7848B700704180 /* ViewController.swift */,
+				D8F6F2CE2F7848B800704180 /* Assets.xcassets */,
+				D8F6F2C72F7848B700704180 /* Resources */,
+			);
+			path = "Shared (App)";
+			sourceTree = "<group>";
+		};
+		D8F6F2C72F7848B700704180 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D8F6F2C82F7848B700704180 /* Main.html */,
+				D8F6F2CA2F7848B700704180 /* Icon.png */,
+				D8F6F2CB2F7848B700704180 /* Style.css */,
+				D8F6F2CC2F7848B700704180 /* Script.js */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		D8F6F2CF2F7848B800704180 /* Shared (Extension) */ = {
+			isa = PBXGroup;
+			children = (
+				D8F6F3212F7848B900704180 /* Resources */,
+				D8F6F2D02F7848B800704180 /* SafariWebExtensionHandler.swift */,
+			);
+			path = "Shared (Extension)";
+			sourceTree = "<group>";
+		};
+		D8F6F2D62F7848B800704180 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D8F6F2D52F7848B800704180 /* FuseBoard.app */,
+				D8F6F2E72F7848B800704180 /* FuseBoard.app */,
+				D8F6F2F32F7848B800704180 /* FuseBoard Extension.appex */,
+				D8F6F2FD2F7848B800704180 /* FuseBoard Extension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D8F6F2D72F7848B800704180 /* iOS (App) */ = {
+			isa = PBXGroup;
+			children = (
+				D8F6F2D82F7848B800704180 /* AppDelegate.swift */,
+				D8F6F2DA2F7848B800704180 /* SceneDelegate.swift */,
+				D8F6F2DC2F7848B800704180 /* LaunchScreen.storyboard */,
+				D8F6F2DF2F7848B800704180 /* Main.storyboard */,
+				D8F6F2E22F7848B800704180 /* Info.plist */,
+			);
+			path = "iOS (App)";
+			sourceTree = "<group>";
+		};
+		D8F6F2E82F7848B800704180 /* macOS (App) */ = {
+			isa = PBXGroup;
+			children = (
+				D8F6F2E92F7848B800704180 /* AppDelegate.swift */,
+				D8F6F2EB2F7848B800704180 /* Main.storyboard */,
+				D8F6F2EE2F7848B800704180 /* Info.plist */,
+			);
+			path = "macOS (App)";
+			sourceTree = "<group>";
+		};
+		D8F6F2F72F7848B800704180 /* iOS (Extension) */ = {
+			isa = PBXGroup;
+			children = (
+				D8F6F2F82F7848B800704180 /* Info.plist */,
+			);
+			path = "iOS (Extension)";
+			sourceTree = "<group>";
+		};
+		D8F6F3012F7848B800704180 /* macOS (Extension) */ = {
+			isa = PBXGroup;
+			children = (
+				D8F6F3022F7848B800704180 /* Info.plist */,
+			);
+			path = "macOS (Extension)";
+			sourceTree = "<group>";
+		};
+		D8F6F3212F7848B900704180 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D8F6F3222F7848B900704180 /* background */,
+				D8F6F3232F7848B900704180 /* options */,
+				D8F6F3242F7848B900704180 /* popup */,
+				D8F6F3252F7848B900704180 /* content */,
+				D8F6F3262F7848B900704180 /* icons */,
+				D8F6F3272F7848B900704180 /* manifest.json */,
+				D8F6F3282F7848B900704180 /* sync */,
+				D8F6F3292F7848B900704180 /* blocked */,
+				D8F6F32A2F7848B900704180 /* data */,
+			);
+			name = Resources;
+			path = "Shared (Extension)";
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D8F6F2D42F7848B800704180 /* FuseBoard (iOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D8F6F3172F7848B800704180 /* Build configuration list for PBXNativeTarget "FuseBoard (iOS)" */;
+			buildPhases = (
+				D8F6F2D12F7848B800704180 /* Sources */,
+				D8F6F2D22F7848B800704180 /* Frameworks */,
+				D8F6F2D32F7848B800704180 /* Resources */,
+				D8F6F3162F7848B800704180 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D8F6F2F62F7848B800704180 /* PBXTargetDependency */,
+			);
+			name = "FuseBoard (iOS)";
+			packageProductDependencies = (
+			);
+			productName = "FuseBoard (iOS)";
+			productReference = D8F6F2D52F7848B800704180 /* FuseBoard.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D8F6F2E62F7848B800704180 /* FuseBoard (macOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D8F6F31E2F7848B800704180 /* Build configuration list for PBXNativeTarget "FuseBoard (macOS)" */;
+			buildPhases = (
+				D8F6F2E32F7848B800704180 /* Sources */,
+				D8F6F2E42F7848B800704180 /* Frameworks */,
+				D8F6F2E52F7848B800704180 /* Resources */,
+				D8F6F31D2F7848B800704180 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D8F6F3002F7848B800704180 /* PBXTargetDependency */,
+			);
+			name = "FuseBoard (macOS)";
+			packageProductDependencies = (
+			);
+			productName = "FuseBoard (macOS)";
+			productReference = D8F6F2E72F7848B800704180 /* FuseBoard.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D8F6F2F22F7848B800704180 /* FuseBoard Extension (iOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D8F6F3132F7848B800704180 /* Build configuration list for PBXNativeTarget "FuseBoard Extension (iOS)" */;
+			buildPhases = (
+				D8F6F2EF2F7848B800704180 /* Sources */,
+				D8F6F2F02F7848B800704180 /* Frameworks */,
+				D8F6F2F12F7848B800704180 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "FuseBoard Extension (iOS)";
+			packageProductDependencies = (
+			);
+			productName = "FuseBoard Extension (iOS)";
+			productReference = D8F6F2F32F7848B800704180 /* FuseBoard Extension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		D8F6F2FC2F7848B800704180 /* FuseBoard Extension (macOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D8F6F31A2F7848B800704180 /* Build configuration list for PBXNativeTarget "FuseBoard Extension (macOS)" */;
+			buildPhases = (
+				D8F6F2F92F7848B800704180 /* Sources */,
+				D8F6F2FA2F7848B800704180 /* Frameworks */,
+				D8F6F2FB2F7848B800704180 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "FuseBoard Extension (macOS)";
+			packageProductDependencies = (
+			);
+			productName = "FuseBoard Extension (macOS)";
+			productReference = D8F6F2FD2F7848B800704180 /* FuseBoard Extension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D8F6F2C22F7848B700704180 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2640;
+				LastUpgradeCheck = 2640;
+				TargetAttributes = {
+					D8F6F2D42F7848B800704180 = {
+						CreatedOnToolsVersion = 26.4;
+					};
+					D8F6F2E62F7848B800704180 = {
+						CreatedOnToolsVersion = 26.4;
+					};
+					D8F6F2F22F7848B800704180 = {
+						CreatedOnToolsVersion = 26.4;
+					};
+					D8F6F2FC2F7848B800704180 = {
+						CreatedOnToolsVersion = 26.4;
+					};
+				};
+			};
+			buildConfigurationList = D8F6F2C52F7848B700704180 /* Build configuration list for PBXProject "FuseBoard" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = D8F6F2C12F7848B700704180;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = D8F6F2D62F7848B800704180 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D8F6F2D42F7848B800704180 /* FuseBoard (iOS) */,
+				D8F6F2E62F7848B800704180 /* FuseBoard (macOS) */,
+				D8F6F2F22F7848B800704180 /* FuseBoard Extension (iOS) */,
+				D8F6F2FC2F7848B800704180 /* FuseBoard Extension (macOS) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D8F6F2D32F7848B800704180 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8F6F3052F7848B800704180 /* Icon.png in Resources */,
+				D8F6F2DE2F7848B800704180 /* LaunchScreen.storyboard in Resources */,
+				D8F6F3032F7848B800704180 /* Main.html in Resources */,
+				D8F6F3092F7848B800704180 /* Script.js in Resources */,
+				D8F6F30D2F7848B800704180 /* Assets.xcassets in Resources */,
+				D8F6F2E12F7848B800704180 /* Main.storyboard in Resources */,
+				D8F6F3072F7848B800704180 /* Style.css in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8F6F2E52F7848B800704180 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8F6F3062F7848B800704180 /* Icon.png in Resources */,
+				D8F6F3082F7848B800704180 /* Style.css in Resources */,
+				D8F6F2ED2F7848B800704180 /* Main.storyboard in Resources */,
+				D8F6F30A2F7848B800704180 /* Script.js in Resources */,
+				D8F6F30E2F7848B800704180 /* Assets.xcassets in Resources */,
+				D8F6F3042F7848B800704180 /* Main.html in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8F6F2F12F7848B800704180 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8F6F3362F7848B900704180 /* popup in Resources */,
+				D8F6F3342F7848B900704180 /* background in Resources */,
+				D8F6F3372F7848B900704180 /* content in Resources */,
+				D8F6F33B2F7848B900704180 /* blocked in Resources */,
+				D8F6F33C2F7848B900704180 /* data in Resources */,
+				D8F6F3382F7848B900704180 /* icons in Resources */,
+				D8F6F3392F7848B900704180 /* manifest.json in Resources */,
+				D8F6F3352F7848B900704180 /* options in Resources */,
+				D8F6F33A2F7848B900704180 /* sync in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8F6F2FB2F7848B800704180 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8F6F32D2F7848B900704180 /* popup in Resources */,
+				D8F6F32B2F7848B900704180 /* background in Resources */,
+				D8F6F32E2F7848B900704180 /* content in Resources */,
+				D8F6F3322F7848B900704180 /* blocked in Resources */,
+				D8F6F3332F7848B900704180 /* data in Resources */,
+				D8F6F32F2F7848B900704180 /* icons in Resources */,
+				D8F6F3302F7848B900704180 /* manifest.json in Resources */,
+				D8F6F32C2F7848B900704180 /* options in Resources */,
+				D8F6F3312F7848B900704180 /* sync in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D8F6F2D12F7848B800704180 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8F6F30B2F7848B800704180 /* ViewController.swift in Sources */,
+				D8F6F2D92F7848B800704180 /* AppDelegate.swift in Sources */,
+				D8F6F2DB2F7848B800704180 /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8F6F2E32F7848B800704180 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8F6F30C2F7848B800704180 /* ViewController.swift in Sources */,
+				D8F6F2EA2F7848B800704180 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8F6F2EF2F7848B800704180 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8F6F30F2F7848B800704180 /* SafariWebExtensionHandler.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8F6F2F92F7848B800704180 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8F6F3102F7848B800704180 /* SafariWebExtensionHandler.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D8F6F2F62F7848B800704180 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D8F6F2F22F7848B800704180 /* FuseBoard Extension (iOS) */;
+			targetProxy = D8F6F2F52F7848B800704180 /* PBXContainerItemProxy */;
+		};
+		D8F6F3002F7848B800704180 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D8F6F2FC2F7848B800704180 /* FuseBoard Extension (macOS) */;
+			targetProxy = D8F6F2FF2F7848B800704180 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		D8F6F2C82F7848B700704180 /* Main.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D8F6F2C92F7848B700704180 /* Base */,
+			);
+			name = Main.html;
+			sourceTree = "<group>";
+		};
+		D8F6F2DC2F7848B800704180 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D8F6F2DD2F7848B800704180 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		D8F6F2DF2F7848B800704180 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D8F6F2E02F7848B800704180 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		D8F6F2EB2F7848B800704180 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D8F6F2EC2F7848B800704180 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		D8F6F3112F7848B800704180 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		D8F6F3122F7848B800704180 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		D8F6F3142F7848B800704180 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "iOS (Extension)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "FuseBoard Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = co.uk.josephpalmer.FuseBoard.Extension;
+				PRODUCT_NAME = "FuseBoard Extension";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D8F6F3152F7848B800704180 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "iOS (Extension)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "FuseBoard Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = co.uk.josephpalmer.FuseBoard.Extension;
+				PRODUCT_NAME = "FuseBoard Extension";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D8F6F3182F7848B800704180 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "iOS (App)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = FuseBoard;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = co.uk.josephpalmer.FuseBoard;
+				PRODUCT_NAME = FuseBoard;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D8F6F3192F7848B800704180 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "iOS (App)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = FuseBoard;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = co.uk.josephpalmer.FuseBoard;
+				PRODUCT_NAME = FuseBoard;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D8F6F31B2F7848B800704180 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "macOS (Extension)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "FuseBoard Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = co.uk.josephpalmer.FuseBoard.Extension;
+				PRODUCT_NAME = "FuseBoard Extension";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		D8F6F31C2F7848B800704180 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "macOS (Extension)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "FuseBoard Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = co.uk.josephpalmer.FuseBoard.Extension;
+				PRODUCT_NAME = "FuseBoard Extension";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		D8F6F31F2F7848B800704180 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "macOS (App)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = FuseBoard;
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = co.uk.josephpalmer.FuseBoard;
+				PRODUCT_NAME = FuseBoard;
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		D8F6F3202F7848B800704180 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "macOS (App)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = FuseBoard;
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = co.uk.josephpalmer.FuseBoard;
+				PRODUCT_NAME = FuseBoard;
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D8F6F2C52F7848B700704180 /* Build configuration list for PBXProject "FuseBoard" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D8F6F3112F7848B800704180 /* Debug */,
+				D8F6F3122F7848B800704180 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D8F6F3132F7848B800704180 /* Build configuration list for PBXNativeTarget "FuseBoard Extension (iOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D8F6F3142F7848B800704180 /* Debug */,
+				D8F6F3152F7848B800704180 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D8F6F3172F7848B800704180 /* Build configuration list for PBXNativeTarget "FuseBoard (iOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D8F6F3182F7848B800704180 /* Debug */,
+				D8F6F3192F7848B800704180 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D8F6F31A2F7848B800704180 /* Build configuration list for PBXNativeTarget "FuseBoard Extension (macOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D8F6F31B2F7848B800704180 /* Debug */,
+				D8F6F31C2F7848B800704180 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D8F6F31E2F7848B800704180 /* Build configuration list for PBXNativeTarget "FuseBoard (macOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D8F6F31F2F7848B800704180 /* Debug */,
+				D8F6F3202F7848B800704180 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D8F6F2C22F7848B700704180 /* Project object */;
+}

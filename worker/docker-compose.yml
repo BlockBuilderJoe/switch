@@ -1,0 +1,13 @@
+services:
+  fuseboard-sync:
+    build: .
+    ports:
+      - "8787:8787"
+    volumes:
+      - fuseboard-data:/data
+    environment:
+      - JWT_SECRET=change-me-to-a-random-string
+      - SELF_HOSTED=true
+
+volumes:
+  fuseboard-data:

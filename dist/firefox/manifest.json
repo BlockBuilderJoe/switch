@@ -1,0 +1,45 @@
+{
+  "manifest_version": 3,
+  "name": "FuseBoard",
+  "version": "1.5.0",
+  "description": "Your digital fuseboard. Block distracting sites and features.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "fuseboard@josephpalmer.co.uk",
+      "strict_min_version": "109.0"
+    }
+  },
+  "permissions": [
+    "storage",
+    "declarativeNetRequest",
+    "declarativeNetRequestFeedback",
+    "activeTab"
+  ],
+  "host_permissions": ["<all_urls>"],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
+  "background": {
+    "scripts": ["background/background.js"]
+  },
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "js": ["data/blocklists.js", "content/content.js"],
+    "css": ["content/content.css"],
+    "run_at": "document_start"
+  }],
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  }
+}

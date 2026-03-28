@@ -1,5 +1,17 @@
 # FuseBoard Changelog
 
+## v1.5.0 — Cloud Sync
+- Added cross-device sync (hosted at $0.50/mo or $5/yr, or self-host for free)
+- Sync backend using Hono — runs on Cloudflare Workers and Docker
+- Email + password auth with JWT tokens
+- Device management (register, list, remove, 10-device limit for hosted)
+- Auto-push on settings change (2s debounce)
+- Auto-pull every 60 seconds
+- Force push/pull buttons in settings
+- Stripe integration for hosted subscriptions
+- Self-hosted Docker container with SQLite
+- Sync UI in options page: sign in, device list, subscription status
+
 ## v1.4.2 — Rule Engine Fix
 - Fixed duplicate rule ID errors on extension reload
 - Rules now use timestamp-based IDs to guarantee uniqueness
