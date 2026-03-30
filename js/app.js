@@ -387,7 +387,7 @@ function renderMain() {
     const isTripped = selections[cat.id]?.enabled || false;
     const wire = getWireColor(cat.id);
     const hasSites = (cat.sites || []).length > 0;
-    const cell = createFuseCell(cat.name, isTripped, wire, hasSites ? (cat.sites.length + ' sites') : '', hasSites, cat.icon);
+    const cell = createFuseCell(cat.name, isTripped, wire, hasSites ? (cat.sites.length + ' sites') : '', hasSites, cat.icon, null, cat.id);
 
     function toggleCat() {
       const s = selections[cat.id];
@@ -506,7 +506,177 @@ function renderFeatures(path) {
   updateStatus();
 }
 
-function createFuseCell(label, isTripped, wireColor, info, canDrill, icon, siteId) {
+// Character paddle SVGs for specific categories
+const CHAR_CATS = {
+  'social-media': 'social-media', 'video-streaming': 'video-streaming', 'ads-trackers': 'ads-trackers', 'adult-content': 'adult-content', gambling: 'gambling', gaming: 'gaming', news: 'news', dating: 'dating', shopping: 'shopping', ai: 'ai', crypto: 'crypto', 'security-threats': 'security-threats'
+};
+
+function charEyes(st,ex,ey,er) {
+  er=er||7;const gap=er*1.6;
+  const iris=st===0?'#2a1a44':st===1?'#1a2a44':'#0a2a1a';
+  if(st===0){
+    const lx=-gap+ex,rx=gap+ex;
+    return `<g>
+      <path d="M${lx-er*.85},${ey+1}Q${lx},${ey-er*.7} ${lx+er*.85},${ey+1}" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M${rx-er*.85},${ey+1}Q${rx},${ey-er*.7} ${rx+er*.85},${ey+1}" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
+    </g>`;
+  }
+  const lx=-gap+ex,rx=gap+ex;
+  const blink=st===2?'char-blink':'';
+  return `<g>
+    <circle cx="${lx}" cy="${ey}" r="${er+2}" fill="white"/>
+    <g class="${blink}" style="transform-origin:${lx}px ${ey}px"><circle cx="${lx}" cy="${ey}" r="${er}" fill="${iris}"/><circle cx="${lx-er*.28}" cy="${ey-er*.28}" r="${er*.38}" fill="white" opacity=".8"/></g>
+    <circle cx="${rx}" cy="${ey}" r="${er+2}" fill="white"/>
+    <g class="${blink}" style="transform-origin:${rx}px ${ey}px"><circle cx="${rx}" cy="${ey}" r="${er}" fill="${iris}"/><circle cx="${rx-er*.28}" cy="${ey-er*.28}" r="${er*.38}" fill="white" opacity=".8"/></g>
+  </g>`;
+}
+
+function charMouth(st,mx,my) {
+  if(st===0) return `<path d="M${mx-4},${my+2}Q${mx},${my+5} ${mx+4},${my+2}" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round"/>`;
+  if(st===1) return `<rect x="${mx-5}" y="${my-1}" width="10" height="2.5" rx="1.2" fill="#111"/>`;
+  return `<path d="M${mx-6},${my}Q${mx},${my+7} ${mx+6},${my}" fill="#111"/><path d="M${mx-4},${my+1}Q${mx},${my+5} ${mx+4},${my+1}" fill="white"/>`;
+}
+
+function charZzz(ox,oy) {
+  return `<text class="char-zzz" x="${ox}" y="${oy}" font-size="8" font-weight="700" fill="#ddd" font-family="Arial">z</text>
+    <text class="char-zzz char-zzz-d1" x="${ox+6}" y="${oy-7}" font-size="6" font-weight="700" fill="#ddd" font-family="Arial">z</text>
+    <text class="char-zzz char-zzz-d2" x="${ox+11}" y="${oy-13}" font-size="5" font-weight="700" fill="#ddd" font-family="Arial">z</text>`;
+}
+
+function charSVG(catId, wireColor) {
+  const st = wireColor==='red'?0:wireColor==='amber'?1:2;
+  const col = wireColor==='red'?'#e8443a':wireColor==='amber'?'#f5a623':'#3abf6e';
+  const E = charEyes, M = charMouth, Z = st===0?charZzz:'';
+  const zz = st===0?charZzz(20,-24):'';
+
+  if(catId==='social-media') {
+    // Speech bubble with tail
+    return `<svg viewBox="-36 -40 72 80" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+      <polygon points="-20,14 2,14 -30,44" fill="${col}"/>
+      <rect x="-34" y="-34" width="68" height="56" rx="28" fill="${col}"/>
+      ${E(st,0,-8,8)}${M(st,0,6)}${zz}
+    </svg>`;
+  }
+  if(catId==='adult-content') {
+    // Tall pill with 18+ header and tinted lower body
+    const lf = st===0?'#f5a0a0':st===1?'#fde59a':'#a8ecc0';
+    return `<svg viewBox="-36 -40 72 80" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+      <rect x="-26" y="-36" width="52" height="72" rx="26" fill="${col}"/>
+      <rect x="-22" y="-12" width="44" height="32" rx="18" fill="${lf}"/>
+      <text x="0" y="-20" font-size="14" font-weight="900" fill="rgba(255,255,255,.85)" font-family="Arial" text-anchor="middle" dominant-baseline="middle" letter-spacing="1">18+</text>
+      ${E(st,0,0,7)}${M(st,0,16)}${zz}
+    </svg>`;
+  }
+  if(catId==='ads-trackers') {
+    // Magnifying glass with tinted lens and handle
+    const lensFill = st===0?'#f5a0a0':st===1?'#fde59a':'#a8ecc0';
+    const lx=-6,ly=-8,outerR=28,ringW=9,innerR=outerR-ringW;
+    const rad=135*Math.PI/180;
+    const hx=lx+outerR*Math.cos(rad),hy=ly+outerR*Math.sin(rad);
+    return `<svg viewBox="-36 -36 72 72" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+      <rect x="${hx-6}" y="${hy-5}" width="12" height="32" rx="6" fill="${col}" transform="rotate(45,${hx},${hy})"/>
+      <circle cx="${lx}" cy="${ly}" r="${outerR}" fill="${col}"/>
+      <circle cx="${lx}" cy="${ly}" r="${innerR}" fill="${lensFill}"/>
+      ${E(st,lx,ly-2,7)}${M(st,lx,ly+10)}${zz}
+    </svg>`;
+  }
+  if(catId==='video-streaming') {
+    // Play triangle with rounded corners — face offset left
+    const r=9;
+    const TL=[-30,-34],BL=[-30,34],R=[35,0];
+    function along(ax,ay,bx,by,d){const len=Math.hypot(bx-ax,by-ay);return [ax+(bx-ax)*d/len,ay+(by-ay)*d/len];}
+    function cp(prev,curr,next,rad){return{i:along(curr[0],curr[1],prev[0],prev[1],rad),o:along(curr[0],curr[1],next[0],next[1],rad),c:curr};}
+    const c0=cp(BL,TL,R,r),c1=cp(TL,R,BL,r),c2=cp(R,BL,TL,r);
+    const d=`M${c0.o[0]},${c0.o[1]}L${c1.i[0]},${c1.i[1]}Q${c1.c[0]},${c1.c[1]} ${c1.o[0]},${c1.o[1]}L${c2.i[0]},${c2.i[1]}Q${c2.c[0]},${c2.c[1]} ${c2.o[0]},${c2.o[1]}L${c0.i[0]},${c0.i[1]}Q${c0.c[0]},${c0.c[1]} ${c0.o[0]},${c0.o[1]}Z`;
+    return `<svg viewBox="-36 -36 72 72" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+      <path d="${d}" fill="${col}"/>
+      ${E(st,-5,0,8)}${M(st,-5,14)}${zz}
+    </svg>`;
+  }
+  if(catId==='gambling') {
+    // Playing card — Ace of Spades
+    return `<svg viewBox="-36 -40 72 80" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+      <rect x="-26" y="-34" width="52" height="68" rx="8" fill="${col}"/>
+      <text x="-17" y="-19" font-size="10" font-weight="900" fill="rgba(0,0,0,.28)" font-family="Arial" text-anchor="middle" dominant-baseline="middle">A</text>
+      <text x="-17" y="-10" font-size="8" font-weight="900" fill="rgba(0,0,0,.22)" font-family="Arial" text-anchor="middle" dominant-baseline="middle">\u2660</text>
+      <g transform="rotate(180,0,0)">
+        <text x="-17" y="-19" font-size="10" font-weight="900" fill="rgba(0,0,0,.28)" font-family="Arial" text-anchor="middle" dominant-baseline="middle">A</text>
+        <text x="-17" y="-10" font-size="8" font-weight="900" fill="rgba(0,0,0,.22)" font-family="Arial" text-anchor="middle" dominant-baseline="middle">\u2660</text>
+      </g>
+      <text x="0" y="-16" font-size="18" font-weight="900" fill="rgba(0,0,0,.2)" font-family="Arial" text-anchor="middle" dominant-baseline="middle">\u2660</text>
+      ${E(st,0,0,7)}${M(st,0,14)}${zz}
+    </svg>`;
+  }
+  if(catId==='gaming') {
+    return `<svg viewBox="-36 -36 72 72" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+      <path d="M-24,24 L-24,-4 C-24,-30 -14,-34 0,-34 C14,-34 24,-30 24,-4 L24,24 Q18,16 12,24 Q6,32 0,24 Q-6,16 -12,24 Q-18,32 -24,24 Z" fill="${col}"/>
+      <ellipse cx="-30" cy="2" rx="8" ry="6" fill="${col}" transform="rotate(-20,-30,2)"/>
+      <ellipse cx="30" cy="2" rx="8" ry="6" fill="${col}" transform="rotate(20,30,2)"/>
+      ${E(st,0,-10,8)}${M(st,0,4)}${zz}
+    </svg>`;
+  }
+  if(catId==='news') {
+    return `<svg viewBox="-36 -36 72 72" xmlns="http://www.w3.org/2000/svg">
+      <rect x="-28" y="-32" width="56" height="64" rx="7" fill="${col}"/>
+      <rect x="-22" y="-26" width="44" height="16" rx="4" fill="rgba(0,0,0,.18)"/>
+      <rect x="-22" y="-4" width="44" height="4" rx="2" fill="rgba(0,0,0,.12)"/>
+      <rect x="-22" y="6" width="44" height="4" rx="2" fill="rgba(0,0,0,.12)"/>
+      <rect x="-22" y="16" width="30" height="4" rx="2" fill="rgba(0,0,0,.12)"/>
+      ${E(st,0,-2,7)}${M(st,0,12)}${zz}
+    </svg>`;
+  }
+  if(catId==='dating') {
+    return `<svg viewBox="-36 -36 72 72" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+      <path d="M0,30 C-6,24 -36,8 -36,-12 C-36,-28 -24,-36 -12,-32 C-6,-30 -2,-26 0,-20 C2,-26 6,-30 12,-32 C24,-36 36,-28 36,-12 C36,8 6,24 0,30 Z" fill="${col}"/>
+      ${E(st,0,-8,7)}${M(st,0,6)}${zz}
+    </svg>`;
+  }
+  if(catId==='shopping') {
+    // Shopping basket with hoop handle and slat lines
+    return `<svg viewBox="-36 -40 72 80" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+      <path d="M-28,-36 L-28,-14 Q-28,-10 -24,-10 L24,-10 Q28,-10 28,-14 L28,-36" fill="none" stroke="${col}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M-30,-10 L30,-10 L24,30 Q24,34 20,34 L-20,34 Q-24,34 -24,30 Z" fill="${col}"/>
+      <line x1="-12" y1="-4" x2="-10" y2="28" stroke="rgba(0,0,0,.12)" stroke-width="2" stroke-linecap="round"/>
+      <line x1="0" y1="-4" x2="0" y2="28" stroke="rgba(0,0,0,.12)" stroke-width="2" stroke-linecap="round"/>
+      <line x1="12" y1="-4" x2="10" y2="28" stroke="rgba(0,0,0,.12)" stroke-width="2" stroke-linecap="round"/>
+      ${E(st,0,4,7)}${M(st,0,18)}${zz}
+    </svg>`;
+  }
+  if(catId==='ai') {
+    // Robot head with antenna, ear nubs, and face panel
+    return `<svg viewBox="-36 -40 72 80" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+      <circle cx="0" cy="-38" r="5" fill="${col}"/>
+      <rect x="-3" y="-33" width="6" height="14" rx="3" fill="${col}"/>
+      <rect x="-38" y="-7" width="9" height="14" rx="4.5" fill="${col}"/>
+      <rect x="29" y="-7" width="9" height="14" rx="4.5" fill="${col}"/>
+      <rect x="-30" y="-20" width="60" height="50" rx="10" fill="${col}"/>
+      <rect x="-23" y="-14" width="46" height="38" rx="7" fill="rgba(0,0,0,.13)"/>
+      ${E(st,0,-4,7)}${M(st,0,12)}${zz}
+    </svg>`;
+  }
+  if(catId==='crypto') {
+    // Refined coin with rim bands, inner ring, ₿ symbol, divider line
+    return `<svg viewBox="-36 -36 72 72" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+      <circle cx="0" cy="0" r="32" fill="${col}"/>
+      <circle cx="0" cy="0" r="32" fill="none" stroke="rgba(0,0,0,.18)" stroke-width="5"/>
+      <circle cx="0" cy="0" r="23" fill="none" stroke="rgba(0,0,0,.08)" stroke-width="1.5"/>
+      <text x="0" y="-10" font-size="18" font-weight="900" fill="rgba(0,0,0,.25)" font-family="Arial" text-anchor="middle" dominant-baseline="middle">\u20BF</text>
+      <line x1="-16" y1="-1" x2="16" y2="-1" stroke="rgba(0,0,0,.1)" stroke-width="1" stroke-linecap="round"/>
+      ${E(st,0,6,7)}${M(st,0,18)}${zz}
+    </svg>`;
+  }
+  if(catId==='security-threats') {
+    // Shield shape with inner panel
+    return `<svg viewBox="-36 -40 72 80" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+      <path d="M0,-36 C13,-36 30,-30 30,-16 L30,5 C30,22 18,33 0,40 C-18,33 -30,22 -30,5 L-30,-16 C-30,-30 -13,-36 0,-36 Z" fill="${col}"/>
+      <path d="M0,-27 C9,-27 23,-22 23,-12 L23,4 C23,16 13,25 0,30 C-13,25 -23,16 -23,4 L-23,-12 C-23,-22 -9,-27 0,-27 Z" fill="rgba(0,0,0,.11)"/>
+      ${E(st,0,-6,7)}${M(st,0,8)}${zz}
+    </svg>`;
+  }
+  return null; // no custom character
+}
+
+function createFuseCell(label, isTripped, wireColor, info, canDrill, icon, siteId, catId) {
   const cell = document.createElement('div');
   cell.className = 'fuse-cell';
   cell.dataset.s = isTripped ? '1' : '0';
@@ -531,6 +701,27 @@ function createFuseCell(label, isTripped, wireColor, info, canDrill, icon, siteI
 
   const gearSVG = `<svg viewBox="0 0 24 24" fill="none" width="14" height="14"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" fill="#bbb"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="#bbb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
+  // Custom character paddle for specific categories, or default square paddle
+  const customChar = catId && CHAR_CATS[catId] ? charSVG(catId, wireColor) : null;
+  const paddleHTML = customChar
+    ? `<div class="fuse-paddle fuse-paddle-char">${customChar}</div>`
+    : `<div class="fuse-paddle">
+        <div class="fuse-paddle-shine"></div>
+        <div class="fuse-face fuse-face-sleep">
+          <div class="fuse-eyes"><div class="fuse-eye-shut"></div><div class="fuse-eye-shut"></div></div>
+          <div class="fuse-zzz"><span class="fuse-z1">z</span><span class="fuse-z2">z</span></div>
+        </div>
+        <div class="fuse-face fuse-face-neutral">
+          <div class="fuse-eyes"><div class="fuse-eye"></div><div class="fuse-eye"></div></div>
+          <div class="fuse-neutral"></div>
+        </div>
+        <div class="fuse-face fuse-face-happy">
+          <div class="fuse-eyes"><div class="fuse-eye"></div><div class="fuse-eye"></div></div>
+          <div class="fuse-cheeks"><div class="fuse-cheek"></div><div class="fuse-cheek"></div></div>
+          <div class="fuse-smile"></div>
+        </div>
+      </div>`;
+
   const bottomHTML = canDrill
     ? `<div class="fuse-screw-wrap"><div class="fuse-screw-face"></div></div>
        <div class="fuse-label-sm fuse-cfg"><span class="fuse-label-sm-text">Settings</span></div>`
@@ -554,22 +745,7 @@ function createFuseCell(label, isTripped, wireColor, info, canDrill, icon, siteI
         <div class="fuse-track-area">
           <div class="fuse-track-line"></div>
           <div class="fuse-trk" role="switch" aria-checked="${isTripped}" aria-label="Block ${label}" tabindex="0">
-            <div class="fuse-paddle">
-              <div class="fuse-paddle-shine"></div>
-              <div class="fuse-face fuse-face-sleep">
-                <div class="fuse-eyes"><div class="fuse-eye-shut"></div><div class="fuse-eye-shut"></div></div>
-                <div class="fuse-zzz"><span class="fuse-z1">z</span><span class="fuse-z2">z</span></div>
-              </div>
-              <div class="fuse-face fuse-face-neutral">
-                <div class="fuse-eyes"><div class="fuse-eye"></div><div class="fuse-eye"></div></div>
-                <div class="fuse-neutral"></div>
-              </div>
-              <div class="fuse-face fuse-face-happy">
-                <div class="fuse-eyes"><div class="fuse-eye"></div><div class="fuse-eye"></div></div>
-                <div class="fuse-cheeks"><div class="fuse-cheek"></div><div class="fuse-cheek"></div></div>
-                <div class="fuse-smile"></div>
-              </div>
-            </div>
+            ${paddleHTML}
           </div>
         </div>
         <div class="fuse-terminal-bot">

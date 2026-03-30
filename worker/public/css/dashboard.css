@@ -191,6 +191,22 @@ body.light{
 .fuse-trk{position:absolute;left:50%;transform:translateX(-50%);z-index:3;cursor:pointer;transition:top .5s cubic-bezier(.34,1.4,.64,1)}
 .fuse-paddle{width:72px;height:72px;border-radius:16px;display:flex;align-items:center;justify-content:center;transition:background .4s;position:relative;overflow:hidden}
 .fuse-paddle-shine{position:absolute;left:7px;top:5px;width:7px;height:15px;border-radius:4px;background:rgba(255,255,255,.22);pointer-events:none}
+.fuse-paddle-char{background:transparent!important;overflow:visible}
+.fuse-paddle-char svg{width:100%;height:100%;overflow:visible}
+
+/* Character animations */
+@keyframes char-blink{0%,90%,100%{transform:scaleY(1)}95%{transform:scaleY(.07)}}
+@keyframes char-zzz{0%{opacity:.9;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(4px,-10px) scale(.5)}}
+@keyframes char-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes char-sway{0%,100%{transform:rotate(0deg)}30%{transform:rotate(-2deg)}70%{transform:rotate(2deg)}}
+@keyframes char-bounce{0%,100%{transform:translateY(0) scaleX(1) scaleY(1)}40%{transform:translateY(-5px) scaleX(.95) scaleY(1.05)}78%{transform:translateY(1px) scaleX(1.03) scaleY(.97)}}
+.char-blink{animation:char-blink 5.5s ease-in-out infinite}
+.char-zzz{animation:char-zzz 2.8s ease-in-out infinite}
+.char-zzz-d1{animation-delay:.6s}
+.char-zzz-d2{animation-delay:1.2s}
+.fuse-cell[data-w="red"] .fuse-paddle-char{animation:char-float 3.4s ease-in-out infinite}
+.fuse-cell[data-w="amber"] .fuse-paddle-char{animation:char-sway 5s ease-in-out infinite}
+.fuse-cell[data-w="green"] .fuse-paddle-char{animation:char-bounce 2.2s cubic-bezier(.36,.07,.19,.97) infinite}
 
 /* Paddle position + color */
 .fuse-cell[data-w="red"] .fuse-trk{top:8px}

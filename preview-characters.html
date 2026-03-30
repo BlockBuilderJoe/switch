@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Confirmed Fuse Characters</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#1a1a2e;font-family:Arial,sans-serif;padding:40px 32px 60px;}
+h1{color:#fff;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;opacity:.5;}
+p{color:#fff;font-size:12px;opacity:.3;margin-bottom:40px;letter-spacing:.5px;}
+
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:32px;}
+.card{display:flex;flex-direction:column;align-items:center;gap:20px;}
+.card-label{color:#fff;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;opacity:.6;}
+.states{display:flex;flex-direction:column;align-items:center;gap:14px;}
+.state-row{display:flex;align-items:center;gap:10px;}
+.state-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.cw{display:inline-block;}
+
+/* Animations */
+.s0{animation:afloat 3.4s ease-in-out infinite;}
+.s1{animation:asway 5s ease-in-out infinite;}
+.s2{animation:abounce 2.2s cubic-bezier(.36,.07,.19,.97) infinite;}
+@keyframes afloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}
+@keyframes asway{0%,100%{transform:rotate(0deg);}30%{transform:rotate(-2.5deg);}70%{transform:rotate(2.5deg);}}
+@keyframes abounce{0%,100%{transform:translateY(0) scaleX(1) scaleY(1);}40%{transform:translateY(-6px) scaleX(.94) scaleY(1.06);}78%{transform:translateY(1px) scaleX(1.04) scaleY(.97);}}
+.zblink{animation:zdrift 2.8s ease-in-out infinite;}
+@keyframes zdrift{0%{opacity:.9;transform:translate(0,0) scale(1);}100%{opacity:0;transform:translate(5px,-12px) scale(.55);}}
+.eblink{animation:eblink 5.5s ease-in-out infinite;}
+@keyframes eblink{0%,90%,100%{transform:scaleY(1);}95%{transform:scaleY(.07);}}
+</style>
+</head>
+<body>
+<h1>Confirmed Characters</h1>
+<p>Gaming · News · Dating · Crypto · Security — three states each</p>
+<div class="grid" id="grid"></div>
+
+<script>
+const R='#e8443a', A='#f5a623', G='#3abf6e';
+
+function eyes(st,ex,ey,er){
+  er=er||11;
+  const gap=er*1.6;
+  const iris=st===0?'#2a1a44':st===1?'#1a2a44':'#0a2a1a';
+  if(st===0){
+    const lx=-gap+ex, rx=gap+ex;
+    return `<g>
+      <path d="M${lx-er*.85},${ey+1} Q${lx},${ey-er*.7} ${lx+er*.85},${ey+1}" fill="none" stroke="#111" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M${rx-er*.85},${ey+1} Q${rx},${ey-er*.7} ${rx+er*.85},${ey+1}" fill="none" stroke="#111" stroke-width="3.5" stroke-linecap="round"/>
+    </g>`;
+  }
+  const lx=-gap+ex, rx=gap+ex;
+  const bc=st===2?'eblink':'';
+  return `<g>
+    <circle cx="${lx}" cy="${ey}" r="${er+3.5}" fill="white"/>
+    <g class="${bc}" style="transform-origin:${lx}px ${ey}px">
+      <circle cx="${lx}" cy="${ey}" r="${er}" fill="${iris}"/>
+      <circle cx="${lx-er*.28}" cy="${ey-er*.28}" r="${er*.38}" fill="white" opacity=".8"/>
+    </g>
+    <circle cx="${rx}" cy="${ey}" r="${er+3.5}" fill="white"/>
+    <g class="${bc}" style="transform-origin:${rx}px ${ey}px">
+      <circle cx="${rx}" cy="${ey}" r="${er}" fill="${iris}"/>
+      <circle cx="${rx-er*.28}" cy="${ey-er*.28}" r="${er*.38}" fill="white" opacity=".8"/>
+    </g>
+  </g>`;
+}
+
+function mouth(st,mx,my){
+  if(st===0) return `<path d="M${mx-5},${my+3} Q${mx},${my+7} ${mx+5},${my+3}" fill="none" stroke="#111" stroke-width="2.8" stroke-linecap="round"/>`;
+  if(st===1) return `<rect x="${mx-7}" y="${my-1.5}" width="14" height="3" rx="1.5" fill="#111"/>`;
+  return `<path d="M${mx-9},${my} Q${mx},${my+10} ${mx+9},${my}" fill="#111"/>
+    <path d="M${mx-6},${my+2} Q${mx},${my+7} ${mx+6},${my+2}" fill="white"/>`;
+}
+
+function zzz(ox,oy){
+  return `
+    <text class="zblink" x="${ox}" y="${oy}" font-size="12" font-weight="700" fill="#ddd" font-family="Arial" style="animation-delay:0s">z</text>
+    <text class="zblink" x="${ox+8}" y="${oy-9}" font-size="9" font-weight="700" fill="#ddd" font-family="Arial" style="animation-delay:.6s">z</text>
+    <text class="zblink" x="${ox+15}" y="${oy-17}" font-size="7" font-weight="700" fill="#ddd" font-family="Arial" style="animation-delay:1.2s">z</text>`;
+}
+
+function gaming(col,st){
+  const E=eyes(st,0,-14,12),M=mouth(st,0,8),Z=st===0?zzz(34,-40):'';
+  return `<path d="M-38,40 L-38,-6 C-38,-48 -22,-54 0,-54 C22,-54 38,-48 38,-6 L38,40 Q28,28 19,40 Q10,52 0,40 Q-10,28 -19,40 Q-28,52 -38,40 Z" fill="${col}"/>
+    <ellipse cx="-46" cy="4" rx="12" ry="9" fill="${col}" transform="rotate(-20,-46,4)"/>
+    <ellipse cx="46" cy="4" rx="12" ry="9" fill="${col}" transform="rotate(20,46,4)"/>
+    ${E}${M}${Z}`;
+}
+
+function news(col,st){
+  const E=eyes(st,0,-6,10),M=mouth(st,0,14),Z=st===0?zzz(26,-34):'';
+  return `<rect x="-44" y="-52" width="88" height="104" rx="10" fill="${col}"/>
+    <rect x="-38" y="-46" width="76" height="26" rx="6" fill="rgba(0,0,0,.18)"/>
+    <rect x="-38" y="-12" width="76" height="6" rx="3" fill="rgba(0,0,0,.12)"/>
+    <rect x="-38" y="2"   width="76" height="6" rx="3" fill="rgba(0,0,0,.12)"/>
+    <rect x="-38" y="16"  width="52" height="6" rx="3" fill="rgba(0,0,0,.12)"/>
+    ${E}${M}${Z}`;
+}
+
+function dating(col,st){
+  const E=eyes(st,0,-10,11),M=mouth(st,0,12),Z=st===0?zzz(32,-36):'';
+  return `<path d="M0,48 C-10,38 -56,14 -56,-18 C-56,-42 -38,-56 -20,-50 C-10,-47 -4,-40 0,-32 C4,-40 10,-47 20,-50 C38,-56 56,-42 56,-18 C56,14 10,38 0,48 Z" fill="${col}"/>
+    ${E}${M}${Z}`;
+}
+
+function crypto(col,st){
+  const E=eyes(st,0,-6,11),M=mouth(st,0,12),Z=st===0?zzz(28,-34):'';
+  return `<circle cx="0" cy="0" r="46" fill="${col}"/>
+    <circle cx="0" cy="0" r="38" fill="none" stroke="rgba(0,0,0,.11)" stroke-width="5"/>
+    <text x="0" y="-24" font-size="18" font-weight="900" fill="rgba(0,0,0,.16)" font-family="Arial" text-anchor="middle">&#8383;</text>
+    ${E}${M}${Z}`;
+}
+
+function security(col,st){
+  const E=eyes(st,0,16,10),M=mouth(st,0,38),Z=st===0?zzz(26,-28):'';
+  return `<rect x="-42" y="4" width="84" height="62" rx="20" fill="${col}"/>
+    <path d="M-22,6 L-22,-20 Q-22,-50 0,-50 Q22,-50 22,-20 L22,6" fill="none" stroke="${col}" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="0" cy="30" r="12" fill="rgba(0,0,0,.22)"/>
+    <rect x="-6" y="36" width="12" height="16" rx="5" fill="rgba(0,0,0,.22)"/>
+    ${E}${M}${Z}`;
+}
+
+const chars=[
+  {name:'Gaming',   fn:gaming,   W:116,H:124},
+  {name:'News',     fn:news,     W:108,H:124},
+  {name:'Dating',   fn:dating,   W:124,H:118},
+  {name:'Crypto',   fn:crypto,   W:114,H:114},
+  {name:'Security', fn:security, W:110,H:124},
+];
+
+const stateMeta=[
+  {col:R, cls:'s0', dot:'#e8443a', label:'Asleep'},
+  {col:A, cls:'s1', dot:'#f5a623', label:'Meh'},
+  {col:G, cls:'s2', dot:'#3abf6e', label:'Happy'},
+];
+
+const grid=document.getElementById('grid');
+chars.forEach(ch=>{
+  const card=document.createElement('div');
+  card.className='card';
+  card.innerHTML=`<div class="card-label">${ch.name}</div>`;
+  const states=document.createElement('div');
+  states.className='states';
+  stateMeta.forEach(sm=>{
+    const hw=ch.W/2, hh=ch.H/2;
+    const row=document.createElement('div');
+    row.className='state-row';
+    row.innerHTML=`<div class="state-dot" style="background:${sm.dot}"></div>
+      <div class="cw ${sm.cls}">
+        <svg width="${ch.W}" height="${ch.H}" viewBox="${-hw} ${-hh} ${ch.W} ${ch.H}" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+          ${ch.fn(sm.col, stateMeta.indexOf(sm))}
+        </svg>
+      </div>`;
+    states.appendChild(row);
+  });
+  card.appendChild(states);
+  grid.appendChild(card);
+});
+</script>
+</body>
+</html>

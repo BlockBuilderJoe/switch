@@ -11,23 +11,6 @@ const categories = [
     cfType: 'content_category',
     cfCategoryIds: [149],
     sites: [
-      { id: 'youtube', name: 'YouTube', domains: ['youtube.com', 'youtu.be', 'ytimg.com', 'googlevideo.com', 'yt3.ggpht.com'], features: [
-        { id: 'yt-shorts', name: 'Shorts', type: 'url', urlFilter: '/shorts', requestDomains: ['youtube.com'], elementSelectors: ['ytd-reel-shelf-renderer', 'ytd-rich-shelf-renderer[is-shorts]', '[title="Shorts"]', 'ytd-mini-guide-entry-renderer:has(a[title="Shorts"])', 'ytd-guide-entry-renderer:has(a[title="Shorts"])', 'a[href*="/shorts/"]', 'ytd-shorts'] },
-        { id: 'yt-trending', name: 'Trending', type: 'url', urlFilter: '/feed/trending', requestDomains: ['youtube.com'], elementSelectors: ['[title="Trending"]', 'ytd-guide-entry-renderer:has(a[title="Trending"])'] },
-        { id: 'yt-comments', name: 'Comments', type: 'element', selector: '#comments, ytd-comments' },
-        { id: 'yt-recommendations', name: 'Up Next', type: 'element', selector: '#related, #secondary, ytd-watch-next-secondary-results-renderer' },
-        { id: 'yt-home', name: 'Home Feed', type: 'element', selector: 'ytd-rich-grid-renderer, ytd-browse[page-subtype="home"] ytd-rich-item-renderer, ytd-feed-nudge-renderer' },
-        { id: 'yt-notifications', name: 'Notifications', type: 'element', selector: 'ytd-notification-topbar-button-renderer' },
-        { id: 'yt-shop', name: 'Shop', type: 'element', selector: 'ytd-merch-shelf-renderer, ytd-structured-description-content-renderer, #merch-shelf, ytd-product-details-renderer, [aria-label="Shopping"], ytd-guide-entry-renderer:has(a[title="Shopping"]), button[aria-label="Shopping"]' },
-        { id: 'yt-endscreen', name: 'End Cards', type: 'element', selector: '.ytp-endscreen-content, .ytp-ce-element, .ytp-ce-covering-overlay, .ytp-ce-element-shadow, .ytp-cards-teaser, .ytp-cards-button, .ytp-cards-button-icon, .ytp-suggestion-set, .html5-endscreen, .videowall-endscreen, iv-endscreen, .ytp-endscreen-previous, .ytp-endscreen-next, .annotation' },
-        { id: 'yt-subs-only', name: 'Subs Only Mode', type: 'allowlist', description: 'Only allow videos from channels you add to your allow list' },
-        { id: 'yt-autoplay', name: 'Autoplay', type: 'element', selector: '.ytp-autonav-toggle-button, [data-tooltip-target-id="ytp-autonav-toggle-button"]' },
-        { id: 'yt-live-chat', name: 'Live Chat', type: 'element', selector: '#chat, ytd-live-chat-frame, #chat-container' },
-        { id: 'yt-premium-upsell', name: 'Premium Upsell', type: 'element', selector: 'ytd-mealbar-promo-renderer, ytd-popup-container, tp-yt-paper-dialog:has(.premium), ytd-enforcement-message-view-model' },
-        { id: 'yt-view-count', name: 'View Counts', type: 'element', selector: '#info-strings .view-count, ytd-video-view-count-renderer, .ytd-video-meta-block' },
-        { id: 'yt-subscribe-btn', name: 'Subscribe Button', type: 'element', selector: '#subscribe-button, ytd-subscribe-button-renderer' },
-        { id: 'yt-playlist-mix', name: 'Mixes / Playlists', type: 'element', selector: 'ytd-radio-renderer, ytd-compact-radio-renderer, ytd-rich-item-renderer:has(a[href*="list="])' },
-      ]},
       { id: 'tiktok', name: 'TikTok', domains: ['tiktok.com', 'tiktokv.com', 'tiktokcdn.com', 'musical.ly'], features: [
         { id: 'tt-fyp', name: 'For You', type: 'url', urlFilter: '||tiktok.com/', requestDomains: ['tiktok.com'], elementSelectors: ['[data-e2e="recommend-list-item-container"]', '[data-e2e="feed-video"]'] },
         { id: 'tt-live', name: 'Live', type: 'url', urlFilter: '/live', requestDomains: ['tiktok.com'] },
@@ -112,6 +95,23 @@ const categories = [
     cfType: 'content_category',
     cfCategoryIds: [164],
     sites: [
+      { id: 'youtube', name: 'YouTube', domains: ['youtube.com', 'youtu.be', 'ytimg.com', 'googlevideo.com', 'yt3.ggpht.com'], features: [
+        { id: 'yt-shorts', name: 'Shorts', type: 'url', urlFilter: '/shorts', requestDomains: ['youtube.com'], elementSelectors: ['ytd-reel-shelf-renderer', 'ytd-rich-shelf-renderer[is-shorts]', '[title="Shorts"]', 'ytd-mini-guide-entry-renderer:has(a[title="Shorts"])', 'ytd-guide-entry-renderer:has(a[title="Shorts"])', 'a[href*="/shorts/"]', 'ytd-shorts'] },
+        { id: 'yt-trending', name: 'Trending', type: 'url', urlFilter: '/feed/trending', requestDomains: ['youtube.com'], elementSelectors: ['[title="Trending"]', 'ytd-guide-entry-renderer:has(a[title="Trending"])'] },
+        { id: 'yt-comments', name: 'Comments', type: 'element', selector: '#comments, ytd-comments' },
+        { id: 'yt-recommendations', name: 'Up Next', type: 'element', selector: '#related, #secondary, ytd-watch-next-secondary-results-renderer' },
+        { id: 'yt-home', name: 'Home Feed', type: 'element', selector: 'ytd-rich-grid-renderer, ytd-browse[page-subtype="home"] ytd-rich-item-renderer, ytd-feed-nudge-renderer' },
+        { id: 'yt-notifications', name: 'Notifications', type: 'element', selector: 'ytd-notification-topbar-button-renderer' },
+        { id: 'yt-shop', name: 'Shop', type: 'element', selector: 'ytd-merch-shelf-renderer, ytd-structured-description-content-renderer, #merch-shelf, ytd-product-details-renderer, [aria-label="Shopping"], ytd-guide-entry-renderer:has(a[title="Shopping"]), button[aria-label="Shopping"]' },
+        { id: 'yt-endscreen', name: 'End Cards', type: 'element', selector: '.ytp-endscreen-content, .ytp-ce-element, .ytp-ce-covering-overlay, .ytp-ce-element-shadow, .ytp-cards-teaser, .ytp-cards-button, .ytp-cards-button-icon, .ytp-suggestion-set, .html5-endscreen, .videowall-endscreen, iv-endscreen, .ytp-endscreen-previous, .ytp-endscreen-next, .annotation' },
+        { id: 'yt-subs-only', name: 'Subs Only Mode', type: 'allowlist', description: 'Only allow videos from channels you add to your allow list' },
+        { id: 'yt-autoplay', name: 'Autoplay', type: 'element', selector: '.ytp-autonav-toggle-button, [data-tooltip-target-id="ytp-autonav-toggle-button"]' },
+        { id: 'yt-live-chat', name: 'Live Chat', type: 'element', selector: '#chat, ytd-live-chat-frame, #chat-container' },
+        { id: 'yt-premium-upsell', name: 'Premium Upsell', type: 'element', selector: 'ytd-mealbar-promo-renderer, ytd-popup-container, tp-yt-paper-dialog:has(.premium), ytd-enforcement-message-view-model' },
+        { id: 'yt-view-count', name: 'View Counts', type: 'element', selector: '#info-strings .view-count, ytd-video-view-count-renderer, .ytd-video-meta-block' },
+        { id: 'yt-subscribe-btn', name: 'Subscribe Button', type: 'element', selector: '#subscribe-button, ytd-subscribe-button-renderer' },
+        { id: 'yt-playlist-mix', name: 'Mixes / Playlists', type: 'element', selector: 'ytd-radio-renderer, ytd-compact-radio-renderer, ytd-rich-item-renderer:has(a[href*="list="])' },
+      ]},
       { id: 'netflix', name: 'Netflix', domains: ['netflix.com', 'nflxvideo.net', 'nflximg.net', 'nflxext.com'] },
       { id: 'disneyplus', name: 'Disney+', domains: ['disneyplus.com', 'disney-plus.net', 'dssott.com', 'bamgrid.com'], features: [
         { id: 'dp-home', name: 'Home/Browse', type: 'url', urlFilter: '/home', requestDomains: ['disneyplus.com'] },
@@ -204,7 +204,7 @@ const categories = [
         { id: 'st-market', name: 'Market', type: 'url', urlFilter: '/market', requestDomains: ['steamcommunity.com'] },
       ]},
       { id: 'epic', name: 'Epic Games', domains: ['epicgames.com', 'unrealengine.com', 'fortnite.com'], features: [
-        { id: 'ep-store', name: 'Store', type: 'url', urlFilter: '/store', requestDomains: ['epicgames.com'] },
+        { id: 'ep-store', name: 'Store', type: 'url', urlFilter: '||store.epicgames.com', requestDomains: ['store.epicgames.com'] },
         { id: 'ep-fortnite', name: 'Fortnite', type: 'url', urlFilter: '||fortnite.com', requestDomains: ['fortnite.com'] },
       ]},
       { id: 'roblox', name: 'Roblox', domains: ['roblox.com', 'rbxcdn.com'], features: [
