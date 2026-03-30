@@ -1,40 +1,28 @@
-# FuseBox — Project Notes
+# FuseBox
 
 ## Versioning
-- Current version: **1.4.1**
-- Version is shown in the popup and options page header
-- Use semantic versioning: MAJOR.MINOR.PATCH
-  - PATCH (1.4.1 → 1.4.2): bug fixes, selector updates, small tweaks
-  - MINOR (1.4.x → 1.5.0): new features, new sites, new categories
-  - MAJOR (1.x → 2.0): breaking changes, major redesign
-- Update in ALL of these places each time:
-  1. `extension/manifest.json` → `"version"` field (3-part: "1.4.1")
-  2. `extension/popup/popup.html` → `.version` span text (3-part: "v1.4.1")
-  3. `extension/options/options.html` → `.version` span text (3-part: "v1.4.1")
-  4. `CHANGELOG.md` → add new entry at the top
-  5. `extension/options/options.js` → add entry to the inline changelog HTML
-
-## Changelog
-- Always add a new entry to the top of `CHANGELOG.md` for every version bump
-- Format: `## v1.X.0 — Short Title` followed by bullet points
-- Be specific about what changed
+- Current version: **1.5.1**
+- Update ALL of these: `extension/manifest.json`, `extension/popup/popup.html`, `extension/options/options.html`, `index.html`, `CHANGELOG.md`, `extension/options/options.js` (inline changelog)
+- PATCH: selector fixes. MINOR: new features/sites. MAJOR: breaking changes.
 
 ## Architecture
-- Browser extension (Chrome Manifest V3)
-- Extension files in `/extension/`
-- Blocking: `declarativeNetRequest` for domains, content script for URL paths + element hiding
-- Settings: `chrome.storage.sync`
-- No backend, no accounts, fully local
+- **Dashboard** (`index.html`, `js/`, `css/`): primary UI, static SPA, no sign-up needed
+- **Extension** (`extension/`): thin client, applies blocking rules from dashboard via `postMessage`
+- **Bridge** (`extension/content/dashboard-bridge.js`): relays `postMessage` → `background.js` (cross-browser)
+- **Backend** (`worker/`): optional sync server (Cloudflare Worker + D1, or Docker + SQLite)
+- Source of truth for blocklists: `extension/data/blocklists.js`
 
-## Key Files
-- `extension/data/blocklists.js` — all categories, sites, features, selectors
-- `extension/content/content.js` — element hiding + SPA URL blocking
-- `extension/background/background.js` — declarativeNetRequest rule management
-- `extension/popup/popup.js` — popup UI
-- `extension/options/options.js` — full config with 3-level drill-down
+## Build & Deploy
+- `./build.sh all` — Chrome + Firefox + Safari + dashboard (copies to `worker/public/`)
+- `cd worker && npx wrangler deploy` — deploy worker + dashboard
+- `npx wrangler pages deploy . --project-name switch` — deploy to Cloudflare Pages
+- Dev auto-reload: `cd extension && python3 -m http.server 8111`
 
-## Branding
-- Name: FuseBox
-- Tagline: Your digital fusebox
-- Visual: 10J lever-in-card fuse style with animated wire pulses
-- Wire colors: Red = unprotected, Amber = partial, Green = fully blocked
+## Dashboard Safeguards
+Never block these domains — they're filtered in `background.js` and skipped in `content.js`:
+`fuseboard-sync.joe-780.workers.dev`, `switch-ahg.pages.dev`, `localhost`
+
+## Testing — `/test-fuses`
+- Tests every feature by toggling fuses on the dashboard and checking blocking in Chrome
+- Fix failures → `./build.sh all` → re-test → bump version + changelog if changes made
+- **Never send domain-level blocks during tests** — only use `urls` and `selectors`

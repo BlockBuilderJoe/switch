@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.wrangler/
+tests/results/
+tests/node_modules/
+tests/.env
+.env
+*.woff2

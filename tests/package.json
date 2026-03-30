@@ -1,0 +1,13 @@
+{
+  "name": "fusebox-tests",
+  "private": true,
+  "scripts": {
+    "test": "node run.js",
+    "test:site": "node run.js --site"
+  },
+  "dependencies": {
+    "puppeteer": "^23.0.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
+  }
+}

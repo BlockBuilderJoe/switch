@@ -1,5 +1,11 @@
 # FuseBoard Changelog
 
+## v1.5.1 — Selector Updates
+- Netflix simplified to full domain block (no feature toggles)
+- Removed obsolete Reddit features: Coins and Chat (both discontinued by Reddit)
+- LinkedIn features updated to URL-based tests (Feed, Messaging, Promoted Posts)
+- Fixed blocked page redirect (ERR_BLOCKED_BY_CLIENT → FuseBox blocked page)
+
 ## v1.5.0 — Cloud Sync
 - Added cross-device sync (hosted at $0.50/mo or $5/yr, or self-host for free)
 - Sync backend using Hono — runs on Cloudflare Workers and Docker

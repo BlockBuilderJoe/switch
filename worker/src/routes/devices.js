@@ -16,7 +16,7 @@ devices.post('/', async (c) => {
   const db = c.get('db');
   const userId = c.get('user_id');
   const selfHosted = c.get('self_hosted');
-  const { name, platform } = await c.req.json();
+  const { name, platform, role: requestedRole } = await c.req.json();
 
   if (!name) return c.json({ error: 'Device name required' }, 400);
 
@@ -28,9 +28,8 @@ devices.post('/', async (c) => {
     }
   }
 
-  // First device = admin, subsequent = client
-  const existingDevices = await db.query('SELECT COUNT(*) as count FROM devices WHERE user_id = ?', [userId]);
-  const role = existingDevices[0]?.count > 0 ? 'client' : 'admin';
+  // Role comes from the client: 'host' (web dashboard) or 'client' (extension)
+  const role = requestedRole === 'host' ? 'host' : 'client';
 
   const deviceId = generateId();
   const now = new Date().toISOString();
@@ -50,21 +49,12 @@ devices.patch('/:id/role', async (c) => {
   const targetDeviceId = c.req.param('id');
   const { role, requester_device_id } = await c.req.json();
 
-  if (!['admin', 'client'].includes(role)) return c.json({ error: 'Invalid role' }, 400);
+  if (!['host', 'client', 'locked'].includes(role)) return c.json({ error: 'Invalid role' }, 400);
 
-  // Verify requester is an admin device
+  // Verify requester is the host device
   const requester = await db.query('SELECT role FROM devices WHERE id = ? AND user_id = ?', [requester_device_id, userId]);
-  if (!requester.length || requester[0].role !== 'admin') {
-    return c.json({ error: 'Only admin devices can change roles' }, 403);
-  }
-
-  // Prevent demoting the last admin
-  if (role === 'client') {
-    const admins = await db.query("SELECT COUNT(*) as count FROM devices WHERE user_id = ? AND role = 'admin'", [userId]);
-    const target = await db.query('SELECT role FROM devices WHERE id = ? AND user_id = ?', [targetDeviceId, userId]);
-    if (target[0]?.role === 'admin' && admins[0]?.count <= 1) {
-      return c.json({ error: 'Cannot demote the last admin device' }, 400);
-    }
+  if (!requester.length || requester[0].role !== 'host') {
+    return c.json({ error: 'Only the host can change device roles' }, 403);
   }
 
   await db.run('UPDATE devices SET role = ? WHERE id = ? AND user_id = ?', [role, targetDeviceId, userId]);

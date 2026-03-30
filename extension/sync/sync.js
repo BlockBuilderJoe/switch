@@ -73,13 +73,13 @@ async function pull() {
 // --- Push (local → server) ---
 
 function schedulePush() {
-  if (!syncEnabled || isPushing || deviceRole === 'client') return;
+  if (!syncEnabled || isPushing || deviceRole === 'locked') return;
   clearTimeout(debounceTimer);
   debounceTimer = setTimeout(push, DEBOUNCE_DELAY);
 }
 
 async function push() {
-  if (!syncEnabled || isPushing || deviceRole === 'client') return;
+  if (!syncEnabled || isPushing || deviceRole === 'locked') return;
   isPushing = true;
 
   try {
@@ -180,19 +180,29 @@ async function saveAuth(data) {
 }
 
 async function registerDevice() {
-  const name = navigator.userAgent.includes('Chrome') ? 'Chrome' :
-               navigator.userAgent.includes('Firefox') ? 'Firefox' : 'Browser';
-  const platform = navigator.platform || 'unknown';
+  const ua = navigator.userAgent;
+  const browser = ua.includes('Edg/') ? 'Edge' :
+                  ua.includes('Firefox') ? 'Firefox' :
+                  ua.includes('Chrome') ? 'Chrome' :
+                  ua.includes('Safari') ? 'Safari' : 'Browser';
+  const os = ua.includes('Macintosh') ? 'macOS' :
+             ua.includes('Windows') ? 'Windows' :
+             ua.includes('CrOS') ? 'ChromeOS' :
+             ua.includes('Linux') ? 'Linux' :
+             ua.includes('iPhone') ? 'iPhone' :
+             ua.includes('iPad') ? 'iPad' :
+             ua.includes('Android') ? 'Android' : 'Unknown';
 
   const res = await apiFetch('POST', '/api/v1/devices', {
-    name: `${name} on ${platform}`,
-    platform: name.toLowerCase(),
+    name: `${browser} on ${os}`,
+    platform: browser.toLowerCase(),
+    role: 'client',
   });
 
   if (res.ok) {
     const data = await res.json();
     deviceId = data.device_id;
-    deviceRole = data.role || 'admin';
+    deviceRole = data.role || 'client';
     await chrome.storage.local.set({ sync_device_id: deviceId, sync_device_role: deviceRole });
   }
 }

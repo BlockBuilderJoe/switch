@@ -73,13 +73,13 @@ async function pull() {
 // --- Push (local → server) ---
 
 function schedulePush() {
-  if (!syncEnabled || isPushing || deviceRole === 'client') return;
+  if (!syncEnabled || isPushing || deviceRole === 'locked') return;
   clearTimeout(debounceTimer);
   debounceTimer = setTimeout(push, DEBOUNCE_DELAY);
 }
 
 async function push() {
-  if (!syncEnabled || isPushing || deviceRole === 'client') return;
+  if (!syncEnabled || isPushing || deviceRole === 'locked') return;
   isPushing = true;
 
   try {
@@ -180,19 +180,29 @@ async function saveAuth(data) {
 }
 
 async function registerDevice() {
-  const name = navigator.userAgent.includes('Chrome') ? 'Chrome' :
-               navigator.userAgent.includes('Firefox') ? 'Firefox' : 'Browser';
-  const platform = navigator.platform || 'unknown';
+  const ua = navigator.userAgent;
+  const browser = ua.includes('Edg/') ? 'Edge' :
+                  ua.includes('Firefox') ? 'Firefox' :
+                  ua.includes('Chrome') ? 'Chrome' :
+                  ua.includes('Safari') ? 'Safari' : 'Browser';
+  const os = ua.includes('Macintosh') ? 'macOS' :
+             ua.includes('Windows') ? 'Windows' :
+             ua.includes('CrOS') ? 'ChromeOS' :
+             ua.includes('Linux') ? 'Linux' :
+             ua.includes('iPhone') ? 'iPhone' :
+             ua.includes('iPad') ? 'iPad' :
+             ua.includes('Android') ? 'Android' : 'Unknown';
 
   const res = await apiFetch('POST', '/api/v1/devices', {
-    name: `${name} on ${platform}`,
-    platform: name.toLowerCase(),
+    name: `${browser} on ${os}`,
+    platform: browser.toLowerCase(),
+    role: 'client',
   });
 
   if (res.ok) {
     const data = await res.json();
     deviceId = data.device_id;
-    deviceRole = data.role || 'admin';
+    deviceRole = data.role || 'client';
     await chrome.storage.local.set({ sync_device_id: deviceId, sync_device_role: deviceRole });
   }
 }
@@ -374,6 +384,30 @@ initSync();
 
 // FuseBox — Background Service Worker v1.5.0
 
+// --- Dev auto-reload: polls a local dev server for build changes ---
+// Run `python3 -m http.server 8111` in the extension/ dir to enable
+(function devReload() {
+  const DEV_URL = 'http://localhost:8111/.build-stamp';
+  const POLL_MS = 2000;
+  let lastStamp = null;
+
+  async function check() {
+    try {
+      const res = await fetch(DEV_URL, { cache: 'no-store' });
+      if (!res.ok) { setTimeout(check, POLL_MS); return; }
+      const stamp = (await res.text()).trim();
+      if (lastStamp && stamp !== lastStamp) {
+        console.log('FuseBox: build changed, reloading...');
+        chrome.runtime.reload();
+        return;
+      }
+      lastStamp = stamp;
+    } catch {} // dev server not running — ignore
+    setTimeout(check, POLL_MS);
+  }
+  check();
+})();
+
 chrome.runtime.onInstalled.addListener(async () => {
   // Nuke all rules on install/update
   const all = await chrome.declarativeNetRequest.getDynamicRules();
@@ -425,10 +459,14 @@ async function applyRules() {
       return;
     }
 
+    // Never block the FuseBox dashboard or extension pages
+    const SAFE_DOMAINS = ['fuseboard-sync.joe-780.workers.dev', 'switch-ahg.pages.dev', 'localhost'];
+    const safeDomains = domains.filter(d => !SAFE_DOMAINS.some(safe => d === safe || d.endsWith('.' + safe)));
+
     const addRules = [];
     const usedIds = new Set();
 
-    domains.forEach((domain, i) => {
+    safeDomains.forEach((domain, i) => {
       let id = (i + 1) * 100 + Math.floor(Math.random() * 99);
       while (usedIds.has(id)) id++;
       usedIds.add(id);
@@ -456,11 +494,15 @@ async function applyRules() {
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.type === 'updateRules') {
-    chrome.storage.sync.set({
+    // Save selections if provided (from dashboard bridge)
+    const toStore = {
       blockedDomains: msg.domains || [],
       blockedUrls: msg.urls || [],
       hiddenSelectors: msg.selectors || {},
-    }, () => {
+    };
+    if (msg.selections) toStore.selections = msg.selections;
+
+    chrome.storage.sync.set(toStore, () => {
       applyRules().then(() => sendResponse({ ok: true }));
     });
     return true;

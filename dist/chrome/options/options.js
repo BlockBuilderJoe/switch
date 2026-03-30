@@ -506,15 +506,15 @@ function renderSignedOut() {
 function renderSignedIn(status) {
   // Get device role to determine what to show
   chrome.runtime.sendMessage({ type: 'sync_device_role' }, (roleData) => {
-    const isAdmin = roleData?.role === 'admin';
-    const isClient = roleData?.role === 'client';
+    const isAdmin = roleData?.role === 'host';
+    const isClient = roleData?.role === 'locked';
 
     syncContent.innerHTML = `
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
         <div style="display:flex;align-items:center;gap:6px">
           <span style="width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 6px rgba(34,197,94,.3)"></span>
           <span style="font-size:.82rem;font-weight:600">Synced</span>
-          <span style="font-size:.6rem;padding:2px 6px;border-radius:4px;background:${isAdmin ? 'rgba(34,197,94,.1)' : 'rgba(239,68,68,.1)'};color:${isAdmin ? '#22c55e' : '#ef4444'};border:1px solid ${isAdmin ? 'rgba(34,197,94,.2)' : 'rgba(239,68,68,.2)'}">${isAdmin ? 'admin' : 'client'}</span>
+          <span style="font-size:.6rem;padding:2px 6px;border-radius:4px;background:${isAdmin ? 'rgba(34,197,94,.1)' : 'rgba(239,68,68,.1)'};color:${isAdmin ? '#22c55e' : '#ef4444'};border:1px solid ${isAdmin ? 'rgba(34,197,94,.2)' : 'rgba(239,68,68,.2)'}">${isAdmin ? 'host' : (isClient ? 'locked' : 'client')}</span>
           <span style="font-size:.65rem;color:#444">v${status.version}</span>
         </div>
         <div style="display:flex;gap:8px">
@@ -527,6 +527,7 @@ function renderSignedIn(status) {
       <div id="sync-devices" style="margin-bottom:10px"></div>
       <div id="sync-sub" style="margin-bottom:8px"></div>
       <div style="display:flex;gap:6px">
+        <button id="sync-web-btn" style="flex:1;padding:6px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);border-radius:6px;color:#22c55e;font-size:.68rem;cursor:pointer;font-family:inherit;font-weight:600">Manage on website</button>
         ${isAdmin ? '<button id="sync-push-btn" style="flex:1;padding:6px;background:#12141a;border:1px solid #1e2028;border-radius:6px;color:#888;font-size:.68rem;cursor:pointer;font-family:inherit">Push now</button>' : ''}
         <button id="sync-pull-btn" style="flex:1;padding:6px;background:#12141a;border:1px solid #1e2028;border-radius:6px;color:#888;font-size:.68rem;cursor:pointer;font-family:inherit">Pull now</button>
       </div>
@@ -545,6 +546,10 @@ function renderSignedIn(status) {
         document.body.classList.remove('client-locked');
         renderSyncUI();
       });
+    });
+
+    document.getElementById('sync-web-btn').addEventListener('click', () => {
+      chrome.tabs.create({ url: 'https://fusebox.app' });
     });
 
     const pushBtn = document.getElementById('sync-push-btn');
@@ -566,10 +571,10 @@ function renderSignedIn(status) {
         <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;font-size:.72rem">
           <div style="display:flex;align-items:center;gap:6px">
             <span style="color:#888">${d.name}</span>
-            <span style="font-size:.55rem;padding:1px 5px;border-radius:3px;background:${d.role === 'admin' ? 'rgba(34,197,94,.1)' : 'rgba(239,68,68,.1)'};color:${d.role === 'admin' ? '#22c55e' : '#ef4444'};border:1px solid ${d.role === 'admin' ? 'rgba(34,197,94,.2)' : 'rgba(239,68,68,.2)'}">${d.role || 'admin'}</span>
+            <span style="font-size:.55rem;padding:1px 5px;border-radius:3px;background:${d.role === 'host' ? 'rgba(34,197,94,.1)' : d.role === 'locked' ? 'rgba(239,68,68,.1)' : 'rgba(100,150,255,.1)'};color:${d.role === 'host' ? '#22c55e' : d.role === 'locked' ? '#ef4444' : '#6496ff'};border:1px solid ${d.role === 'host' ? 'rgba(34,197,94,.2)' : d.role === 'locked' ? 'rgba(239,68,68,.2)' : 'rgba(100,150,255,.2)'}">${d.role || 'client'}</span>
           </div>
           <div style="display:flex;align-items:center;gap:6px">
-            ${isAdmin ? `<button class="role-toggle" data-did="${d.id}" data-role="${d.role === 'admin' ? 'client' : 'admin'}" style="background:none;border:none;color:#555;font-size:.6rem;cursor:pointer;font-family:inherit">${d.role === 'admin' ? 'make client' : 'make admin'}</button>` : ''}
+            ${isAdmin && d.role !== 'host' ? `<button class="role-toggle" data-did="${d.id}" data-role="${d.role === 'locked' ? 'client' : 'locked'}" style="background:none;border:none;color:#555;font-size:.6rem;cursor:pointer;font-family:inherit">${d.role === 'locked' ? 'unlock' : 'lock'}</button>` : ''}
             <button class="remove-device" data-did="${d.id}" style="background:none;border:none;color:#333;font-size:.65rem;cursor:pointer;font-family:inherit">remove</button>
           </div>
         </div>
@@ -641,6 +646,8 @@ document.getElementById('changelog').innerHTML = `
   <div style="font-weight:700;font-size:.9rem;color:#e0e2e8;margin-bottom:12px">Changelog</div>
 
   <div style="margin-bottom:14px">
+    <div style="font-weight:700;color:#22c55e;margin-bottom:4px">v1.5.1 — Selector Updates
+    </div>
     <div style="font-weight:700;color:#22c55e;margin-bottom:4px">v1.5.0 — Cloud Sync</div>
     <ul style="padding-left:16px;color:#777">
       <li>Cross-device sync (hosted $0.50/mo or self-host free)</li>
@@ -738,7 +745,7 @@ chrome.storage.sync.get(['selections', 'openView'], (data) => {
 
   // Check device role before rendering
   chrome.runtime.sendMessage({ type: 'sync_device_role' }, (res) => {
-    if (res?.role === 'client') {
+    if (res?.role === 'locked') {
       document.body.classList.add('client-locked');
     }
     render();

@@ -18,6 +18,7 @@ copy_shared() {
   cp "$EXT/data/blocklists.js" "$dest/data/"
   cp "$EXT/content/content.js" "$dest/content/"
   cp "$EXT/content/content.css" "$dest/content/"
+  cp "$EXT/content/dashboard-bridge.js" "$dest/content/"
   cp "$EXT/blocked/blocked.html" "$dest/blocked/"
   cp "$EXT/blocked/blocked.js" "$dest/blocked/"
   cp "$EXT/icons/"*.png "$dest/icons/"
@@ -61,7 +62,7 @@ build_firefox() {
 {
   "manifest_version": 3,
   "name": "FuseBox",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Your digital fusebox. Block distracting sites and features.",
   "browser_specific_settings": {
     "gecko": {
@@ -91,12 +92,23 @@ build_firefox() {
   "background": {
     "scripts": ["background/background.js"]
   },
-  "content_scripts": [{
-    "matches": ["<all_urls>"],
-    "js": ["data/blocklists.js", "content/content.js"],
-    "css": ["content/content.css"],
-    "run_at": "document_start"
-  }],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["data/blocklists.js", "content/content.js"],
+      "css": ["content/content.css"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "https://fuseboard-sync.joe-780.workers.dev/*",
+        "https://switch-ahg.pages.dev/*",
+        "http://localhost/*"
+      ],
+      "js": ["content/dashboard-bridge.js"],
+      "run_at": "document_idle"
+    }
+  ],
   "icons": {
     "16": "icons/icon-16.png",
     "48": "icons/icon-48.png",
@@ -124,7 +136,7 @@ build_safari() {
 {
   "manifest_version": 3,
   "name": "FuseBox",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Your digital fusebox. Block distracting sites and features.",
   "permissions": [
     "storage",
@@ -144,12 +156,23 @@ build_safari() {
   "background": {
     "service_worker": "background/background.js"
   },
-  "content_scripts": [{
-    "matches": ["<all_urls>"],
-    "js": ["content/content.js"],
-    "css": ["content/content.css"],
-    "run_at": "document_start"
-  }],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/content.js"],
+      "css": ["content/content.css"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "https://fuseboard-sync.joe-780.workers.dev/*",
+        "https://switch-ahg.pages.dev/*",
+        "http://localhost/*"
+      ],
+      "js": ["content/dashboard-bridge.js"],
+      "run_at": "document_idle"
+    }
+  ],
   "icons": {
     "16": "icons/icon-16.png",
     "48": "icons/icon-48.png",
@@ -164,22 +187,43 @@ MANIFEST
   echo "  xcrun safari-web-extension-converter $dest --project-location $DIST/safari-xcode --app-name FuseBox --bundle-identifier co.uk.josephpalmer.FuseBox"
 }
 
+build_dashboard() {
+  echo "Building dashboard..."
+  local dest="$ROOT/worker/public"
+  mkdir -p "$dest/css" "$dest/js"
+  cp "$ROOT/index.html" "$dest/"
+  cp "$ROOT/css/dashboard.css" "$dest/css/"
+  cp "$ROOT/js/api.js" "$ROOT/js/app.js" "$dest/js/"
+  cp "$EXT/data/blocklists.js" "$ROOT/js/blocklists.js"
+  cp "$ROOT/js/blocklists.js" "$dest/js/"
+  echo "Dashboard build: $dest"
+}
+
 case "$TARGET" in
   chrome)  build_chrome ;;
   firefox) build_firefox ;;
   safari)  build_safari ;;
+  dashboard) build_dashboard ;;
   all)
     build_chrome
     echo ""
     build_firefox
     echo ""
     build_safari
+    echo ""
+    build_dashboard
     ;;
   *)
-    echo "Usage: $0 [chrome|firefox|safari|all]"
+    echo "Usage: $0 [chrome|firefox|safari|dashboard|all]"
     exit 1
     ;;
 esac
 
+# Write build stamp for dev auto-reload
+date +%s > "$EXT/.build-stamp"
+
 echo ""
 echo "Done! Builds are in $DIST/"
+echo ""
+echo "Dev auto-reload: run this once in a separate terminal:"
+echo "  cd extension && python3 -m http.server 8111"

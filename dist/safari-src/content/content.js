@@ -2,6 +2,12 @@
 // 1. Hides elements based on selectors
 // 2. Watches for SPA URL changes and blocks matching paths
 
+// Never run on FuseBox dashboard pages
+const SAFE_HOSTS = ['fuseboard-sync.joe-780.workers.dev', 'switch-ahg.pages.dev'];
+if (SAFE_HOSTS.includes(location.hostname)) {
+  // Skip all blocking on dashboard
+} else {
+
 let hiddenSelectors = {};
 let blockedUrlRules = [];
 let allowedChannels = [];
@@ -24,7 +30,9 @@ function loadConfig() {
 // --- Element Hiding ---
 function applyHiding() {
   const hostname = window.location.hostname.replace('www.', '');
-  const selectors = hiddenSelectors[hostname];
+  // Match exact domain OR subdomain (e.g. edition.cnn.com matches cnn.com key)
+  const selectors = hiddenSelectors[hostname] ||
+    Object.entries(hiddenSelectors).find(([k]) => hostname.endsWith('.' + k))?.[1];
   if (!selectors || selectors.length === 0) {
     const existing = document.getElementById('fuseboard-hide');
     if (existing) existing.remove();
@@ -255,3 +263,5 @@ chrome.storage.onChanged.addListener((changes, area) => {
 // Init
 loadConfig();
 watchUrlChanges();
+
+} // end SAFE_HOSTS check

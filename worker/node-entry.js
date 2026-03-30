@@ -1,5 +1,6 @@
-// FuseBoard Sync — Node.js / Docker entry point
+// FuseBox Sync — Node.js / Docker entry point
 import { serve } from '@hono/node-server';
+import { serveStatic } from '@hono/node-server/serve-static';
 import Database from 'better-sqlite3';
 import { readFileSync } from 'fs';
 import { createApp } from './src/index.js';
@@ -36,5 +37,8 @@ const app = createApp(
   })
 );
 
-console.log(`FuseBoard Sync (self-hosted) running on port ${PORT}`);
+// Serve dashboard static files from ./public/
+app.use('/*', serveStatic({ root: './public' }));
+
+console.log(`FuseBox Sync (self-hosted) running on port ${PORT}`);
 serve({ fetch: app.fetch, port: PORT });
