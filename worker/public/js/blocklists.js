@@ -90,7 +90,7 @@ const categories = [
         { id: 'rd-suggested', name: 'Suggested Subs', type: 'element', selector: 'pdp-right-rail, #right-sidebar-container aside, [data-testid="subreddit-recommendation"]' },
       ]},
       { id: 'pinterest', name: 'Pinterest', domains: ['pinterest.com', 'pinimg.com'], features: [
-        { id: 'pn-home', name: 'Home Feed', type: 'url', urlFilter: '||pinterest.com/' },
+        { id: 'pn-home', name: 'Home Feed', type: 'url', urlFilter: '||pinterest.com/', requestDomains: ['pinterest.com'] },
         { id: 'pn-shop', name: 'Shop', type: 'element', selector: '[data-test-id="shopping-spotlight"], a[href*="/shop/"]' },
         { id: 'pn-notifications', name: 'Notifications', type: 'element', selector: '[aria-label="Notifications"]' },
       ]},
@@ -114,10 +114,10 @@ const categories = [
     sites: [
       { id: 'netflix', name: 'Netflix', domains: ['netflix.com', 'nflxvideo.net', 'nflximg.net', 'nflxext.com'] },
       { id: 'disneyplus', name: 'Disney+', domains: ['disneyplus.com', 'disney-plus.net', 'dssott.com', 'bamgrid.com'], features: [
-        { id: 'dp-home', name: 'Home/Browse', type: 'url', urlFilter: '||disneyplus.com/home' },
+        { id: 'dp-home', name: 'Home/Browse', type: 'url', urlFilter: '/home', requestDomains: ['disneyplus.com'] },
       ]},
       { id: 'hulu', name: 'Hulu', domains: ['hulu.com', 'hulustream.com', 'huluim.com'], features: [
-        { id: 'hu-home', name: 'Home/Browse', type: 'url', urlFilter: '||hulu.com/hub' },
+        { id: 'hu-home', name: 'Home/Browse', type: 'url', urlFilter: '/hub', requestDomains: ['hulu.com'] },
       ]},
       { id: 'twitch', name: 'Twitch', domains: ['twitch.tv', 'twitchcdn.net', 'jtvnw.net'], features: [
         { id: 'tw-browse', name: 'Browse', type: 'url', urlFilter: '/directory', requestDomains: ['twitch.tv'] },
@@ -199,17 +199,17 @@ const categories = [
     cfCategoryIds: [],
     sites: [
       { id: 'steam', name: 'Steam', domains: ['store.steampowered.com', 'steampowered.com', 'steamcommunity.com', 'steamstatic.com'], features: [
-        { id: 'st-store', name: 'Store', type: 'url', urlFilter: '||store.steampowered.com' },
-        { id: 'st-community', name: 'Community', type: 'url', urlFilter: '||steamcommunity.com' },
+        { id: 'st-store', name: 'Store', type: 'url', urlFilter: '||store.steampowered.com', requestDomains: ['store.steampowered.com'] },
+        { id: 'st-community', name: 'Community', type: 'url', urlFilter: '||steamcommunity.com', requestDomains: ['steamcommunity.com'] },
         { id: 'st-market', name: 'Market', type: 'url', urlFilter: '/market', requestDomains: ['steamcommunity.com'] },
       ]},
       { id: 'epic', name: 'Epic Games', domains: ['epicgames.com', 'unrealengine.com', 'fortnite.com'], features: [
         { id: 'ep-store', name: 'Store', type: 'url', urlFilter: '/store', requestDomains: ['epicgames.com'] },
-        { id: 'ep-fortnite', name: 'Fortnite', type: 'url', urlFilter: '||fortnite.com' },
+        { id: 'ep-fortnite', name: 'Fortnite', type: 'url', urlFilter: '||fortnite.com', requestDomains: ['fortnite.com'] },
       ]},
       { id: 'roblox', name: 'Roblox', domains: ['roblox.com', 'rbxcdn.com'], features: [
         { id: 'rb-catalog', name: 'Avatar Shop', type: 'url', urlFilter: '/catalog', requestDomains: ['roblox.com'] },
-        { id: 'rb-discover', name: 'Discover', type: 'url', urlFilter: '/discover', requestDomains: ['roblox.com'] },
+        { id: 'rb-discover', name: 'Discover', type: 'url', urlFilter: '/charts', requestDomains: ['roblox.com'] },
       ]},
       { id: 'riot', name: 'Riot Games', domains: ['riotgames.com', 'leagueoflegends.com'] },
       { id: 'ea', name: 'EA Games', domains: ['ea.com', 'origin.com'] },

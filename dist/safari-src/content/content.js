@@ -80,25 +80,32 @@ function checkUrl() {
 
     // Check path match — only match against pathname, not full URL
     const filterClean = urlFilter.replace(/^\|\|[^/]*/, '');
-    const pathToCheck = filterClean || urlFilter;
 
-    if (pathname.includes(pathToCheck)) {
-      isRedirecting = true;
-      // Replace current history entry so back button doesn't loop
-      window.stop();
-      document.title = 'Blocked by FuseBox';
-      document.body.innerHTML = `
-        <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#07080a;color:#e4e6ea;font-family:system-ui,sans-serif;text-align:center">
-          <div>
-            <div style="font-size:2rem;margin-bottom:8px">Blocked by <span style="color:#22c55e">FuseBox</span></div>
-            <div style="color:#666;margin-bottom:16px">This content has been switched off.</div>
-            <a href="javascript:history.back()" style="color:#22c55e;text-decoration:none;padding:8px 20px;border:1px solid rgba(34,197,94,.3);border-radius:8px;font-size:.85rem">Go Back</a>
-          </div>
-        </div>
-      `;
-      setTimeout(() => { isRedirecting = false; }, 1000);
-      return;
+    // If filter was domain-only (e.g. ||store.steampowered.com), domain match above is enough.
+    // Otherwise check the path component matches.
+    if (filterClean) {
+      if (!pathname.includes(filterClean)) continue;
+    } else if (!urlFilter.startsWith('||')) {
+      // Plain string filter — match against pathname
+      if (!pathname.includes(urlFilter)) continue;
     }
+    // If we reach here: either domain-only || rule matched, or path matched
+
+    isRedirecting = true;
+    // Replace current history entry so back button doesn't loop
+    window.stop();
+    document.title = 'Blocked by FuseBox';
+    document.body.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#07080a;color:#e4e6ea;font-family:system-ui,sans-serif;text-align:center">
+        <div>
+          <div style="font-size:2rem;margin-bottom:8px">Blocked by <span style="color:#22c55e">FuseBox</span></div>
+          <div style="color:#666;margin-bottom:16px">This content has been switched off.</div>
+          <a href="javascript:history.back()" style="color:#22c55e;text-decoration:none;padding:8px 20px;border:1px solid rgba(34,197,94,.3);border-radius:8px;font-size:.85rem">Go Back</a>
+        </div>
+      </div>
+    `;
+    setTimeout(() => { isRedirecting = false; }, 1000);
+    return;
   }
 }
 
