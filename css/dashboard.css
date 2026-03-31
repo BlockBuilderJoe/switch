@@ -137,55 +137,56 @@ body.light{
 .section-title{font-size:1.1rem;font-weight:800;margin-bottom:14px}
 
 /* ═══════ FUSE GRID ═══════ */
-.fuse-grid{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;padding:8px 0}
+.fuse-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;padding:16px 0;max-width:740px;margin:0 auto}
+@media(max-width:780px){.fuse-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:520px){.fuse-grid{grid-template-columns:repeat(3,1fr)}}
 
-/* ═══════ FUSE CELL — compact cute switch ═══════ */
-.fuse-cell{display:flex;flex-direction:column;align-items:center;gap:0;user-select:none;width:114px}
+/* ═══════ FUSE CELL ═══════ */
+.fuse-cell{display:flex;flex-direction:column;align-items:center;user-select:none}
+.fuse-grid-animate .fuse-cell{animation:fuse-enter .4s ease both}
+@keyframes fuse-enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
-/* Conduit pipes — compact */
-.fuse-conduit{width:24px;display:flex;flex-direction:column;align-items:center}
-.fuse-conduit-cap{width:24px;height:10px;border-radius:6px 6px 0 0;background:#aaa}
-.fuse-conduit-cap-bot{width:24px;height:10px;border-radius:0 0 6px 6px;background:#aaa}
-.fuse-conduit-pipe{width:12px;height:24px;position:relative;overflow:hidden;background:#888}
-.fuse-conduit-flare{width:24px;height:7px;background:#555;clip-path:polygon(15% 0%,85% 0%,100% 100%,0% 100%)}
-.fuse-conduit-flare-bot{width:24px;height:7px;background:#555;clip-path:polygon(0% 0%,100% 0%,85% 100%,15% 100%)}
+/* Conduits hidden */
+.fuse-conduit{display:none}
 
-/* Pulse dots */
-.fuse-pulse{position:absolute;left:0;right:0;width:100%;display:flex;flex-direction:column;gap:4px;animation:fuse-pulse-down .6s linear infinite}
-.fuse-pulse-bot{position:absolute;left:0;right:0;width:100%;display:flex;flex-direction:column;gap:4px;animation:fuse-pulse-down .7s linear infinite;transition:opacity .4s}
-.fuse-pulse-dot{width:100%;height:4px;border-radius:2px;background:#e63946;opacity:.9}
-.fuse-pulse-dot-bot{width:100%;height:4px;border-radius:2px;opacity:.9;transition:background .4s}
-@keyframes fuse-pulse-down{0%{transform:translateY(-24px)}100%{transform:translateY(24px)}}
+/* Housing */
+.fuse-housing{width:100%;border-radius:20px;padding:4px;cursor:pointer;transition:transform .15s,box-shadow .2s;background:#2e2e2e}
+.fuse-housing:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.fuse-housing:active{transform:scale(.97) translateY(0);box-shadow:none}
+.fuse-housing-inner{width:100%;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;align-items:center;position:relative;background:#1a1a1a}
 
-/* Bottom conduit color by state */
-.fuse-cell[data-w="red"] .fuse-pulse-dot-bot{background:#e63946}
-.fuse-cell[data-w="amber"] .fuse-pulse-dot-bot{background:#f4a228}
-.fuse-cell[data-w="green"] .fuse-pulse-bot{opacity:0}
+/* State indicator bar */
+.fuse-status{width:100%;height:22px;display:flex;align-items:center;justify-content:center;font-family:'DM Sans',Arial,sans-serif;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;border-radius:0 0 16px 16px;transition:background .3s,color .3s}
+.fuse-cell[data-w="red"] .fuse-status{background:rgba(232,68,58,.25);color:rgba(232,68,58,.7)}
+.fuse-cell[data-w="amber"] .fuse-status{background:rgba(244,162,40,.25);color:rgba(244,162,40,.85)}
+.fuse-cell[data-w="green"] .fuse-status{background:rgba(45,198,83,.25);color:#2dc653}
 
-/* Housing — compact */
-.fuse-housing{width:114px;border-radius:22px;padding:5px;cursor:pointer;transition:transform .1s;background:#2c2c2c}
-.fuse-housing:active{transform:scale(.97)}
-.fuse-housing-inner{width:100%;border-radius:17px;overflow:hidden;display:flex;flex-direction:column;align-items:center;position:relative;background:#1c1c1c}
+/* State glow on housing */
+.fuse-cell[data-w="green"] .fuse-housing{box-shadow:0 0 12px rgba(45,198,83,.15),0 2px 8px rgba(0,0,0,.3)}
+.fuse-cell[data-w="amber"] .fuse-housing{box-shadow:0 0 12px rgba(244,162,40,.12),0 2px 8px rgba(0,0,0,.3)}
 
 /* Terminals */
-.fuse-terminal-top{width:100%;padding:8px 8px 6px;display:flex;flex-direction:column;align-items:center;z-index:2;flex-shrink:0;background:#383838}
-.fuse-terminal-bot{width:100%;padding:6px 8px 8px;display:flex;flex-direction:column;align-items:center;gap:5px;z-index:2;flex-shrink:0;background:#383838}
+.fuse-terminal-top{width:100%;padding:6px 6px 4px;display:flex;flex-direction:column;align-items:center;z-index:2;flex-shrink:0;background:#232323}
+.fuse-terminal-bot{width:100%;padding:4px 6px 6px;display:flex;flex-direction:column;align-items:center;gap:0;z-index:2;flex-shrink:0;background:#232323}
 
 /* Label — BOLD and readable */
-.fuse-label-box{width:100%;height:62px;border-radius:7px;padding:3px 5px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:#2a2a2a;overflow:hidden}
-.fuse-label-text{font-family:'DM Sans',Arial,sans-serif;font-size:12.5px;font-weight:800;color:#fff;letter-spacing:.2px;text-align:center;line-height:1.2}
+.fuse-label-box{width:100%;height:34px;border-radius:6px;padding:0 5px;display:flex;align-items:center;justify-content:center;background:#222;overflow:hidden}
+/* Sub-pages: taller label box with column layout for logo + text */
+.fuse-grid-sub .fuse-label-box{height:56px;flex-direction:column;gap:2px;padding:3px 5px}
+.fuse-grid-main .fuse-brand-logo,.fuse-grid-main .fuse-brand-logo-lg,.fuse-grid-main .fuse-label-icon{display:none}
+.fuse-label-text{font-family:'DM Sans',Arial,sans-serif;font-size:13px;font-weight:800;color:#fff;letter-spacing:.1px;text-align:center;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .fuse-label-icon{width:18px;height:18px;color:#aaa;flex-shrink:0}
 .fuse-label-icon svg{width:100%;height:100%}
-.fuse-brand-logo{width:20px;height:20px;flex-shrink:0;border-radius:3px;overflow:hidden}
-.fuse-brand-logo svg{width:100%;height:100%;display:block}
-.fuse-brand-logo-lg{width:28px;height:28px;border-radius:4px}
+.fuse-brand-logo{width:20px;height:20px;flex-shrink:0;border-radius:4px;object-fit:contain}
+img.fuse-brand-logo{display:block}
+.fuse-brand-logo-lg{width:28px;height:28px;border-radius:5px}
 .fuse-tm{font-size:7px;vertical-align:super;opacity:.5;font-weight:400;margin-left:1px}
-.fuse-label-sm{width:100%;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;gap:4px;background:#2a2a2a}
-.fuse-label-sm-text{font-family:'DM Sans',Arial,sans-serif;font-size:9px;font-weight:700;color:#bbb;letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fuse-label-sm{width:100%;height:20px;border-radius:4px;display:flex;align-items:center;justify-content:center;gap:4px}
+.fuse-label-sm-text{font-family:'DM Sans',Arial,sans-serif;font-size:10px;font-weight:700;color:#777;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* Track area — compact */
 .fuse-track-area{flex:1;width:100%;min-height:130px;position:relative;display:flex;align-items:center;justify-content:center}
-.fuse-track-line{position:absolute;left:50%;top:0;bottom:0;width:5px;transform:translateX(-50%);border-radius:3px;background:#111;border:1px solid #2e2e2e}
+.fuse-track-line{position:absolute;left:50%;top:0;bottom:0;width:4px;transform:translateX(-50%);border-radius:2px;background:#141414}
 
 /* Paddle toggle — .fuse-trk for event compat */
 .fuse-trk{position:absolute;left:50%;transform:translateX(-50%);z-index:3;cursor:pointer;transition:top .5s cubic-bezier(.34,1.4,.64,1)}
@@ -196,7 +197,7 @@ body.light{
 
 /* Character animations */
 @keyframes char-blink{0%,90%,100%{transform:scaleY(1)}95%{transform:scaleY(.07)}}
-@keyframes char-zzz{0%{opacity:.9;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(4px,-10px) scale(.5)}}
+@keyframes char-zzz{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(6px,-14px) scale(.4)}}
 @keyframes char-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 @keyframes char-sway{0%,100%{transform:rotate(0deg)}30%{transform:rotate(-2deg)}70%{transform:rotate(2deg)}}
 @keyframes char-bounce{0%,100%{transform:translateY(0) scaleX(1) scaleY(1)}40%{transform:translateY(-5px) scaleX(.95) scaleY(1.05)}78%{transform:translateY(1px) scaleX(1.03) scaleY(.97)}}
@@ -204,9 +205,7 @@ body.light{
 .char-zzz{animation:char-zzz 2.8s ease-in-out infinite}
 .char-zzz-d1{animation-delay:.6s}
 .char-zzz-d2{animation-delay:1.2s}
-.fuse-cell[data-w="red"] .fuse-paddle-char{animation:char-float 3.4s ease-in-out infinite}
-.fuse-cell[data-w="amber"] .fuse-paddle-char{animation:char-sway 5s ease-in-out infinite}
-.fuse-cell[data-w="green"] .fuse-paddle-char{animation:char-bounce 2.2s cubic-bezier(.36,.07,.19,.97) infinite}
+/* Character body animations removed — too distracting at grid scale */
 
 /* Paddle position + color */
 .fuse-cell[data-w="red"] .fuse-trk{top:8px}
@@ -227,8 +226,8 @@ body.light{
 .fuse-smile{width:18px;height:9px;border-radius:0 0 9px 9px;border-bottom:2.5px solid rgba(0,0,0,.35)}
 .fuse-neutral{width:14px;height:2.5px;background:rgba(0,0,0,.28);border-radius:2px;margin-top:3px}
 .fuse-zzz{display:flex;gap:2px;align-items:flex-end;margin-top:1px}
-.fuse-z1{font-size:10px;font-weight:700;font-family:Arial;line-height:1;color:rgba(0,0,0,.22)}
-.fuse-z2{font-size:7px;font-weight:700;font-family:Arial;margin-bottom:1px;color:rgba(0,0,0,.15)}
+.fuse-z1{font-size:14px;font-weight:800;font-family:Arial;line-height:1;color:rgba(255,255,255,.5)}
+.fuse-z2{font-size:9px;font-weight:800;font-family:Arial;margin-bottom:1px;color:rgba(255,255,255,.3)}
 
 /* Face visibility by state */
 .fuse-face-sleep,.fuse-face-neutral,.fuse-face-happy{display:none}
@@ -242,10 +241,10 @@ body.light{
 .fuse-label-sm.fuse-cfg .fuse-label-sm-text{color:#ccc}
 
 /* Screw (label variant) */
-.fuse-screw-wrap{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#555}
-.fuse-screw-face{width:14px;height:14px;border-radius:50%;background:#444;position:relative}
-.fuse-screw-face::before{content:'';position:absolute;width:9px;height:2px;border-radius:1px;top:50%;left:50%;transform:translate(-50%,-50%);background:#222}
-.fuse-screw-face::after{content:'';position:absolute;width:2px;height:9px;border-radius:1px;top:50%;left:50%;transform:translate(-50%,-50%);background:#222}
+.fuse-screw-wrap{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#444;flex-shrink:0;margin:2px auto}
+.fuse-screw-face{width:10px;height:10px;border-radius:50%;background:#383838;position:relative}
+.fuse-screw-face::before{content:'';position:absolute;width:6px;height:1.5px;border-radius:1px;top:50%;left:50%;transform:translate(-50%,-50%);background:#2a2a2a}
+.fuse-screw-face::after{content:'';position:absolute;width:1.5px;height:6px;border-radius:1px;top:50%;left:50%;transform:translate(-50%,-50%);background:#2a2a2a}
 
 /* Toggle animation */
 @keyframes fuse-pop{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
@@ -257,14 +256,18 @@ body.light{
 .client-locked .fuse-cfg{pointer-events:none;opacity:.4}
 
 /* ═══════ LIGHT MODE FUSE OVERRIDES ═══════ */
-body.light .fuse-housing{background:#c8c8c8;box-shadow:0 2px 8px rgba(0,0,0,.12)}
-body.light .fuse-housing-inner{background:#f0ede6}
-body.light .fuse-terminal-top,body.light .fuse-terminal-bot{background:#d4d0c8}
-body.light .fuse-label-box,body.light .fuse-label-sm{background:#c4c0b8}
-body.light .fuse-label-text{color:#1a1a1a;font-weight:800}
-body.light .fuse-label-sm-text{color:#555}
-body.light .fuse-screw-wrap{background:#b0aca4}
-body.light .fuse-screw-face{background:#a09c94}
+body.light .fuse-housing{background:#ddd9d2;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+body.light .fuse-housing:hover{box-shadow:0 8px 28px rgba(0,0,0,.12)}
+body.light .fuse-housing-inner{background:#fafafa}
+body.light .fuse-terminal-top,body.light .fuse-terminal-bot{background:#eae7e0}
+body.light .fuse-label-box{background:#ddd9d2}
+body.light .fuse-label-text{color:#1a1a1a;text-shadow:none}
+body.light .fuse-label-sm-text{color:#999}
+body.light .fuse-track-line{background:#e8e4de}
+body.light .fuse-cell[data-w="green"] .fuse-housing{box-shadow:0 0 14px rgba(45,198,83,.12),0 2px 8px rgba(0,0,0,.06)}
+body.light .fuse-cell[data-w="amber"] .fuse-housing{box-shadow:0 0 14px rgba(244,162,40,.1),0 2px 8px rgba(0,0,0,.06)}
+body.light .fuse-screw-wrap{background:#c8c4bc}
+body.light .fuse-screw-face{background:#b8b4ac}
 body.light .fuse-screw-face::before,body.light .fuse-screw-face::after{background:#888}
 body.light .fuse-label-sm.fuse-cfg:hover{background:#b8b4ac}
 body.light .fuse-track-line{background:#ccc8c0;border-color:#bbb8b0}

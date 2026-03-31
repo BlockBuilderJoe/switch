@@ -348,10 +348,14 @@ function getWireColor(catId) {
 
 // --- Render ---
 
+let lastRenderedView = null;
+
 function render() {
-  if (currentView === 'main') renderMain();
-  else if (currentView.includes('/')) renderFeatures(currentView);
-  else renderSites(currentView);
+  const viewChanged = currentView !== lastRenderedView;
+  lastRenderedView = currentView;
+  if (currentView === 'main') renderMain(viewChanged);
+  else if (currentView.includes('/')) renderFeatures(currentView, viewChanged);
+  else renderSites(currentView, viewChanged);
 }
 
 function renderBreadcrumb(crumbs) {
@@ -376,18 +380,23 @@ function renderBreadcrumb(crumbs) {
   nav.appendChild(bc);
 }
 
-function renderMain() {
+function renderMain(animate) {
   renderBreadcrumb([{ label: 'FuseBox', view: 'main' }]);
   titleEl.textContent = '';
   board.innerHTML = '';
   const grid = document.createElement('div');
-  grid.className = 'fuse-grid';
+  grid.className = 'fuse-grid fuse-grid-main' + (animate ? ' fuse-grid-animate' : '');
 
-  categories.forEach(cat => {
+  // Short labels for main grid — single line, punchy
+  const SHORT = {'Social Media':'Social','Video Streaming':'Streaming','Ads & Trackers':'Ads','Adult Content':'Adult','Security':'Security'};
+
+  categories.forEach((cat, ci) => {
     const isTripped = selections[cat.id]?.enabled || false;
     const wire = getWireColor(cat.id);
     const hasSites = (cat.sites || []).length > 0;
-    const cell = createFuseCell(cat.name, isTripped, wire, hasSites ? (cat.sites.length + ' sites') : '', hasSites, cat.icon, null, cat.id);
+    const shortName = SHORT[cat.name] || cat.name;
+    const cell = createFuseCell(shortName, isTripped, wire, hasSites ? (cat.sites.length + ' sites') : '', hasSites, cat.icon, null, cat.id);
+    cell.style.animationDelay = (ci * 40) + 'ms';
 
     function toggleCat() {
       const s = selections[cat.id];
@@ -416,7 +425,7 @@ function renderMain() {
   updateStatus();
 }
 
-function renderSites(catId) {
+function renderSites(catId, animate) {
   const cat = categories.find(c => c.id === catId);
   if (!cat) { currentView = 'main'; render(); return; }
 
@@ -427,9 +436,9 @@ function renderSites(catId) {
   titleEl.textContent = '';
   board.innerHTML = '';
   const grid = document.createElement('div');
-  grid.className = 'fuse-grid';
+  grid.className = 'fuse-grid fuse-grid-sub' + (animate ? ' fuse-grid-animate' : '');
 
-  (cat.sites || []).forEach(site => {
+  (cat.sites || []).forEach((site, si) => {
     const isTripped = selections[cat.id].sites[site.id] || false;
     const hasFeatures = (site.features || []).length > 0;
     let wire = 'red';
@@ -442,7 +451,8 @@ function renderSites(catId) {
       else if (anyFeatOn) wire = 'amber';
     }
     const showTripped = isTripped || wire !== 'red';
-    const cell = createFuseCell(site.name, showTripped, wire, hasFeatures ? (site.features.length + ' features') : '', hasFeatures, '', site.id);
+    const cell = createFuseCell(site.name, showTripped, wire, hasFeatures ? (site.features.length + ' features') : '', hasFeatures, '', site.id, cat.id);
+    cell.style.animationDelay = (si * 40) + 'ms';
 
     function toggleSite() {
       selections[cat.id].sites[site.id] = !selections[cat.id].sites[site.id];
@@ -471,7 +481,7 @@ function renderSites(catId) {
   updateStatus();
 }
 
-function renderFeatures(path) {
+function renderFeatures(path, animate) {
   const [catId, siteId] = path.split('/');
   const cat = categories.find(c => c.id === catId);
   const site = cat?.sites?.find(s => s.id === siteId);
@@ -485,12 +495,12 @@ function renderFeatures(path) {
   titleEl.textContent = '';
   board.innerHTML = '';
   const grid = document.createElement('div');
-  grid.className = 'fuse-grid';
+  grid.className = 'fuse-grid fuse-grid-sub' + (animate ? ' fuse-grid-animate' : '');
 
   (site.features || []).forEach(feat => {
     const isTripped = selections[cat.id].features[feat.id] || false;
     const wire = isTripped ? 'green' : 'red';
-    const cell = createFuseCell(feat.name, isTripped, wire, feat.type === 'allowlist' ? 'allow list' : feat.type, false, '', siteId);
+    const cell = createFuseCell(feat.name, isTripped, wire, feat.type === 'allowlist' ? 'allow list' : feat.type, false, '', siteId, catId);
 
     cell.addEventListener('click', () => {
       cell.classList.add('just-toggled');
@@ -538,9 +548,9 @@ function charMouth(st,mx,my) {
 }
 
 function charZzz(ox,oy) {
-  return `<text class="char-zzz" x="${ox}" y="${oy}" font-size="8" font-weight="700" fill="#ddd" font-family="Arial">z</text>
-    <text class="char-zzz char-zzz-d1" x="${ox+6}" y="${oy-7}" font-size="6" font-weight="700" fill="#ddd" font-family="Arial">z</text>
-    <text class="char-zzz char-zzz-d2" x="${ox+11}" y="${oy-13}" font-size="5" font-weight="700" fill="#ddd" font-family="Arial">z</text>`;
+  return `<text class="char-zzz" x="${ox}" y="${oy}" font-size="12" font-weight="800" fill="#fff" font-family="Arial" opacity=".7">z</text>
+    <text class="char-zzz char-zzz-d1" x="${ox+8}" y="${oy-9}" font-size="9" font-weight="800" fill="#fff" font-family="Arial" opacity=".5">z</text>
+    <text class="char-zzz char-zzz-d2" x="${ox+15}" y="${oy-17}" font-size="7" font-weight="800" fill="#fff" font-family="Arial" opacity=".35">z</text>`;
 }
 
 function charSVG(catId, wireColor) {
@@ -550,47 +560,46 @@ function charSVG(catId, wireColor) {
   const zz = st===0?charZzz(20,-24):'';
 
   if(catId==='social-media') {
-    // Speech bubble with tail
-    return `<svg viewBox="-36 -40 72 80" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
-      <polygon points="-20,14 2,14 -30,44" fill="${col}"/>
-      <rect x="-34" y="-34" width="68" height="56" rx="28" fill="${col}"/>
-      ${E(st,0,-8,8)}${M(st,0,6)}${zz}
+    // Speech bubble — centred, tail below
+    return `<svg viewBox="-36 -36 72 72" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+      <polygon points="-8,18 8,18 -4,36" fill="${col}"/>
+      <rect x="-30" y="-28" width="60" height="48" rx="24" fill="${col}"/>
+      ${E(st,0,-6,8)}${M(st,0,8)}${zz}
     </svg>`;
   }
   if(catId==='adult-content') {
-    // Tall pill with 18+ header and tinted lower body
-    const lf = st===0?'#f5a0a0':st===1?'#fde59a':'#a8ecc0';
+    // Tall pill with 18+ header and dark inner panel (like Security)
     return `<svg viewBox="-36 -40 72 80" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
       <rect x="-26" y="-36" width="52" height="72" rx="26" fill="${col}"/>
-      <rect x="-22" y="-12" width="44" height="32" rx="18" fill="${lf}"/>
-      <text x="0" y="-20" font-size="14" font-weight="900" fill="rgba(255,255,255,.85)" font-family="Arial" text-anchor="middle" dominant-baseline="middle" letter-spacing="1">18+</text>
+      <rect x="-22" y="-12" width="44" height="32" rx="18" fill="rgba(0,0,0,.13)"/>
+      <text x="0" y="-20" font-size="14" font-weight="900" fill="rgba(0,0,0,.3)" font-family="Arial" text-anchor="middle" dominant-baseline="middle" letter-spacing="1">18+</text>
       ${E(st,0,0,7)}${M(st,0,16)}${zz}
     </svg>`;
   }
   if(catId==='ads-trackers') {
-    // Magnifying glass with tinted lens and handle
-    const lensFill = st===0?'#f5a0a0':st===1?'#fde59a':'#a8ecc0';
-    const lx=-6,ly=-8,outerR=28,ringW=9,innerR=outerR-ringW;
+    // Magnifying glass — centred lens, dark inner panel (like Security)
+    const outerR=26,ringW=8,innerR=outerR-ringW;
     const rad=135*Math.PI/180;
-    const hx=lx+outerR*Math.cos(rad),hy=ly+outerR*Math.sin(rad);
+    const hx=outerR*Math.cos(rad),hy=outerR*Math.sin(rad);
     return `<svg viewBox="-36 -36 72 72" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
-      <rect x="${hx-6}" y="${hy-5}" width="12" height="32" rx="6" fill="${col}" transform="rotate(45,${hx},${hy})"/>
-      <circle cx="${lx}" cy="${ly}" r="${outerR}" fill="${col}"/>
-      <circle cx="${lx}" cy="${ly}" r="${innerR}" fill="${lensFill}"/>
-      ${E(st,lx,ly-2,7)}${M(st,lx,ly+10)}${zz}
+      <rect x="${hx-5}" y="${hy-4}" width="10" height="28" rx="5" fill="${col}" transform="rotate(45,${hx},${hy})"/>
+      <circle cx="0" cy="0" r="${outerR}" fill="${col}"/>
+      <circle cx="0" cy="0" r="${innerR}" fill="rgba(0,0,0,.13)"/>
+      ${E(st,0,-2,7)}${M(st,0,10)}${zz}
     </svg>`;
   }
   if(catId==='video-streaming') {
-    // Play triangle with rounded corners — face offset left
+    // Play triangle — centred, face centred
     const r=9;
-    const TL=[-30,-34],BL=[-30,34],R=[35,0];
+    const TL=[-26,-30],BL=[-26,30],R=[32,0];
     function along(ax,ay,bx,by,d){const len=Math.hypot(bx-ax,by-ay);return [ax+(bx-ax)*d/len,ay+(by-ay)*d/len];}
     function cp(prev,curr,next,rad){return{i:along(curr[0],curr[1],prev[0],prev[1],rad),o:along(curr[0],curr[1],next[0],next[1],rad),c:curr};}
     const c0=cp(BL,TL,R,r),c1=cp(TL,R,BL,r),c2=cp(R,BL,TL,r);
     const d=`M${c0.o[0]},${c0.o[1]}L${c1.i[0]},${c1.i[1]}Q${c1.c[0]},${c1.c[1]} ${c1.o[0]},${c1.o[1]}L${c2.i[0]},${c2.i[1]}Q${c2.c[0]},${c2.c[1]} ${c2.o[0]},${c2.o[1]}L${c0.i[0]},${c0.i[1]}Q${c0.c[0]},${c0.c[1]} ${c0.o[0]},${c0.o[1]}Z`;
+    // Centre of triangle = (-26+(-26)+32)/3, (−30+30+0)/3 = roughly -7, 0
     return `<svg viewBox="-36 -36 72 72" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
       <path d="${d}" fill="${col}"/>
-      ${E(st,-5,0,8)}${M(st,-5,14)}${zz}
+      ${E(st,-4,-2,8)}${M(st,-4,12)}${zz}
     </svg>`;
   }
   if(catId==='gambling') {
@@ -682,18 +691,34 @@ function createFuseCell(label, isTripped, wireColor, info, canDrill, icon, siteI
   cell.dataset.s = isTripped ? '1' : '0';
   cell.dataset.w = wireColor;
 
-  // Brand lookup — use logo if available, add ™ to company names
-  const brand = siteId && BRANDS[siteId];
-  const isFeatureLevel = siteId && !canDrill; // features = have siteId but can't drill further
-  const brandLogo = brand?.logo || '';
-  const brandLogoSmall = brandLogo ? `<div class="fuse-brand-logo">${brandLogo}</div>` : '';
-  const brandLogoBig = brandLogo ? `<div class="fuse-brand-logo fuse-brand-logo-lg">${brandLogo}</div>` : '';
+  // Brand lookup — use favicon for actual logos, add ™ to company names
+  const isFeatureLevel = siteId && !canDrill;
+
+  // Favicon domain overrides — use the main brand domain for favicon, not ad/tracking subdomains
+  const FAVICON_OVERRIDE = {
+    'facebook-ads': 'facebook.com', 'amazon-ads': 'amazon.com', 'tiktok-ads': 'tiktok.com',
+    'google-ads': 'google.com', 'generic-trackers': 'hotjar.com', 'analytics': 'google.com',
+    'bbc-news': 'bbc.com', 'primevideo': 'amazon.com', 'disneyplus': 'disneyplus.com',
+    'google-ai': 'google.com',
+  };
+
+  // Get the best domain for this site's favicon
+  let siteDomain = FAVICON_OVERRIDE[siteId] || '';
+  if (!siteDomain && siteId) {
+    for (const c of categories) {
+      const s = c.sites?.find(x => x.id === siteId);
+      if (s?.domains?.[0]) { siteDomain = s.domains[0]; break; }
+    }
+  }
+
+  const faviconSmall = siteDomain ? `<img class="fuse-brand-logo" src="https://www.google.com/s2/favicons?domain=${siteDomain}&sz=64" alt="" loading="lazy">` : '';
+  const faviconBig = siteDomain ? `<img class="fuse-brand-logo fuse-brand-logo-lg" src="https://www.google.com/s2/favicons?domain=${siteDomain}&sz=64" alt="" loading="lazy">` : '';
   const displayLabel = isFeatureLevel
-    ? label  // feature names like "Comments", "Shorts" — no ™
+    ? label
     : (siteId ? label + '<span class="fuse-tm">\u2122</span>' : label);
   const labelIcon = isFeatureLevel
-    ? brandLogoBig  // features: show big logo, no name duplication
-    : (brandLogoSmall || (icon ? '<div class="fuse-label-icon">' + icon + '</div>' : ''));
+    ? faviconBig
+    : (faviconSmall || (icon ? '<div class="fuse-label-icon">' + icon + '</div>' : ''));
 
   const pulseDots = '<div class="fuse-pulse-dot"></div>'.repeat(8);
   const pulseDotsBotClass = 'fuse-pulse-dot-bot';
@@ -722,11 +747,12 @@ function createFuseCell(label, isTripped, wireColor, info, canDrill, icon, siteI
         </div>
       </div>`;
 
+  // Bottom: site count, then screw under for drillable
+  const bottomText = canDrill ? (info || '') : displayLabel;
   const bottomHTML = canDrill
-    ? `<div class="fuse-screw-wrap"><div class="fuse-screw-face"></div></div>
-       <div class="fuse-label-sm fuse-cfg"><span class="fuse-label-sm-text">Settings</span></div>`
-    : `<div class="fuse-screw-wrap"><div class="fuse-screw-face"></div></div>
-       <div class="fuse-label-sm"><span class="fuse-label-sm-text">${displayLabel}</span></div>`;
+    ? `<div class="fuse-label-sm fuse-cfg"><span class="fuse-label-sm-text">${bottomText}</span></div>
+       <div class="fuse-screw-wrap fuse-cfg"><div class="fuse-screw-face"></div></div>`
+    : `<div class="fuse-label-sm"><span class="fuse-label-sm-text">${bottomText}</span></div>`;
 
   cell.innerHTML = `
     <div class="fuse-conduit">
@@ -751,6 +777,7 @@ function createFuseCell(label, isTripped, wireColor, info, canDrill, icon, siteI
         <div class="fuse-terminal-bot">
           ${bottomHTML}
         </div>
+        <div class="fuse-status">${wireColor==='green'?'Blocked':wireColor==='amber'?'Filtered':'Open'}</div>
       </div>
     </div>
     <div class="fuse-conduit">
