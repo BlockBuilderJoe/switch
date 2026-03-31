@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { hashPassword, generateSalt, verifyPassword, createJWT, generateId } from '../middleware/auth.js';
+import { hashPassword, generateSalt, verifyPassword, createJWT, generateId, hashEmail, encryptEmail } from '../middleware/auth.js';
 
 const auth = new Hono();
 
@@ -11,8 +11,12 @@ auth.post('/signup', async (c) => {
   const db = c.get('db');
   const secret = c.get('jwt_secret');
 
-  // Check if email exists
-  const existing = await db.query('SELECT id FROM users WHERE email = ?', [email.toLowerCase()]);
+  // Hash email for lookups, encrypt for storage
+  const emailHash = await hashEmail(email);
+  const emailEnc = await encryptEmail(email, secret);
+
+  // Check if email exists (via hash)
+  const existing = await db.query('SELECT id FROM users WHERE email_hash = ?', [emailHash]);
   if (existing.length) return c.json({ error: 'Email already registered' }, 409);
 
   const userId = generateId();
@@ -21,11 +25,11 @@ auth.post('/signup', async (c) => {
   const now = new Date().toISOString();
 
   await db.run(
-    'INSERT INTO users (id, email, password_hash, salt, created_at) VALUES (?, ?, ?, ?, ?)',
-    [userId, email.toLowerCase(), hash, salt, now]
+    'INSERT INTO users (id, email_hash, email_encrypted, password_hash, salt, created_at) VALUES (?, ?, ?, ?, ?, ?)',
+    [userId, emailHash, emailEnc, hash, salt, now]
   );
 
-  const token = await createJWT({ user_id: userId }, secret, 900); // 15 min
+  const token = await createJWT({ user_id: userId }, secret, 900);
   const refreshToken = generateId();
   const refreshExpires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
 
@@ -44,7 +48,9 @@ auth.post('/login', async (c) => {
   const db = c.get('db');
   const secret = c.get('jwt_secret');
 
-  const users = await db.query('SELECT * FROM users WHERE email = ?', [email.toLowerCase()]);
+  // Look up by email hash
+  const emailHash = await hashEmail(email);
+  const users = await db.query('SELECT * FROM users WHERE email_hash = ?', [emailHash]);
   if (!users.length) return c.json({ error: 'Invalid email or password' }, 401);
 
   const user = users[0];

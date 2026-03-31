@@ -130,14 +130,17 @@ function detectExtension() {
 
 function updateExtensionBadge() {
   const badge = document.getElementById('ext-badge');
-  if (!badge) return;
-  if (extensionConnected) {
-    badge.innerHTML = '<span class="ext-dot"></span> Extension connected';
-    badge.className = 'ext-badge connected';
-  } else {
-    badge.innerHTML = 'Install extension to block sites';
-    badge.className = 'ext-badge disconnected';
+  const prompt = document.getElementById('install-prompt');
+  if (badge) {
+    if (extensionConnected) {
+      badge.innerHTML = '<span class="ext-dot"></span> Connected';
+      badge.className = 'ext-badge connected';
+    } else {
+      badge.innerHTML = 'Not installed';
+      badge.className = 'ext-badge disconnected';
+    }
   }
+  if (prompt) prompt.style.display = extensionConnected ? 'none' : '';
 }
 
 function sendToExtension(data) {
@@ -145,10 +148,98 @@ function sendToExtension(data) {
   window.postMessage({ type: 'FUSEBOX_UPDATE', ...data }, '*');
 }
 
+// --- Platform Detection ---
+
+function detectPlatform() {
+  const ua = navigator.userAgent;
+  let browser = 'Chrome', store = '#';
+  if (ua.includes('Edg/')) { browser = 'Edge'; store = '#'; }
+  else if (ua.includes('Firefox')) { browser = 'Firefox'; store = '#'; }
+  else if (ua.includes('Safari') && !ua.includes('Chrome')) { browser = 'Safari'; store = '#'; }
+  else { browser = 'Chrome'; store = '#'; }
+
+  // Update hero install button
+  const heroName = document.getElementById('hero-browser-name');
+  const heroLink = document.getElementById('hero-install');
+  if (heroName) heroName.textContent = browser;
+  if (heroLink) heroLink.href = store;
+
+  // Update download section
+  const dlName = document.getElementById('download-browser-name');
+  const dlLink = document.getElementById('download-main');
+  if (dlName) dlName.textContent = browser;
+  if (dlLink) dlLink.href = store;
+}
+
+// --- Hero Army ---
+
+function renderHeroArmy() {
+  const container = document.getElementById('hero-army');
+  if (!container) return;
+
+  // All 12 categories in heroic formation — shield (security) center front
+  // Back row: 6 characters, smaller
+  // Front row: 6 characters, with security-threats in the center position
+  const lineup = [
+    // Back row (smaller)
+    { id: 'ads-trackers', label: 'Ads', size: 42 },
+    { id: 'adult-content', label: 'Adult', size: 42 },
+    { id: 'gambling', label: 'Gambling', size: 44 },
+    { id: 'dating', label: 'Dating', size: 48 },
+    { id: 'crypto', label: 'Crypto', size: 44 },
+    { id: 'news', label: 'News', size: 42 },
+    // Front row (larger, center is biggest)
+    { id: 'social-media', label: 'Social', size: 52 },
+    { id: 'video-streaming', label: 'Streaming', size: 52 },
+    { id: 'gaming', label: 'Gaming', size: 54 },
+    { id: 'security-threats', label: 'Security', size: 64, center: true },
+    { id: 'shopping', label: 'Shopping', size: 54 },
+    { id: 'ai', label: 'AI', size: 52 },
+  ];
+
+  // Render in two rows
+  const backRow = document.createElement('div');
+  backRow.style.cssText = 'display:flex;align-items:flex-end;justify-content:center;gap:4px;margin-bottom:-8px;position:relative;z-index:0;opacity:.85';
+  const frontRow = document.createElement('div');
+  frontRow.style.cssText = 'display:flex;align-items:flex-end;justify-content:center;gap:6px;position:relative;z-index:1';
+
+  lineup.forEach((ch, i) => {
+    const svg = charSVG(ch.id, 'green'); // All in green "ready" state
+    if (!svg) return;
+    const wrap = document.createElement('div');
+    wrap.className = 'hero-char' + (ch.center ? ' hero-char-center' : (i >= 6 ? ' hero-char-front' : ''));
+    wrap.innerHTML = `<div style="width:${ch.size}px;height:${ch.size}px">${svg}</div><span class="hero-char-label">${ch.label}</span>`;
+    if (i < 6) backRow.appendChild(wrap);
+    else frontRow.appendChild(wrap);
+  });
+
+  container.appendChild(backRow);
+  container.appendChild(frontRow);
+}
+
 // --- Init ---
 
 function init() {
   initTheme();
+  detectPlatform();
+  renderHeroArmy();
+
+  // Smooth scroll for hero CTA
+  document.getElementById('hero-try')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    document.getElementById('why')?.scrollIntoView({ behavior: 'smooth' });
+  });
+
+  // Hero fuse clicks → scroll to dashboard and open that category
+  document.querySelectorAll('.hv-fuse[data-cat]').forEach(el => {
+    el.style.cursor = 'pointer';
+    el.addEventListener('click', () => {
+      const catId = el.dataset.cat;
+      currentView = catId;
+      render();
+      document.getElementById('fusebox')?.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
 
   // Load selections from localStorage
   const saved = localStorage.getItem('fb_selections');
@@ -156,26 +247,8 @@ function init() {
     try { selections = JSON.parse(saved); } catch {}
   }
 
-  if (isSignedIn()) {
-    showDashboard(true); // pull from server
-  } else if (saved) {
-    showDashboard(false); // local only, already have selections
-  } else {
-    showHero();
-  }
-}
-
-// --- Hero ---
-
-function showHero() {
-  heroSection.style.display = '';
-  authScreen.style.display = 'none';
-  dashScreen.style.display = 'none';
-
-  document.getElementById('hero-cta').onclick = () => {
-    heroSection.style.display = 'none';
-    showDashboard(false);
-  };
+  // Always show dashboard — no screen switching
+  showDashboard(isSignedIn());
 }
 
 // --- Auth ---
@@ -243,9 +316,7 @@ function showAuthPanel() {
 // --- Dashboard ---
 
 async function showDashboard(pullFromServer) {
-  heroSection.style.display = 'none';
-  authScreen.style.display = 'none';
-  dashScreen.style.display = '';
+  // No screen switching — dashboard is always visible on the page
 
   initSelections();
 
@@ -361,7 +432,25 @@ function render() {
 function renderBreadcrumb(crumbs) {
   nav.innerHTML = '';
   const bc = document.createElement('div');
+
+  // Hide breadcrumb on main view
+  if (crumbs.length <= 1) {
+    bc.className = 'breadcrumb breadcrumb-main';
+    nav.appendChild(bc);
+    return;
+  }
+
   bc.className = 'breadcrumb';
+
+  // Back arrow — goes to previous level
+  const backBtn = document.createElement('button');
+  backBtn.className = 'back-btn';
+  backBtn.innerHTML = '&larr;';
+  backBtn.title = 'Back';
+  const prevView = crumbs.length >= 2 ? crumbs[crumbs.length - 2].view : 'main';
+  backBtn.addEventListener('click', () => { currentView = prevView; render(); });
+  bc.appendChild(backBtn);
+
   crumbs.forEach((c, i) => {
     if (i > 0) {
       const sep = document.createElement('span');

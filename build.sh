@@ -204,6 +204,51 @@ case "$TARGET" in
   firefox) build_firefox ;;
   safari)  build_safari ;;
   dashboard) build_dashboard ;;
+  production)
+    echo "=== PRODUCTION BUILD ==="
+    build_chrome
+    build_firefox
+    build_safari
+    build_dashboard
+
+    # Strip dev auto-reload from background.js (remove the IIFE block)
+    echo "Stripping dev code..."
+    for dir in chrome firefox safari-src; do
+      bgfile="$DIST/$dir/background/background.js"
+      if [ -f "$bgfile" ]; then
+        # Remove everything between the dev comment and the closing })();
+        python3 -c "
+import re
+with open('$bgfile','r') as f: s=f.read()
+s=re.sub(r'// --- Dev auto-reload.*?\n\}\)\(\);','',s,flags=re.DOTALL)
+with open('$bgfile','w') as f: f.write(s)
+"
+      fi
+    done
+
+    # Remove localhost from content_scripts in Chrome manifest
+    sed -i '' '/"http:\/\/localhost\/\*"/d' "$DIST/chrome/manifest.json"
+    sed -i '' '/"http:\/\/localhost\/\*"/d' "$DIST/firefox/manifest.json"
+    sed -i '' '/"http:\/\/localhost\/\*"/d' "$DIST/safari-src/manifest.json"
+
+    # Remove declarativeNetRequestFeedback from Firefox
+    sed -i '' '/"declarativeNetRequestFeedback"/d' "$DIST/firefox/manifest.json"
+
+    # Copy privacy policy to dashboard
+    cp "$ROOT/privacy.html" "$ROOT/worker/public/"
+
+    # Package zips
+    echo "Packaging..."
+    cd "$DIST/chrome" && zip -r "$DIST/fusebox-chrome.zip" . -x "*.DS_Store" > /dev/null
+    cd "$DIST/firefox" && zip -r "$DIST/fusebox-firefox.zip" . -x "*.DS_Store" > /dev/null
+    cd "$ROOT"
+
+    echo ""
+    echo "Production builds ready:"
+    echo "  $DIST/fusebox-chrome.zip (Chrome + Edge)"
+    echo "  $DIST/fusebox-firefox.zip (Firefox)"
+    echo "  $DIST/safari-src/ (run xcrun to convert)"
+    ;;
   all)
     build_chrome
     echo ""

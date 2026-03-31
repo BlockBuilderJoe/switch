@@ -3,31 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blocked by FuseBox</title>
+  <title>Switched Off — FuseBox</title>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#07080a;color:#e4e6ea;display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:20px}
-    .wrap{max-width:400px}
-    .icon{width:64px;height:64px;margin:0 auto 20px;background:rgba(34,197,94,.1);border:2px solid rgba(34,197,94,.3);border-radius:50%;display:flex;align-items:center;justify-content:center}
-    .icon svg{width:32px;height:32px;color:#22c55e}
-    h1{font-size:1.5rem;font-weight:800;margin-bottom:8px}
-    h1 span{color:#22c55e}
-    p{color:#888;font-size:.9rem;line-height:1.5;margin-bottom:24px}
-    .url{font-family:monospace;font-size:.8rem;color:#555;background:#111;padding:8px 14px;border-radius:8px;margin-bottom:20px;word-break:break-all}
+    body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#000;color:#e4e6ea;display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:20px}
+    .wrap{max-width:440px}
+    .character{width:120px;height:120px;margin:0 auto 24px}
+    .character svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 8px 24px rgba(45,198,83,.2))}
+    h1{font-size:1.4rem;font-weight:800;margin-bottom:6px;line-height:1.3}
+    h1 span{color:#2dc653}
+    .pun{color:#999;font-size:1rem;line-height:1.6;margin-bottom:24px;min-height:3em}
+    .url{font-family:monospace;font-size:.75rem;color:#444;background:#111;padding:8px 14px;border-radius:8px;margin-bottom:20px;word-break:break-all}
     .btn{display:inline-block;padding:10px 24px;background:#1a1e28;color:#ccc;border:1px solid #2a2e38;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;text-decoration:none;transition:.15s}
-    .btn:hover{background:#222630;border-color:#444}
+    .btn:hover{background:#222630;border-color:#2dc653;color:#fff}
+    .footer{margin-top:32px;font-size:.7rem;color:#333}
+    .footer span{color:#2dc653}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
-    </div>
-    <h1>Blocked by <span>FuseBox</span></h1>
-    <p>This site has been switched off by your FuseBox configuration.</p>
+    <div class="character" id="character"></div>
+    <h1 id="title">Switched off by <span>FuseBox</span></h1>
+    <p class="pun" id="pun"></p>
     <div class="url" id="blocked-url"></div>
-    <a href="#" class="btn" id="go-back">Go Back</a>
+    <a href="#" class="btn" id="go-back">&larr; Go Back</a>
+    <div class="footer">Protected by <span>Fuse</span>Box — your kill switch for the internet</div>
   </div>
+  <script src="../data/blocklists.js"></script>
   <script src="blocked.js"></script>
 </body>
 </html>

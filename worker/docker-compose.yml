@@ -1,13 +1,16 @@
 services:
-  fuseboard-sync:
+  fusebox:
     build: .
+    image: fusebox/sync
     ports:
       - "8787:8787"
     volumes:
-      - fuseboard-data:/data
+      - fusebox-data:/data
     environment:
-      - JWT_SECRET=change-me-to-a-random-string
-      - SELF_HOSTED=true
+      - JWT_SECRET=change-me-to-a-long-random-string
+      - DB_PATH=/data/fusebox.db
+      - PORT=8787
+    restart: unless-stopped
 
 volumes:
-  fuseboard-data:
+  fusebox-data:

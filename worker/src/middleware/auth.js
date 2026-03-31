@@ -75,6 +75,37 @@ export function authMiddleware(secret) {
   };
 }
 
+// --- Email Encryption (AES-256-GCM) + Hash (SHA-256) ---
+
+export async function hashEmail(email) {
+  const normalized = email.toLowerCase().trim();
+  const hash = await crypto.subtle.digest('SHA-256', encoder.encode(normalized));
+  return bytesToHex(new Uint8Array(hash));
+}
+
+export async function encryptEmail(email, secret) {
+  const normalized = email.toLowerCase().trim();
+  const keyMaterial = await crypto.subtle.importKey('raw', encoder.encode(secret), 'PBKDF2', false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt: encoder.encode('fusebox-email-enc'), iterations: 100000, hash: 'SHA-256' },
+    keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['encrypt']
+  );
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const encrypted = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, encoder.encode(normalized));
+  return bytesToHex(iv) + ':' + bytesToHex(new Uint8Array(encrypted));
+}
+
+export async function decryptEmail(encryptedStr, secret) {
+  const [ivHex, dataHex] = encryptedStr.split(':');
+  const keyMaterial = await crypto.subtle.importKey('raw', encoder.encode(secret), 'PBKDF2', false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt: encoder.encode('fusebox-email-enc'), iterations: 100000, hash: 'SHA-256' },
+    keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['decrypt']
+  );
+  const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: hexToBytes(ivHex) }, key, hexToBytes(dataHex));
+  return new TextDecoder().decode(decrypted);
+}
+
 // --- Helpers ---
 
 function bytesToHex(bytes) {
