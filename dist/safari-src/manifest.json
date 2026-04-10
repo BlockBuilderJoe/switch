@@ -1,12 +1,11 @@
 {
   "manifest_version": 3,
-  "name": "FuseBox",
-  "version": "1.5.1",
-  "description": "Your digital fusebox. Block distracting sites and features.",
+  "name": "Circuit Breaker",
+  "version": "2.0.0",
+  "description": "Your circuit breaker for the internet. Block distracting sites, hide addictive features, and optionally sync across devices.",
   "permissions": [
     "storage",
-    "declarativeNetRequest",
-    "activeTab"
+    "declarativeNetRequest"
   ],
   "host_permissions": ["<all_urls>"],
   "action": {
@@ -32,12 +31,19 @@
       "matches": [
         "https://fuseboard-sync.joe-780.workers.dev/*",
         "https://switch-ahg.pages.dev/*",
+        "https://circuitbreaker.app/*",
         "http://localhost/*"
       ],
       "js": ["content/dashboard-bridge.js"],
       "run_at": "document_idle"
     }
   ],
+  "declarative_net_request": {
+    "rule_resources": [
+      { "id": "ads_trackers_network", "enabled": false, "path": "data/rules/ads-trackers.json" },
+      { "id": "cookie_consent", "enabled": false, "path": "data/rules/cookie-consent.json" }
+    ]
+  },
   "icons": {
     "16": "icons/icon-16.png",
     "48": "icons/icon-48.png",

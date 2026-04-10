@@ -1,4 +1,4 @@
-// FuseBox — Background Service Worker v1.5.0
+// Circuit Breaker — Background Service Worker v2.0.1
 importScripts('../sync/sync.js');
 
 // --- Dev auto-reload: polls a local dev server for build changes ---
@@ -14,7 +14,7 @@ importScripts('../sync/sync.js');
       if (!res.ok) { setTimeout(check, POLL_MS); return; }
       const stamp = (await res.text()).trim();
       if (lastStamp && stamp !== lastStamp) {
-        console.log('FuseBox: build changed, reloading...');
+        console.log('Circuit Breaker: build changed, reloading...');
         chrome.runtime.reload();
         return;
       }
@@ -32,15 +32,36 @@ chrome.runtime.onInstalled.addListener(async () => {
     await chrome.declarativeNetRequest.updateDynamicRules({ removeRuleIds: all.map(r => r.id) });
   }
   applyRules();
+  updateStaticRulesets();
 });
 
-chrome.runtime.onStartup.addListener(() => applyRules());
+chrome.runtime.onStartup.addListener(() => { applyRules(); updateStaticRulesets(); });
 
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area === 'sync' && (changes.blockedDomains || changes.blockedUrls)) {
     applyRules();
   }
+  if (area === 'sync' && changes.selections) {
+    updateStaticRulesets();
+  }
 });
+
+// Toggle static rulesets (ad/tracker + cookie consent) based on ads-trackers category
+async function updateStaticRulesets() {
+  try {
+    const data = await chrome.storage.sync.get(['selections']);
+    const adsEnabled = data.selections?.['ads-trackers']?.enabled || false;
+
+    await chrome.declarativeNetRequest.updateEnabledRulesets({
+      enableRulesetIds: adsEnabled ? ['ads_trackers_network', 'cookie_consent'] : [],
+      disableRulesetIds: adsEnabled ? [] : ['ads_trackers_network', 'cookie_consent'],
+    });
+
+    console.log('Circuit Breaker: ad/cookie rulesets', adsEnabled ? 'enabled' : 'disabled');
+  } catch (e) {
+    console.error('Circuit Breaker: static ruleset error:', e.message);
+  }
+}
 
 let applying = false;
 
@@ -60,7 +81,7 @@ async function applyRules() {
     // 2. Verify they're gone
     const check = await chrome.declarativeNetRequest.getDynamicRules();
     if (check.length) {
-      console.warn('FuseBox: stale rules remain, forcing clear');
+      console.warn('Circuit Breaker: stale rules remain, forcing clear');
       await chrome.declarativeNetRequest.updateDynamicRules({
         removeRuleIds: check.map(r => r.id),
       });
@@ -76,23 +97,25 @@ async function applyRules() {
       return;
     }
 
-    // Never block the FuseBox dashboard or extension pages
-    const SAFE_DOMAINS = ['fuseboard-sync.joe-780.workers.dev', 'switch-ahg.pages.dev', 'localhost'];
+    // Never block the Circuit Breaker dashboard, extension pages, or core infrastructure
+    const SAFE_DOMAINS = [
+      'fuseboard-sync.joe-780.workers.dev', 'switch-ahg.pages.dev', 'circuitbreaker.app', 'localhost',
+      'cloudflare.com', 'cloudflare-dns.com', 'one.one.one.one',
+      'chrome.google.com', 'chromewebstore.google.com',
+    ];
     const safeDomains = domains.filter(d => !SAFE_DOMAINS.some(safe => d === safe || d.endsWith('.' + safe)));
 
     const addRules = [];
-    const usedIds = new Set();
 
+    // Use requestDomains for exact domain matching (includes subdomains automatically).
+    // This is safer than urlFilter: ||domain which can false-positive on substring matches
+    // (e.g. ||ea.com could match via urlFilter pattern bugs, but requestDomains won't).
     safeDomains.forEach((domain, i) => {
-      let id = (i + 1) * 100 + Math.floor(Math.random() * 99);
-      while (usedIds.has(id)) id++;
-      usedIds.add(id);
-
       addRules.push({
-        id,
+        id: i + 1,
         priority: 1,
         action: { type: 'redirect', redirect: { extensionPath: '/blocked/blocked.html' } },
-        condition: { urlFilter: `||${domain}`, resourceTypes: ['main_frame'] }
+        condition: { requestDomains: [domain], resourceTypes: ['main_frame'] }
       });
     });
 
@@ -101,9 +124,9 @@ async function applyRules() {
 
     chrome.action.setBadgeText({ text: String(addRules.length) });
     chrome.action.setBadgeBackgroundColor({ color: '#22c55e' });
-    console.log('FuseBox:', addRules.length, 'rules applied');
+    console.log('Circuit Breaker:', addRules.length, 'rules applied');
   } catch (e) {
-    console.error('FuseBox:', e.message);
+    console.error('Circuit Breaker:', e.message);
   }
 
   applying = false;
@@ -120,8 +143,14 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     if (msg.selections) toStore.selections = msg.selections;
 
     chrome.storage.sync.set(toStore, () => {
-      applyRules().then(() => sendResponse({ ok: true }));
+      applyRules().then(() => {
+        updateStaticRulesets();
+        sendResponse({ ok: true });
+      });
     });
     return true;
+  }
+  if (msg.action === 'openDashboard') {
+    chrome.tabs.create({ url: 'https://circuitbreaker.app/#dashboard' });
   }
 });

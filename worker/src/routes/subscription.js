@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { decryptEmail } from '../middleware/auth.js';
 
 const subscription = new Hono();
 
@@ -38,7 +39,7 @@ subscription.post('/checkout', async (c) => {
   const userId = c.get('user_id');
   const { plan } = await c.req.json();
 
-  const users = await db.query('SELECT email, stripe_customer_id FROM users WHERE id = ?', [userId]);
+  const users = await db.query('SELECT email_encrypted, stripe_customer_id FROM users WHERE id = ?', [userId]);
   if (!users.length) return c.json({ error: 'User not found' }, 404);
 
   const user = users[0];
@@ -49,8 +50,8 @@ subscription.post('/checkout', async (c) => {
 
   const params = new URLSearchParams({
     'mode': 'subscription',
-    'success_url': 'https://fuseboard.app/sync-success',
-    'cancel_url': 'https://fuseboard.app/sync-cancel',
+    'success_url': 'https://circuitbreaker.app/sync-success',
+    'cancel_url': 'https://circuitbreaker.app/sync-cancel',
     'line_items[0][price]': priceId,
     'line_items[0][quantity]': '1',
     'client_reference_id': userId,
@@ -59,7 +60,8 @@ subscription.post('/checkout', async (c) => {
   if (user.stripe_customer_id) {
     params.set('customer', user.stripe_customer_id);
   } else {
-    params.set('customer_email', user.email);
+    const email = await decryptEmail(user.email_encrypted, c.get('jwt_secret'));
+    params.set('customer_email', email);
   }
 
   const res = await fetch('https://api.stripe.com/v1/checkout/sessions', {
@@ -91,7 +93,7 @@ subscription.post('/portal', async (c) => {
 
   const params = new URLSearchParams({
     'customer': users[0].stripe_customer_id,
-    'return_url': 'https://fuseboard.app/settings',
+    'return_url': 'https://circuitbreaker.app/settings',
   });
 
   const res = await fetch('https://api.stripe.com/v1/billing_portal/sessions', {

@@ -1,6 +1,6 @@
-// FuseBox Extension — Thin Popup (opens web dashboard)
+// Circuit Breaker Extension — Thin Popup (opens web dashboard)
 
-const DASHBOARD_URL = 'https://fuseboard-sync.joe-780.workers.dev/';
+const DASHBOARD_URL = 'https://circuitbreaker.app/#dashboard';
 
 const statusDot = document.getElementById('status-dot');
 const statusText = document.getElementById('status-text');

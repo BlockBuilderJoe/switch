@@ -1,6 +1,6 @@
-// FuseBox Web Dashboard — Main Application Logic
+// Circuit Breaker Web Dashboard — Main Application Logic
 
-const SYNC_KEYS = ['selections', 'blockedDomains', 'blockedUrls', 'hiddenSelectors', 'allowedChannels', 'subsOnlyMode'];
+const SYNC_KEYS = ['selections', 'blockedDomains', 'blockedUrls', 'hiddenSelectors', 'followingOnly'];
 
 // Brand logos (official SVG marks) + colors for site labels
 const BRANDS = {
@@ -77,7 +77,7 @@ const CATEGORY_IDS = new Set(categories?.map(c => c.id) || []);
 const heroSection = document.getElementById('hero-section');
 const authScreen = document.getElementById('auth-screen');
 const dashScreen = document.getElementById('dashboard-screen');
-const board = document.getElementById('fuseboard');
+const board = document.getElementById('breakerboard');
 const nav = document.getElementById('nav');
 const titleEl = document.getElementById('title');
 const statusDot = document.getElementById('status-dot');
@@ -92,7 +92,13 @@ let extensionConnected = false;
 // --- Theme ---
 
 function initTheme() {
-  const saved = localStorage.getItem('fb_theme');
+  // Migrate old theme key
+  const oldTheme = localStorage.getItem('fb_theme');
+  if (oldTheme !== null) {
+    localStorage.setItem('cb_theme', oldTheme);
+    localStorage.removeItem('fb_theme');
+  }
+  const saved = localStorage.getItem('cb_theme');
   if (saved === 'light') {
     document.body.classList.add('light');
     document.getElementById('theme-icon-sun').style.display = 'none';
@@ -103,7 +109,7 @@ function initTheme() {
 
 function toggleTheme() {
   const isLight = document.body.classList.toggle('light');
-  localStorage.setItem('fb_theme', isLight ? 'light' : 'dark');
+  localStorage.setItem('cb_theme', isLight ? 'light' : 'dark');
   document.getElementById('theme-icon-sun').style.display = isLight ? 'none' : '';
   document.getElementById('theme-icon-moon').style.display = isLight ? '' : 'none';
 }
@@ -113,14 +119,14 @@ function toggleTheme() {
 function detectExtension() {
   // Listen for PONG from the dashboard-bridge content script
   window.addEventListener('message', (event) => {
-    if (event.data?.type === 'FUSEBOX_PONG') {
+    if (event.data?.type === 'CB_PONG') {
       extensionConnected = true;
       updateExtensionBadge();
     }
   });
 
   // Send a ping — if extension is installed, bridge will respond with PONG
-  window.postMessage({ type: 'FUSEBOX_PING' }, '*');
+  window.postMessage({ type: 'CB_PING' }, '*');
 
   // If no response after 500ms, mark as disconnected
   setTimeout(() => {
@@ -131,21 +137,47 @@ function detectExtension() {
 function updateExtensionBadge() {
   const badge = document.getElementById('ext-badge');
   const prompt = document.getElementById('install-prompt');
+  const extStatus = document.getElementById('ext-status');
+  const browserName = document.getElementById('hero-browser-name')?.textContent || 'Chrome';
   if (badge) {
     if (extensionConnected) {
       badge.innerHTML = '<span class="ext-dot"></span> Connected';
       badge.className = 'ext-badge connected';
     } else {
-      badge.innerHTML = 'Not installed';
-      badge.className = 'ext-badge disconnected';
+      badge.innerHTML = '';
+      badge.className = 'ext-badge';
+      badge.style.display = 'none';
     }
   }
-  if (prompt) prompt.style.display = extensionConnected ? 'none' : '';
+  if (extStatus) {
+    if (extensionConnected) {
+      extStatus.style.display = 'none';
+    } else {
+      extStatus.innerHTML = '<span class="ext-status-sep">&middot;</span> <a href="#download" class="ext-status-link"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Install for ' + browserName + '</a>';
+      extStatus.style.display = '';
+    }
+  }
+  if (prompt) {
+    prompt.style.display = extensionConnected ? 'none' : '';
+    if (!extensionConnected) prompt.classList.add('needs-ext');
+  }
+}
+
+function flashInstallPrompt() {
+  if (extensionConnected) return;
+  const prompt = document.getElementById('install-prompt');
+  const extStatus = document.getElementById('ext-status');
+  [prompt, extStatus].forEach(el => {
+    if (!el) return;
+    el.classList.remove('flash');
+    void el.offsetWidth;
+    el.classList.add('flash');
+  });
 }
 
 function sendToExtension(data) {
   if (!extensionConnected) return;
-  window.postMessage({ type: 'FUSEBOX_UPDATE', ...data }, '*');
+  window.postMessage({ type: 'CB_UPDATE', ...data }, '*');
 }
 
 // --- Platform Detection ---
@@ -231,18 +263,24 @@ function init() {
   });
 
   // Hero fuse clicks → scroll to dashboard and open that category
-  document.querySelectorAll('.hv-fuse[data-cat]').forEach(el => {
+  document.querySelectorAll('.hv-cb[data-cat]').forEach(el => {
     el.style.cursor = 'pointer';
     el.addEventListener('click', () => {
       const catId = el.dataset.cat;
       currentView = catId;
       render();
-      document.getElementById('fusebox')?.scrollIntoView({ behavior: 'smooth' });
+      document.getElementById('circuitboard')?.scrollIntoView({ behavior: 'smooth' });
     });
   });
 
+  // Migrate old selections key
+  const oldSelections = localStorage.getItem('fb_selections');
+  if (oldSelections !== null) {
+    localStorage.setItem('cb_selections', oldSelections);
+    localStorage.removeItem('fb_selections');
+  }
   // Load selections from localStorage
-  const saved = localStorage.getItem('fb_selections');
+  const saved = localStorage.getItem('cb_selections');
   if (saved) {
     try { selections = JSON.parse(saved); } catch {}
   }
@@ -470,11 +508,11 @@ function renderBreadcrumb(crumbs) {
 }
 
 function renderMain(animate) {
-  renderBreadcrumb([{ label: 'FuseBox', view: 'main' }]);
+  renderBreadcrumb([{ label: 'Circuit Breaker', view: 'main' }]);
   titleEl.textContent = '';
   board.innerHTML = '';
   const grid = document.createElement('div');
-  grid.className = 'fuse-grid fuse-grid-main' + (animate ? ' fuse-grid-animate' : '');
+  grid.className = 'cb-grid cb-grid-main' + (animate ? ' cb-grid-animate' : '');
 
   // Short labels for main grid — single line, punchy
   const SHORT = {'Social Media':'Social','Video Streaming':'Streaming','Ads & Trackers':'Ads','Adult Content':'Adult','Security':'Security'};
@@ -499,12 +537,12 @@ function renderMain(animate) {
       saveAndSync();
     }
 
-    const trk = cell.querySelector('.fuse-trk');
+    const trk = cell.querySelector('.cb-trk');
     trk.addEventListener('click', (e) => { e.stopPropagation(); toggleCat(); });
     trk.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); toggleCat(); } });
 
     cell.addEventListener('click', (e) => {
-      if (e.target.closest('.fuse-trk')) return;
+      if (e.target.closest('.cb-trk')) return;
       if (hasSites) { currentView = cat.id; render(); }
     });
 
@@ -519,13 +557,13 @@ function renderSites(catId, animate) {
   if (!cat) { currentView = 'main'; render(); return; }
 
   renderBreadcrumb([
-    { label: 'FuseBox', view: 'main' },
+    { label: 'Circuit Breaker', view: 'main' },
     { label: cat.name, view: cat.id },
   ]);
   titleEl.textContent = '';
   board.innerHTML = '';
   const grid = document.createElement('div');
-  grid.className = 'fuse-grid fuse-grid-sub' + (animate ? ' fuse-grid-animate' : '');
+  grid.className = 'cb-grid cb-grid-sub' + (animate ? ' cb-grid-animate' : '');
 
   (cat.sites || []).forEach((site, si) => {
     const isTripped = selections[cat.id].sites[site.id] || false;
@@ -555,12 +593,12 @@ function renderSites(catId, animate) {
       saveAndSync();
     }
 
-    const trk = cell.querySelector('.fuse-trk');
+    const trk = cell.querySelector('.cb-trk');
     trk.addEventListener('click', (e) => { e.stopPropagation(); toggleSite(); });
     trk.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); toggleSite(); } });
 
     cell.addEventListener('click', (e) => {
-      if (e.target.closest('.fuse-trk')) return;
+      if (e.target.closest('.cb-trk')) return;
       if (hasFeatures) { currentView = cat.id + '/' + site.id; render(); }
     });
 
@@ -577,14 +615,14 @@ function renderFeatures(path, animate) {
   if (!cat || !site) { currentView = 'main'; render(); return; }
 
   renderBreadcrumb([
-    { label: 'FuseBox', view: 'main' },
+    { label: 'Circuit Breaker', view: 'main' },
     { label: cat.name, view: catId },
     { label: site.name, view: catId + '/' + siteId },
   ]);
   titleEl.textContent = '';
   board.innerHTML = '';
   const grid = document.createElement('div');
-  grid.className = 'fuse-grid fuse-grid-sub' + (animate ? ' fuse-grid-animate' : '');
+  grid.className = 'cb-grid cb-grid-sub' + (animate ? ' cb-grid-animate' : '');
 
   (site.features || []).forEach(feat => {
     const isTripped = selections[cat.id].features[feat.id] || false;
@@ -595,6 +633,17 @@ function renderFeatures(path, animate) {
       cell.classList.add('just-toggled');
       setTimeout(() => cell.classList.remove('just-toggled'), 250);
       selections[cat.id].features[feat.id] = !selections[cat.id].features[feat.id];
+
+      // Cascade feature state back up to site and category level:
+      // - If all features are now off, turn the site off
+      // - If any feature is on, turn the site on
+      // - Recalculate category.enabled from all sites
+      const anyFeatureOn = (site.features || []).some(f => selections[cat.id].features[f.id]);
+      const allFeaturesOn = (site.features || []).every(f => selections[cat.id].features[f.id]);
+      selections[cat.id].sites[site.id] = anyFeatureOn;
+      const anySiteOn = Object.values(selections[cat.id].sites).some(v => v);
+      selections[cat.id].enabled = anySiteOn;
+
       saveAndSync();
     });
 
@@ -644,7 +693,7 @@ function charZzz(ox,oy) {
 
 function charSVG(catId, wireColor) {
   const st = wireColor==='red'?0:wireColor==='amber'?1:2;
-  const col = wireColor==='red'?'#e8443a':wireColor==='amber'?'#f5a623':'#3abf6e';
+  const col = wireColor==='red'?'#4a5060':wireColor==='amber'?'#f5a623':'#3abf6e';
   const E = charEyes, M = charMouth, Z = st===0?charZzz:'';
   const zz = st===0?charZzz(20,-24):'';
 
@@ -776,7 +825,7 @@ function charSVG(catId, wireColor) {
 
 function createFuseCell(label, isTripped, wireColor, info, canDrill, icon, siteId, catId) {
   const cell = document.createElement('div');
-  cell.className = 'fuse-cell';
+  cell.className = 'cb-cell';
   cell.dataset.s = isTripped ? '1' : '0';
   cell.dataset.w = wireColor;
 
@@ -791,26 +840,32 @@ function createFuseCell(label, isTripped, wireColor, info, canDrill, icon, siteI
     'google-ai': 'google.com',
   };
 
+  // Sites that represent multiple brands — don't show any single favicon
+  const NO_FAVICON = ['network-ads', 'cookie-popups', 'malware', 'phishing', 'spyware', 'cryptomining', 'botnet', 'command-control'];
+
   // Get the best domain for this site's favicon
-  let siteDomain = FAVICON_OVERRIDE[siteId] || '';
-  if (!siteDomain && siteId) {
-    for (const c of categories) {
-      const s = c.sites?.find(x => x.id === siteId);
-      if (s?.domains?.[0]) { siteDomain = s.domains[0]; break; }
+  let siteDomain = '';
+  if (siteId && !NO_FAVICON.includes(siteId)) {
+    siteDomain = FAVICON_OVERRIDE[siteId] || '';
+    if (!siteDomain) {
+      for (const c of categories) {
+        const s = c.sites?.find(x => x.id === siteId);
+        if (s?.domains?.[0]) { siteDomain = s.domains[0]; break; }
+      }
     }
   }
 
-  const faviconSmall = siteDomain ? `<img class="fuse-brand-logo" src="https://www.google.com/s2/favicons?domain=${siteDomain}&sz=64" alt="" loading="lazy">` : '';
-  const faviconBig = siteDomain ? `<img class="fuse-brand-logo fuse-brand-logo-lg" src="https://www.google.com/s2/favicons?domain=${siteDomain}&sz=64" alt="" loading="lazy">` : '';
+  const faviconSmall = siteDomain ? `<img class="cb-brand-logo" src="https://www.google.com/s2/favicons?domain=${siteDomain}&sz=64" alt="" loading="lazy">` : '';
+  const faviconBig = siteDomain ? `<img class="cb-brand-logo cb-brand-logo-lg" src="https://www.google.com/s2/favicons?domain=${siteDomain}&sz=64" alt="" loading="lazy">` : '';
   const displayLabel = isFeatureLevel
     ? label
-    : (siteId ? label + '<span class="fuse-tm">\u2122</span>' : label);
+    : (siteId ? label + '<span class="cb-tm">\u2122</span>' : label);
   const labelIcon = isFeatureLevel
     ? faviconBig
-    : (faviconSmall || (icon ? '<div class="fuse-label-icon">' + icon + '</div>' : ''));
+    : (faviconSmall || (icon ? '<div class="cb-label-icon">' + icon + '</div>' : ''));
 
-  const pulseDots = '<div class="fuse-pulse-dot"></div>'.repeat(8);
-  const pulseDotsBotClass = 'fuse-pulse-dot-bot';
+  const pulseDots = '<div class="cb-pulse-dot"></div>'.repeat(8);
+  const pulseDotsBotClass = 'cb-pulse-dot-bot';
   const botDots = `<div class="${pulseDotsBotClass}"></div>`.repeat(8);
 
   const gearSVG = `<svg viewBox="0 0 24 24" fill="none" width="14" height="14"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" fill="#bbb"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="#bbb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
@@ -818,61 +873,61 @@ function createFuseCell(label, isTripped, wireColor, info, canDrill, icon, siteI
   // Custom character paddle for specific categories, or default square paddle
   const customChar = catId && CHAR_CATS[catId] ? charSVG(catId, wireColor) : null;
   const paddleHTML = customChar
-    ? `<div class="fuse-paddle fuse-paddle-char">${customChar}</div>`
-    : `<div class="fuse-paddle">
-        <div class="fuse-paddle-shine"></div>
-        <div class="fuse-face fuse-face-sleep">
-          <div class="fuse-eyes"><div class="fuse-eye-shut"></div><div class="fuse-eye-shut"></div></div>
-          <div class="fuse-zzz"><span class="fuse-z1">z</span><span class="fuse-z2">z</span></div>
+    ? `<div class="cb-paddle cb-paddle-char">${customChar}</div>`
+    : `<div class="cb-paddle">
+        <div class="cb-paddle-shine"></div>
+        <div class="cb-face cb-face-sleep">
+          <div class="cb-eyes"><div class="cb-eye-shut"></div><div class="cb-eye-shut"></div></div>
+          <div class="cb-zzz"><span class="cb-z1">z</span><span class="cb-z2">z</span></div>
         </div>
-        <div class="fuse-face fuse-face-neutral">
-          <div class="fuse-eyes"><div class="fuse-eye"></div><div class="fuse-eye"></div></div>
-          <div class="fuse-neutral"></div>
+        <div class="cb-face cb-face-neutral">
+          <div class="cb-eyes"><div class="cb-eye"></div><div class="cb-eye"></div></div>
+          <div class="cb-neutral"></div>
         </div>
-        <div class="fuse-face fuse-face-happy">
-          <div class="fuse-eyes"><div class="fuse-eye"></div><div class="fuse-eye"></div></div>
-          <div class="fuse-cheeks"><div class="fuse-cheek"></div><div class="fuse-cheek"></div></div>
-          <div class="fuse-smile"></div>
+        <div class="cb-face cb-face-happy">
+          <div class="cb-eyes"><div class="cb-eye"></div><div class="cb-eye"></div></div>
+          <div class="cb-cheeks"><div class="cb-cheek"></div><div class="cb-cheek"></div></div>
+          <div class="cb-smile"></div>
         </div>
       </div>`;
 
   // Bottom: site count, then screw under for drillable
   const bottomText = canDrill ? (info || '') : displayLabel;
   const bottomHTML = canDrill
-    ? `<div class="fuse-label-sm fuse-cfg"><span class="fuse-label-sm-text">${bottomText}</span></div>
-       <div class="fuse-screw-wrap fuse-cfg"><div class="fuse-screw-face"></div></div>`
-    : `<div class="fuse-label-sm"><span class="fuse-label-sm-text">${bottomText}</span></div>`;
+    ? `<div class="cb-label-sm cb-cfg"><span class="cb-label-sm-text">${bottomText}</span></div>
+       <div class="cb-screw-wrap cb-cfg"><div class="cb-screw-face"></div></div>`
+    : `<div class="cb-label-sm"><span class="cb-label-sm-text">${bottomText}</span></div>`;
 
   cell.innerHTML = `
-    <div class="fuse-conduit">
-      <div class="fuse-conduit-cap"></div>
-      <div class="fuse-conduit-pipe"><div class="fuse-pulse">${pulseDots}</div></div>
-      <div class="fuse-conduit-flare"></div>
+    <div class="cb-conduit">
+      <div class="cb-conduit-cap"></div>
+      <div class="cb-conduit-pipe"><div class="cb-pulse">${pulseDots}</div></div>
+      <div class="cb-conduit-flare"></div>
     </div>
-    <div class="fuse-housing">
-      <div class="fuse-housing-inner">
-        <div class="fuse-terminal-top">
-          <div class="fuse-label-box">
+    <div class="cb-housing">
+      <div class="cb-housing-inner">
+        <div class="cb-terminal-top">
+          <div class="cb-label-box">
             ${labelIcon}
-            <span class="fuse-label-text">${displayLabel}</span>
+            <span class="cb-label-text">${displayLabel}</span>
           </div>
         </div>
-        <div class="fuse-track-area">
-          <div class="fuse-track-line"></div>
-          <div class="fuse-trk" role="switch" aria-checked="${isTripped}" aria-label="Block ${label}" tabindex="0">
+        <div class="cb-track-area">
+          <div class="cb-track-line"></div>
+          <div class="cb-trk" role="switch" aria-checked="${isTripped}" aria-label="Block ${label}" tabindex="0">
             ${paddleHTML}
           </div>
         </div>
-        <div class="fuse-terminal-bot">
+        <div class="cb-terminal-bot">
           ${bottomHTML}
         </div>
-        <div class="fuse-status">${wireColor==='green'?'Blocked':wireColor==='amber'?'Filtered':'Open'}</div>
+        <div class="cb-status">${wireColor==='green'?'Blocked':wireColor==='amber'?'Filtered':'Open'}</div>
       </div>
     </div>
-    <div class="fuse-conduit">
-      <div class="fuse-conduit-flare-bot"></div>
-      <div class="fuse-conduit-pipe"><div class="fuse-pulse-bot">${botDots}</div></div>
-      <div class="fuse-conduit-cap-bot"></div>
+    <div class="cb-conduit">
+      <div class="cb-conduit-flare-bot"></div>
+      <div class="cb-conduit-pipe"><div class="cb-pulse-bot">${botDots}</div></div>
+      <div class="cb-conduit-cap-bot"></div>
     </div>
   `;
   return cell;
@@ -888,8 +943,11 @@ function updateStatus() {
 // --- Save + Sync ---
 
 function saveAndSync() {
+  // Flash install prompt if extension not connected
+  flashInstallPrompt();
+
   // Always save to localStorage
-  localStorage.setItem('fb_selections', JSON.stringify(selections));
+  localStorage.setItem('cb_selections', JSON.stringify(selections));
 
   // Build rules
   const payload = buildSettingsPayload();
@@ -925,6 +983,17 @@ function buildSettingsPayload() {
       const allFeaturesOn = siteFeatures.length > 0 && siteFeatures.every(f => s.features[f.id]);
       if (siteOn && (siteFeatures.length === 0 || allFeaturesOn)) {
         (site.domains || []).forEach(d => { if (d && !domains.includes(d)) domains.push(d); });
+        // Still collect element selectors — especially global ones (e.g. cookie popup CSS)
+        // which need to apply on ALL sites, not just the provider's domain.
+        // Many sites self-host consent scripts (e.g. sourcepoint.theguardian.com)
+        // so network-level blocking alone won't catch them.
+        siteFeatures.forEach(feat => {
+          if (feat.type === 'element' && feat.selector) {
+            const h = feat.global ? '*' : (site.domains[0] || '').replace('www.', '');
+            if (!selectors[h]) selectors[h] = [];
+            selectors[h].push(feat.selector);
+          }
+        });
         return;
       }
       siteFeatures.forEach(feat => {
@@ -933,7 +1002,8 @@ function buildSettingsPayload() {
           urls.push(feat.requestDomains ? { urlFilter: feat.urlFilter, requestDomains: feat.requestDomains } : feat.urlFilter);
         }
         if (feat.type === 'element' && feat.selector) {
-          const h = (site.domains[0] || '').replace('www.', '');
+          // Use '*' for global selectors (cookie popups apply on all sites)
+          const h = feat.global ? '*' : (site.domains[0] || '').replace('www.', '');
           if (!selectors[h]) selectors[h] = [];
           selectors[h].push(feat.selector);
         }
@@ -1006,10 +1076,10 @@ async function loadDevicesPanel() {
     subEl.innerHTML = '<div style="font-size:.72rem;color:var(--green);margin-top:12px">Pro plan active</div>';
   } else {
     subEl.innerHTML = `
-      <div style="font-size:.72rem;color:var(--text-sec);margin-top:12px">Free plan. <strong style="color:var(--green)">$0.50/mo</strong> or <strong style="color:var(--green)">$5/yr</strong> for sync.</div>
+      <div style="font-size:.72rem;color:var(--text-sec);margin-top:12px">Free plan. <strong style="color:var(--green)">$1/mo</strong> or <strong style="color:var(--green)">$10/yr</strong> for sync.</div>
       <div style="display:flex;gap:6px;margin-top:6px">
-        <button class="checkout-btn btn-primary" data-plan="monthly" style="font-size:.72rem;padding:6px 12px">$0.50/month</button>
-        <button class="checkout-btn btn-secondary" data-plan="yearly" style="font-size:.72rem;padding:6px 12px">$5/year</button>
+        <button class="checkout-btn btn-primary" data-plan="monthly" style="font-size:.72rem;padding:6px 12px">$1/month</button>
+        <button class="checkout-btn btn-secondary" data-plan="yearly" style="font-size:.72rem;padding:6px 12px">$10/year</button>
       </div>
     `;
     subEl.querySelectorAll('.checkout-btn').forEach(btn => {
@@ -1057,7 +1127,7 @@ async function loadSettingsPanel() {
     const settings = await pull();
     if (settings?.selections) {
       selections = settings.selections;
-      localStorage.setItem('fb_selections', JSON.stringify(selections));
+      localStorage.setItem('cb_selections', JSON.stringify(selections));
       initSelections();
       render();
     }

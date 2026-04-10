@@ -18,13 +18,17 @@ const {
 
 const TEST_URLS = {
   // Social Media
-  youtube:    { element: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', base: 'https://www.youtube.com' },
+  youtube:    { element: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', base: 'https://www.youtube.com',
+    // Home Feed only exists on the home page, not on watch pages
+    featureUrls: { 'yt-home': 'https://www.youtube.com' } },
   tiktok:     { element: 'https://www.tiktok.com/foryou', base: 'https://www.tiktok.com' },
   instagram:  { element: 'https://www.instagram.com', base: 'https://www.instagram.com' },
   facebook:   { element: 'https://www.facebook.com', base: 'https://www.facebook.com' },
   twitter:    { element: 'https://x.com/home', base: 'https://x.com' },
   snapchat:   { element: 'https://www.snapchat.com', base: 'https://www.snapchat.com' },
-  reddit:     { element: 'https://www.reddit.com/r/AskReddit/top/?t=day', base: 'https://www.reddit.com' },
+  reddit:     { element: 'https://www.reddit.com/r/AskReddit/top/?t=day', base: 'https://www.reddit.com',
+    // Comments only exist on individual post pages — auto-discover a post link
+    featureUrls: { 'rd-comments': 'post' } },
   pinterest:  { element: 'https://www.pinterest.com', base: 'https://www.pinterest.com' },
   linkedin:   { element: 'https://www.linkedin.com/feed/', base: 'https://www.linkedin.com' },
 
@@ -33,7 +37,7 @@ const TEST_URLS = {
   disneyplus: { element: 'https://www.disneyplus.com', base: 'https://www.disneyplus.com' },
   hulu:       { element: 'https://www.hulu.com', base: 'https://www.hulu.com' },
   twitch:     { element: 'https://www.twitch.tv/xqc', base: 'https://www.twitch.tv' },
-  primevideo: { element: 'https://www.primevideo.com', base: 'https://www.primevideo.com' },
+  primevideo: { element: 'https://www.amazon.com/gp/video/detail/B0D5HMQXZ5', base: 'https://www.primevideo.com' },
   crunchyroll:{ element: 'https://www.crunchyroll.com', base: 'https://www.crunchyroll.com' },
 
   // Gaming
@@ -45,13 +49,18 @@ const TEST_URLS = {
   amazon:     { element: 'https://www.amazon.com/dp/B0D1XD1ZV3', base: 'https://www.amazon.com' },
   ebay:       { element: 'https://www.ebay.com', base: 'https://www.ebay.com' },
 
-  // News
+  // News — use article pages so element selectors (comments, video, related) are present
   cnn:        { element: 'https://www.cnn.com', base: 'https://www.cnn.com' },
   'bbc-news': { element: 'https://www.bbc.co.uk/news', base: 'https://www.bbc.co.uk/news' },
-  foxnews:    { element: 'https://www.foxnews.com', base: 'https://www.foxnews.com' },
-  dailymail:  { element: 'https://www.dailymail.co.uk', base: 'https://www.dailymail.co.uk' },
-  nytimes:    { element: 'https://www.nytimes.com', base: 'https://www.nytimes.com' },
-  theguardian:{ element: 'https://www.theguardian.com', base: 'https://www.theguardian.com' },
+  foxnews:    { element: 'https://www.foxnews.com/video/5614615980001', base: 'https://www.foxnews.com' },
+  dailymail:  { element: 'https://www.dailymail.co.uk', base: 'https://www.dailymail.co.uk',
+    // Comments and Related only exist on article pages, not the homepage
+    featureUrls: { 'dm-comments': 'article', 'dm-related': 'article' } },
+  nytimes:    { element: 'https://www.nytimes.com', base: 'https://www.nytimes.com',
+    featureUrls: { 'nyt-paywall': 'article', 'nyt-comments': 'article' } },
+  theguardian:{ element: 'https://www.theguardian.com', base: 'https://www.theguardian.com',
+    // Comments only on commentisfree articles, donation banner intermittent on article pages
+    featureUrls: { 'gu-comments': 'commentisfree', 'gu-donate': 'article' } },
 
   // AI
   chatgpt:    { element: 'https://chatgpt.com', base: 'https://chatgpt.com' },
@@ -721,7 +730,62 @@ async function run() {
         result = testAllowlistFeature(cat, site, feature);
         console.log(`  ${progress} ⊘ ${feature.name} — ${result.reason}`);
       } else if (feature.type === 'element') {
-        // Load page once for all element features on same site
+        // Check if this feature needs a different page than the default
+        const featureUrl = urls?.featureUrls?.[feature.id];
+        let needsNav = !pageLoaded;
+
+        if (featureUrl && pageLoaded) {
+          // Feature needs a specific page — navigate there
+          if (featureUrl === 'article' || featureUrl === 'commentisfree' || featureUrl === 'post') {
+            // Auto-discover a content link on the current page
+            try {
+              const articleHref = await page.evaluate((type) => {
+                let links;
+                if (type === 'commentisfree') {
+                  // Guardian opinion articles with comments
+                  links = Array.from(document.querySelectorAll('a[href*="/commentisfree/"]'));
+                  const article = links.find(a => {
+                    const h = a.getAttribute('href') || '';
+                    return h.split('/').length > 5 && h.length > 40;
+                  });
+                  return article ? article.href : null;
+                } else if (type === 'post') {
+                  // Reddit post with comments
+                  links = Array.from(document.querySelectorAll('a[href*="/comments/"]'));
+                  const post = links.find(a => {
+                    const h = a.getAttribute('href') || '';
+                    return h.includes('/r/') && h.includes('/comments/');
+                  });
+                  return post ? post.href : null;
+                } else {
+                  // Generic article discovery
+                  links = Array.from(document.querySelectorAll('a[href*="/article"], a[href*="/news/"], a[href*="/20"]'));
+                  const article = links.find(a => {
+                    const h = a.getAttribute('href') || '';
+                    return h.split('/').length > 4 && !h.includes('?') && h.length > 30;
+                  });
+                  return article ? article.href : null;
+                }
+              }, featureUrl);
+              if (articleHref) {
+                await page.goto(articleHref, { waitUntil: 'domcontentloaded', timeout: 15000 });
+                await wait(4000);
+                await dismissCookieBanners(page);
+                await wait(1000);
+              }
+            } catch {}
+          } else {
+            // Explicit URL override
+            try {
+              await page.goto(featureUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
+              await wait(3000);
+              await dismissCookieBanners(page);
+              await wait(1000);
+            } catch {}
+          }
+        }
+
+        // Load default page if not yet loaded
         if (!pageLoaded && urls) {
           try {
             await page.goto(urls.element, { waitUntil: 'domcontentloaded', timeout: 15000 });
@@ -765,6 +829,15 @@ async function run() {
           }
         } else {
           result = createResult(cat.id, site, feature, { status: 'skip', reason: 'page failed to load' });
+        }
+
+        // If we navigated away for a per-feature URL, go back to the default page
+        if (featureUrl && urls?.element) {
+          try {
+            await page.goto(urls.element, { waitUntil: 'domcontentloaded', timeout: 15000 });
+            await wait(2000);
+            await dismissCookieBanners(page);
+          } catch {}
         }
 
         const icon = result.status === 'pass' ? '✓' : result.status === 'fail' ? '✗' : '⊘';

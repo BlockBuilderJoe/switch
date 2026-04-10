@@ -1,7 +1,7 @@
-// FuseBox Sync Layer
+// Circuit Breaker Sync Layer
 // Runs in the background service worker. Syncs local settings to/from the server.
 
-const SYNC_KEYS = ['selections', 'blockedDomains', 'blockedUrls', 'hiddenSelectors', 'allowedChannels', 'subsOnlyMode'];
+const SYNC_KEYS = ['selections', 'blockedDomains', 'blockedUrls', 'hiddenSelectors', 'followingOnly'];
 const POLL_INTERVAL = 60000; // 60 seconds
 const DEBOUNCE_DELAY = 2000; // 2 seconds
 
@@ -60,13 +60,13 @@ async function pull() {
     localVersion = data.version;
     await chrome.storage.local.set({ sync_version: localVersion });
 
-    console.log('FuseBox Sync: pulled version', localVersion);
+    console.log('Circuit Breaker Sync: pulled version', localVersion);
 
     // Refresh device role every 5th pull
     pullCount++;
     if (pullCount % 5 === 0) refreshDeviceRole();
   } catch (e) {
-    console.log('FuseBox Sync: pull failed', e.message);
+    console.log('Circuit Breaker Sync: pull failed', e.message);
   }
 }
 
@@ -98,10 +98,10 @@ async function push() {
       const result = await res.json();
       localVersion = result.version;
       await chrome.storage.local.set({ sync_version: localVersion });
-      console.log('FuseBox Sync: pushed version', localVersion);
+      console.log('Circuit Breaker Sync: pushed version', localVersion);
     }
   } catch (e) {
-    console.log('FuseBox Sync: push failed', e.message);
+    console.log('Circuit Breaker Sync: push failed', e.message);
   }
 
   isPushing = false;
@@ -217,7 +217,7 @@ async function refreshDeviceRole() {
     if (thisDevice && thisDevice.role !== deviceRole) {
       deviceRole = thisDevice.role;
       await chrome.storage.local.set({ sync_device_role: deviceRole });
-      console.log('FuseBox Sync: role updated to', deviceRole);
+      console.log('Circuit Breaker Sync: role updated to', deviceRole);
     }
   } catch {}
 }

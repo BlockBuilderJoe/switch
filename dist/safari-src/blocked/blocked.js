@@ -1,4 +1,4 @@
-// FuseBox — Fun themed blocked page
+// Circuit Breaker — Fun themed blocked page
 // Shows the category character that blocked the site + a random pun
 
 const G = '#2dc653'; // green — the character is protecting you
@@ -37,63 +37,63 @@ const CHARACTERS = {
 const PUNS = {
   'social-media': [
     "Shhh\u2026 your social feeds are taking a nap. Go make some real-life memories!",
-    "This feed has been switched off. Your future self says thanks.",
-    "No scrolling here! Your social switch is doing its job.",
+    "This feed has been tripped. Your future self says thanks.",
+    "No scrolling here! Your social breaker is doing its job.",
   ],
   'video-streaming': [
     "Plot twist: there's a whole world outside this screen.",
-    "Your streaming switch said \u2018that's enough episodes for now.\u2019",
-    "The stream has been switched off. Time for something offline!",
+    "Your streaming breaker tripped \u2014 that's enough episodes for now.",
+    "The stream has been tripped. Time for something offline!",
   ],
   'ads-trackers': [
-    "Nothing to track here! Your ad switch is keeping you invisible.",
-    "Ads? Never heard of them. Your tracker switch says you're welcome.",
-    "This ad has been switched off. Your attention is not for sale.",
+    "Nothing to track here! Your ad breaker is keeping you invisible.",
+    "Ads? Never heard of them. Your tracker breaker says you're welcome.",
+    "This ad has been tripped. Your attention is not for sale.",
   ],
   'adult-content': [
-    "This content has been switched off. Your 18+ switch is on guard.",
-    "Nothing to see here! Literally. Your adult switch is working.",
-    "Switched off. Your 18+ guard is keeping things clean.",
+    "This content has been tripped. Your 18+ breaker is on guard.",
+    "Nothing to see here! Literally. Your adult breaker is working.",
+    "Tripped! Your 18+ guard is keeping things clean.",
   ],
   'gambling': [
-    "The house always wins\u2026 but not today. Your gambling switch folded this hand.",
-    "No bets here! Your gambling switch says the odds are in your favour.",
-    "All in\u2026 on self-control. Your gambling switch played the winning hand.",
+    "The house always wins\u2026 but not today. Your gambling breaker folded this hand.",
+    "No bets here! Your gambling breaker says the odds are in your favour.",
+    "All in\u2026 on self-control. Your gambling breaker played the winning hand.",
   ],
   'gaming': [
-    "Game over! \u2026for distractions, that is. Your gaming switch used BLOCK!",
-    "Your gaming switch used BLOCK. It's super effective!",
-    "Achievement unlocked: Self-control! +100 XP. Your gaming switch levels you up.",
+    "Game over! \u2026for distractions, that is. Your gaming breaker used TRIP!",
+    "Your gaming breaker used TRIP! It's super effective!",
+    "Achievement unlocked: Self-control! +100 XP. Your gaming breaker levels you up.",
   ],
   'news': [
     "Breaking news: You don't need to read more news right now.",
-    "Extra! Extra! Your news switch says take a break!",
+    "Extra! Extra! Your news breaker says take a break!",
     "Your daily doom-scroll quota has been reached. Come back never.",
   ],
   'dating': [
-    "Your dating switch swiped left on this site. You deserve better!",
-    "This match has been unmatched. Your dating switch knows your worth.",
-    "Switched off! The only connection you need right now is with yourself.",
+    "Your dating breaker swiped left on this site. You deserve better!",
+    "This match has been unmatched. Your dating breaker knows your worth.",
+    "Tripped! The only connection you need right now is with yourself.",
   ],
   'shopping': [
-    "Your cart is empty and your wallet is full. Your shopping switch did that.",
-    "This store is closed! Your shopping switch saved you from impulse buys.",
-    "Add to cart? More like add to \u2018things I don't need.\u2019 Switched off!",
+    "Your cart is empty and your wallet is full. Your shopping breaker did that.",
+    "This store is closed! Your shopping breaker saved you from impulse buys.",
+    "Add to cart? More like add to \u2018things I don't need.\u2019 Tripped!",
   ],
   'ai': [
-    "Your AI switch said \u2018I'm sorry Dave, I can't let you do that.\u2019",
-    "The robots can wait. Your AI switch has spoken.",
-    "Switched off! Sometimes the best prompt is touching grass.",
+    "Your AI breaker said \u2018I'm sorry Dave, I can't let you do that.\u2019",
+    "The robots can wait. Your AI breaker has spoken.",
+    "Tripped! Sometimes the best prompt is touching grass.",
   ],
   'crypto': [
-    "HODL\u2026 your attention, that is. Your crypto switch is protecting your focus.",
-    "This coin has been switched off. To the moon? More like to bed.",
-    "Your crypto switch says the real investment is in yourself.",
+    "HODL\u2026 your attention, that is. Your crypto breaker is protecting your focus.",
+    "This coin has been tripped. To the moon? More like to bed.",
+    "Your crypto breaker says the real investment is in yourself.",
   ],
   'security-threats': [
-    "Threat neutralised! Your security switch has your back.",
-    "This site has been flagged and switched off. Your shield is up!",
-    "Your security switch blocked this threat. Stay safe out there!",
+    "Threat neutralised! Your security breaker has your back.",
+    "This site has been flagged and tripped. Your shield is up!",
+    "Your security breaker blocked this threat. Stay safe out there!",
   ],
 };
 

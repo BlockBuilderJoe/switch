@@ -1,4 +1,4 @@
-// FuseBox Sync — Node.js / Docker entry point
+// Circuit Breaker Sync — Node.js / Docker entry point
 import { serve } from '@hono/node-server';
 import { serveStatic } from '@hono/node-server/serve-static';
 import Database from 'better-sqlite3';
@@ -6,7 +6,7 @@ import { readFileSync } from 'fs';
 import { createApp } from './src/index.js';
 import { SqliteAdapter } from './src/db/adapter.js';
 
-const DB_PATH = process.env.DB_PATH || '/data/fuseboard.db';
+const DB_PATH = process.env.DB_PATH || '/data/circuitbreaker.db';
 const PORT = parseInt(process.env.PORT || '8787');
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -40,5 +40,5 @@ const app = createApp(
 // Serve dashboard static files from ./public/
 app.use('/*', serveStatic({ root: './public' }));
 
-console.log(`FuseBox Sync (self-hosted) running on port ${PORT}`);
+console.log(`Circuit Breaker Sync (self-hosted) running on port ${PORT}`);
 serve({ fetch: app.fetch, port: PORT });

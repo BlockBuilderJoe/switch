@@ -1,11 +1,11 @@
-// Switch — Blocklist data model
+// Circuit Breaker — Blocklist data model
 // Each category maps to Cloudflare Gateway DNS policy expressions
 
 const categories = [
   {
     id: 'social-media',
     name: 'Social Media',
-    description: 'Switch off social networking platforms',
+    description: 'Trip social networking platforms',
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/></svg>`,
     defaultOn: false,
     cfType: 'content_category',
@@ -13,10 +13,10 @@ const categories = [
     sites: [
       { id: 'tiktok', name: 'TikTok', domains: ['tiktok.com', 'tiktokv.com', 'tiktokcdn.com', 'musical.ly'], features: [
         { id: 'tt-fyp', name: 'For You', type: 'url', urlFilter: '||tiktok.com/', requestDomains: ['tiktok.com'], elementSelectors: ['[data-e2e="recommend-list-item-container"]', '[data-e2e="feed-video"]'] },
-        { id: 'tt-live', name: 'Live', type: 'url', urlFilter: '/live', requestDomains: ['tiktok.com'] },
+        { id: 'tt-live', name: 'Live', type: 'url', urlFilter: '/live', requestDomains: ['tiktok.com'], elementSelectors: ['[data-e2e="nav-live"]', '[data-e2e="live-badge"]'] },
         { id: 'tt-comments', name: 'Comments', type: 'element', selector: '[data-e2e="comment-list"], [data-e2e="comment-input"], [data-e2e="comment-icon"], [data-e2e="comment-count"]' },
         { id: 'tt-shop', name: 'Shop', type: 'url', urlFilter: '/shop', requestDomains: ['tiktok.com'], elementSelectors: ['[data-e2e="tiktok-shop"]', 'a[href*="/shop"]', '[data-e2e="nav-shop"]'] },
-        { id: 'tt-following', name: 'Following Only', type: 'allowlist', description: 'Only allow content from accounts you follow' },
+        { id: 'tt-following', name: 'Following Only', type: 'allowlist', description: 'Redirect the home page to the Following feed — only see videos from accounts you follow' },
         { id: 'tt-likes', name: 'Like Counts', type: 'element', selector: '[data-e2e="like-count"], [data-e2e="browse-like-count"]' },
         { id: 'tt-share', name: 'Share Button', type: 'element', selector: '[data-e2e="share-icon"], [data-e2e="share-button"]' },
       ]},
@@ -25,7 +25,7 @@ const categories = [
         { id: 'ig-explore', name: 'Explore', type: 'url', urlFilter: '/explore', requestDomains: ['instagram.com'] },
         { id: 'ig-stories', name: 'Stories', type: 'element', selector: '[aria-label="Stories tray"], [aria-label*="story"], [aria-label*="Story"]' },
         { id: 'ig-shop', name: 'Shop', type: 'url', urlFilter: '/shop', requestDomains: ['instagram.com'] },
-        { id: 'ig-suggested', name: 'Suggested Posts', type: 'element', selector: '[data-testid="suggested-posts"], article:has([data-testid="suggested-posts"])' },
+        { id: 'ig-suggested', name: 'Suggested Posts', type: 'element', selector: '[data-testid="suggested-posts"], article ~ article' },
         { id: 'ig-comments', name: 'Comments', type: 'element', selector: '[placeholder="Add a comment…"], article section div:has(svg[aria-label="Comment"])' },
         { id: 'ig-like-counts', name: 'Like Counts', type: 'element', selector: 'article section span[role="button"]' },
         { id: 'ig-ads', name: 'Sponsored Posts', type: 'element', selector: '[data-testid="sponsored"], article:has(a[href*="ads/about"])' },
@@ -74,7 +74,7 @@ const categories = [
       ]},
       { id: 'pinterest', name: 'Pinterest', domains: ['pinterest.com', 'pinimg.com'], features: [
         { id: 'pn-home', name: 'Home Feed', type: 'url', urlFilter: '||pinterest.com/', requestDomains: ['pinterest.com'] },
-        { id: 'pn-shop', name: 'Shop', type: 'element', selector: '[data-test-id="shopping-spotlight"], a[href*="/shop/"]' },
+        { id: 'pn-shop', name: 'Shop', type: 'element', selector: '[data-test-id="shopping-spotlight"], [data-test-id*="shop"], a[href*="/shop/"], a[href*="/shopping/"]' },
         { id: 'pn-notifications', name: 'Notifications', type: 'element', selector: '[aria-label="Notifications"]' },
       ]},
       { id: 'linkedin', name: 'LinkedIn', domains: ['linkedin.com', 'licdn.com'], features: [
@@ -89,7 +89,7 @@ const categories = [
   {
     id: 'video-streaming',
     name: 'Video Streaming',
-    description: 'Switch off streaming platforms',
+    description: 'Trip streaming platforms',
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>`,
     defaultOn: false,
     cfType: 'content_category',
@@ -104,13 +104,14 @@ const categories = [
         { id: 'yt-notifications', name: 'Notifications', type: 'element', selector: 'ytd-notification-topbar-button-renderer' },
         { id: 'yt-shop', name: 'Shop', type: 'element', selector: 'ytd-merch-shelf-renderer, ytd-structured-description-content-renderer, #merch-shelf, ytd-product-details-renderer, [aria-label="Shopping"], ytd-guide-entry-renderer:has(a[title="Shopping"]), button[aria-label="Shopping"]' },
         { id: 'yt-endscreen', name: 'End Cards', type: 'element', selector: '.ytp-endscreen-content, .ytp-ce-element, .ytp-ce-covering-overlay, .ytp-ce-element-shadow, .ytp-cards-teaser, .ytp-cards-button, .ytp-cards-button-icon, .ytp-suggestion-set, .html5-endscreen, .videowall-endscreen, iv-endscreen, .ytp-endscreen-previous, .ytp-endscreen-next, .annotation' },
-        { id: 'yt-subs-only', name: 'Subs Only Mode', type: 'allowlist', description: 'Only allow videos from channels you add to your allow list' },
+        { id: 'yt-subs-only', name: 'Subs Only Mode', type: 'allowlist', description: 'Redirect the home page to your Subscriptions feed — only see videos from channels you subscribe to' },
         { id: 'yt-autoplay', name: 'Autoplay', type: 'element', selector: '.ytp-autonav-toggle-button, [data-tooltip-target-id="ytp-autonav-toggle-button"]' },
         { id: 'yt-live-chat', name: 'Live Chat', type: 'element', selector: '#chat, ytd-live-chat-frame, #chat-container' },
         { id: 'yt-premium-upsell', name: 'Premium Upsell', type: 'element', selector: 'ytd-mealbar-promo-renderer, ytd-popup-container, tp-yt-paper-dialog:has(.premium), ytd-enforcement-message-view-model' },
         { id: 'yt-view-count', name: 'View Counts', type: 'element', selector: '#info-strings .view-count, ytd-video-view-count-renderer, .ytd-video-meta-block' },
         { id: 'yt-subscribe-btn', name: 'Subscribe Button', type: 'element', selector: '#subscribe-button, ytd-subscribe-button-renderer' },
         { id: 'yt-playlist-mix', name: 'Mixes / Playlists', type: 'element', selector: 'ytd-radio-renderer, ytd-compact-radio-renderer, ytd-rich-item-renderer:has(a[href*="list="])' },
+        { id: 'yt-ads', name: 'Ads', type: 'element', selector: '.ytp-ad-module, .ytp-ad-overlay-container, .ytp-ad-text, .ytp-ad-skip-button-container, .ytp-ad-image-overlay, .video-ads, #player-ads, #masthead-ad, ytd-ad-slot-renderer, ytd-banner-promo-renderer, ytd-promoted-sparkles-web-renderer, ytd-promoted-video-renderer, ytd-display-ad-renderer, ytd-in-feed-ad-layout-renderer, ytd-rich-item-renderer:has(.ytd-ad-slot-renderer), #related ytd-promoted-sparkles-web-renderer, tp-yt-paper-dialog:has(#mealbar-promo-renderer)' },
       ]},
       { id: 'netflix', name: 'Netflix', domains: ['netflix.com', 'nflxvideo.net', 'nflximg.net', 'nflxext.com'] },
       { id: 'disneyplus', name: 'Disney+', domains: ['disneyplus.com', 'disney-plus.net', 'dssott.com', 'bamgrid.com'], features: [
@@ -124,7 +125,7 @@ const categories = [
         { id: 'tw-clips', name: 'Clips', type: 'url', urlFilter: '/clip', requestDomains: ['twitch.tv'] },
         { id: 'tw-chat', name: 'Chat', type: 'element', selector: '.chat-shell, [data-a-target="chat-input"], .stream-chat' },
         { id: 'tw-recommendations', name: 'Recommendations', type: 'element', selector: '.side-nav-section[aria-label*="Also Watch"], .side-nav-section[aria-label*="Recommended"], .recommended-channels, [data-a-target="recommended-channel"]' },
-        { id: 'tw-subs-only', name: 'Followed Only', type: 'allowlist', description: 'Only allow streams from channels you follow' },
+        { id: 'tw-subs-only', name: 'Followed Only', type: 'allowlist', description: 'Redirect the home page to your Following directory — only see streamers you follow' },
         { id: 'twtv-ads', name: 'Pre-roll Ads', type: 'element', selector: '[data-a-target="video-ad-overlay"], [data-a-target="video-ad-label"], [class*="ad-overlay"]' },
         { id: 'twtv-bits', name: 'Bits/Donations', type: 'element', selector: 'button[aria-label*="Bits"], [data-a-target="bits-button"], [class*="bits"]' },
         { id: 'twtv-sub-btn', name: 'Subscribe Button', type: 'element', selector: '[data-a-target="subscribe-button"], [data-a-target="subscribed-button"]' },
@@ -139,24 +140,23 @@ const categories = [
   {
     id: 'ads-trackers',
     name: 'Ads & Trackers',
-    description: 'Switch off ads and tracking',
+    description: 'Trip ads and tracking',
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>`,
     defaultOn: false,
     cfType: 'content_category',
     cfCategoryIds: [66],
     sites: [
-      { id: 'google-ads', name: 'Google Ads', domains: ['doubleclick.net', 'googlesyndication.com', 'googleadservices.com', 'googletagmanager.com'] },
-      { id: 'facebook-ads', name: 'Meta Ads', domains: ['facebook.net', 'fbsbx.com'] },
-      { id: 'amazon-ads', name: 'Amazon Ads', domains: ['amazon-adsystem.com', 'aax.amazon.com'] },
-      { id: 'tiktok-ads', name: 'TikTok Ads', domains: ['analytics.tiktok.com', 'ads.tiktok.com'] },
-      { id: 'generic-trackers', name: 'Trackers', domains: ['hotjar.com', 'mixpanel.com', 'segment.io', 'amplitude.com', 'fullstory.com'] },
-      { id: 'analytics', name: 'Analytics', domains: ['google-analytics.com', 'analytics.google.com', 'clarity.ms', 'plausible.io'] },
+      { id: 'network-ads', name: 'Ads', domains: ['doubleclick.net', 'googlesyndication.com', 'googleadservices.com', 'facebook.net', 'amazon-adsystem.com'] },
+      { id: 'cookie-popups', name: 'Cookie Popups', domains: ['onetrust.com', 'cookiebot.com', 'quantcast.com', 'trustarc.com'], features: [
+        { id: 'cookie-css', name: 'Cookie Banner CSS', type: 'element', global: true, selector: '#onetrust-banner-sdk, #onetrust-consent-sdk, .onetrust-pc-dark-filter, #CybotCookiebotDialog, #CybotCookiebotDialogBodyUnderlay, .cmp-container, [id^="sp_message_container"], .sp_message_open, #sp_message_overlay, .fc-consent-root, .fc-dialog-overlay, #qc-cmp2-container, .qc-cmp2-container, #truste-consent-track, .trustarc-banner, #didomi-host, .didomi-popup-container, [class*="consent-banner"], [id*="consent-banner"], .js-consent-banner, #usercentrics-root, .iubenda-cs-container, #cookiescript_injected, [id*="cookie-law"], [class*="cookie-banner"], [id*="cookie-banner"], [class*="cookie-notice"], [id*="cookie-notice"], .cc-window, .cc-banner, #sp-cc-wrapper, #cos-banner, #gdpr-banner, #gdpr-banner-container, #gdpr-new-container, [class*="_shein_privacy"], #gdpr-single-choice-overlay, tiktok-cookie-banner, #cookie-consent, .osano-cm-window, .evidon-consent-button, [data-testid="cookie-policy-manage-dialog"], .almacmp-modalwrap, #ppms_cm_popup_overlay, .cmpboxBG, #cmpbox, #cmpbox2, .cmp-root, [id*="cookie-preferences"], [class*="cookie-consent"], [id*="cookieconsent"], [data-testid="consent-banner"], [data-testid="main-cookies-banner-container"]' },
+      ]},
+      { id: 'analytics', name: 'Google Analytics', domains: ['google-analytics.com', 'analytics.google.com', 'googletagmanager.com'] },
     ]
   },
   {
     id: 'adult-content',
     name: 'Adult Content',
-    description: 'Switch off adult material',
+    description: 'Trip adult material',
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>`,
     defaultOn: false,
     cfType: 'content_category',
@@ -173,7 +173,7 @@ const categories = [
   {
     id: 'gambling',
     name: 'Gambling',
-    description: 'Switch off betting and gambling',
+    description: 'Trip betting and gambling',
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="4"/><circle cx="8" cy="8" r="1.5" fill="currentColor"/><circle cx="16" cy="8" r="1.5" fill="currentColor"/><circle cx="8" cy="16" r="1.5" fill="currentColor"/><circle cx="16" cy="16" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>`,
     defaultOn: false,
     cfType: 'content_category',
@@ -192,7 +192,7 @@ const categories = [
   {
     id: 'gaming',
     name: 'Gaming',
-    description: 'Switch off gaming platforms',
+    description: 'Trip gaming platforms',
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="6"/><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><circle cx="15" cy="11" r="0.5" fill="currentColor" stroke="none"/><circle cx="17" cy="13" r="0.5" fill="currentColor" stroke="none"/></svg>`,
     defaultOn: false,
     cfType: 'domain',
@@ -219,7 +219,7 @@ const categories = [
   {
     id: 'news',
     name: 'News',
-    description: 'Switch off news and doomscrolling',
+    description: 'Trip news and doomscrolling',
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><line x1="10" y1="6" x2="18" y2="6"/><line x1="10" y1="10" x2="18" y2="10"/><line x1="10" y1="14" x2="14" y2="14"/></svg>`,
     defaultOn: false,
     cfType: 'content_category',
@@ -242,7 +242,7 @@ const categories = [
       ]},
       { id: 'dailymail', name: 'Daily Mail', domains: ['dailymail.co.uk', 'mailonline.com'], features: [
         { id: 'dm-sidebar', name: 'Sidebar of Shame', type: 'element', selector: '[class*="right-column"], #content .beta' },
-        { id: 'dm-comments', name: 'Comments', type: 'element', selector: '#comment-container, #js-comments-container, .reader-comments' },
+        { id: 'dm-comments', name: 'Comments', type: 'element', selector: '#reader-comments, .article-reader-comments, #reader-comments-container' },
         { id: 'dm-related', name: 'Related Articles', type: 'element', selector: '.related-carousel, .mol-fe-related-articles, [class*="related"]' },
         { id: 'dm-video', name: 'Autoplay Video', type: 'element', selector: '.vjs-tech, .vjs-player, video' },
       ]},
@@ -253,8 +253,8 @@ const categories = [
       ]},
       { id: 'theguardian', name: 'The Guardian', domains: ['theguardian.com', 'guim.co.uk'], features: [
         { id: 'gu-donate', name: 'Donation Banner', type: 'element', selector: '.contributions-banner, [data-component="reader-revenue-banner"], .site-message' },
-        { id: 'gu-comments', name: 'Comments', type: 'element', selector: '#comments, .discussion__comments, [data-component="discussion"]' },
-        { id: 'gu-related', name: 'More Stories', type: 'element', selector: '.fc-container, [data-component="more-on-this-story"]' },
+        { id: 'gu-comments', name: 'Comments', type: 'element', selector: '#comments, .discussion__comments, [data-component="discussion"], gu-island[name*="Discussion"]' },
+        { id: 'gu-related', name: 'More Stories', type: 'element', selector: 'gu-island[name="OnwardsUpper"], gu-island[name="MostViewedFooterData"], gu-island[name="MostViewedRightWithAd"], [data-component="more-on-this-story"], [data-component="most-popular"], [data-link-name*="most-viewed"]' },
         { id: 'gu-cookie', name: 'Cookie Banner', type: 'element', selector: '[id^="sp_message_container"], .js-manage-consent, .cmp-container' },
       ]},
       { id: 'buzzfeed', name: 'BuzzFeed', domains: ['buzzfeed.com', 'buzzfeednews.com'] },
@@ -264,7 +264,7 @@ const categories = [
   {
     id: 'dating',
     name: 'Dating',
-    description: 'Switch off dating apps and sites',
+    description: 'Trip dating apps and sites',
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,
     defaultOn: false,
     cfType: 'domain',
@@ -281,7 +281,7 @@ const categories = [
   {
     id: 'shopping',
     name: 'Shopping',
-    description: 'Switch off online shopping',
+    description: 'Trip online shopping',
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>`,
     defaultOn: false,
     cfType: 'domain',
@@ -310,7 +310,7 @@ const categories = [
   {
     id: 'ai',
     name: 'AI',
-    description: 'Switch off AI chatbots and tools',
+    description: 'Trip AI chatbots and tools',
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z"/><path d="M16 14h.01"/><path d="M8 14h.01"/><path d="M12 18v4"/><path d="M8 22h8"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M12 2V0"/></svg>`,
     defaultOn: false,
     cfType: 'domain',
@@ -339,7 +339,7 @@ const categories = [
   {
     id: 'crypto',
     name: 'Crypto',
-    description: 'Switch off crypto exchanges and wallets',
+    description: 'Trip crypto exchanges and wallets',
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
     defaultOn: false,
     cfType: 'domain',
@@ -358,7 +358,7 @@ const categories = [
   {
     id: 'security-threats',
     name: 'Security',
-    description: 'Switch off malware, phishing, and spyware',
+    description: 'Trip malware, phishing, and spyware',
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>`,
     defaultOn: true,
     cfType: 'security_category',
@@ -388,14 +388,14 @@ function generatePolicies(state) {
 
     if (allSitesOn && category.cfType === 'content_category') {
       policies.push({
-        name: `FuseBoard - Off ${category.name}`,
+        name: `Circuit Breaker - Off ${category.name}`,
         action: 'block',
         traffic: `any(dns.content_category[*] in {${category.cfCategoryIds.join(' ')}})`,
         enabled: true,
       });
     } else if (allSitesOn && category.cfType === 'security_category') {
       policies.push({
-        name: `FuseBoard - Off ${category.name}`,
+        name: `Circuit Breaker - Off ${category.name}`,
         action: 'block',
         traffic: `any(dns.security_category[*] in {${category.cfCategoryIds.join(' ')}})`,
         enabled: true,
@@ -409,7 +409,7 @@ function generatePolicies(state) {
       if (selectedDomains.length > 0) {
         const domainList = selectedDomains.map(d => `"${d}"`).join(' ');
         policies.push({
-          name: `FuseBoard - Off ${category.name} (Custom)`,
+          name: `Circuit Breaker - Off ${category.name} (Custom)`,
           action: 'block',
           traffic: `any(dns.domains[*] in {${domainList}})`,
           enabled: true,
@@ -426,7 +426,7 @@ function generateCustomPolicy(domains) {
   if (!domains || domains.length === 0) return null;
   const domainList = domains.map(d => `"${d}"`).join(' ');
   return {
-    name: 'FuseBoard - Custom Sites Off',
+    name: 'Circuit Breaker - Custom Sites Off',
     action: 'block',
     traffic: `any(dns.domains[*] in {${domainList}})`,
     enabled: true,

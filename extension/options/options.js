@@ -1,6 +1,10 @@
-// FuseBox — Options Page Logic (full drill-down)
+// Circuit Breaker — Options Page Logic (full drill-down)
 
-const board = document.getElementById('fuseboard');
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+const board = document.getElementById('breakerboard');
 const nav = document.getElementById('nav');
 const titleEl = document.getElementById('title');
 const statusDot = document.getElementById('status-dot');
@@ -68,11 +72,11 @@ function renderBreadcrumb(crumbs) {
 }
 
 function renderMain() {
-  renderBreadcrumb([{ label: 'FuseBox', view: 'main' }]);
+  renderBreadcrumb([{ label: 'Circuit Breaker', view: 'main' }]);
   titleEl.textContent = '';
   board.innerHTML = '';
   const grid = document.createElement('div');
-  grid.className = 'fuse-grid';
+  grid.className = 'cb-grid';
 
   categories.forEach(cat => {
     const isTripped = selections[cat.id]?.enabled || false;
@@ -93,12 +97,12 @@ function renderMain() {
       saveAndRender();
     }
 
-    const trk = cell.querySelector('.fuse-trk');
+    const trk = cell.querySelector('.cb-trk');
     trk.addEventListener('click', (e) => { e.stopPropagation(); toggleCat(); });
     trk.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); toggleCat(); } });
 
     cell.addEventListener('click', (e) => {
-      if (e.target.closest('.fuse-trk')) return;
+      if (e.target.closest('.cb-trk')) return;
       if (hasSites) { currentView = cat.id; render(); }
     });
 
@@ -113,13 +117,13 @@ function renderSites(catId) {
   if (!cat) { currentView = 'main'; render(); return; }
 
   renderBreadcrumb([
-    { label: 'FuseBox', view: 'main' },
+    { label: 'Circuit Breaker', view: 'main' },
     { label: cat.name, view: cat.id },
   ]);
   titleEl.textContent = '';
   board.innerHTML = '';
   const grid = document.createElement('div');
-  grid.className = 'fuse-grid';
+  grid.className = 'cb-grid';
 
   (cat.sites || []).forEach(site => {
     const isTripped = selections[cat.id].sites[site.id] || false;
@@ -149,12 +153,12 @@ function renderSites(catId) {
       saveAndRender();
     }
 
-    const trk = cell.querySelector('.fuse-trk');
+    const trk = cell.querySelector('.cb-trk');
     trk.addEventListener('click', (e) => { e.stopPropagation(); toggleSite(); });
     trk.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); toggleSite(); } });
 
     cell.addEventListener('click', (e) => {
-      if (e.target.closest('.fuse-trk')) return;
+      if (e.target.closest('.cb-trk')) return;
       if (hasFeatures) { currentView = cat.id + '/' + site.id; render(); }
     });
 
@@ -171,14 +175,14 @@ function renderFeatures(path) {
   if (!cat || !site) { currentView = 'main'; render(); return; }
 
   renderBreadcrumb([
-    { label: 'FuseBox', view: 'main' },
+    { label: 'Circuit Breaker', view: 'main' },
     { label: cat.name, view: catId },
     { label: site.name, view: catId + '/' + siteId },
   ]);
   titleEl.textContent = '';
   board.innerHTML = '';
   const grid = document.createElement('div');
-  grid.className = 'fuse-grid';
+  grid.className = 'cb-grid';
 
   (site.features || []).forEach(feat => {
     const isTripped = selections[cat.id].features[feat.id] || false;
@@ -191,9 +195,13 @@ function renderFeatures(path) {
       setTimeout(() => cell.classList.remove('just-toggled'), 250);
       selections[cat.id].features[feat.id] = !selections[cat.id].features[feat.id];
 
-      // Special handling for Subs Only Mode
+      // Follower-only features: persist per-feature flag so each site is independent.
       if (feat.type === 'allowlist') {
-        chrome.storage.sync.set({ subsOnlyMode: selections[cat.id].features[feat.id] });
+        chrome.storage.sync.get(['followingOnly'], (data) => {
+          const fo = data.followingOnly || {};
+          fo[feat.id] = selections[cat.id].features[feat.id];
+          chrome.storage.sync.set({ followingOnly: fo });
+        });
       }
 
       saveAndRender();
@@ -203,153 +211,24 @@ function renderFeatures(path) {
   });
 
   board.appendChild(grid);
-
-  // If Subs Only Mode feature exists and is on, show the allowed channels editor
-  const subsFeature = (site.features || []).find(f => f.type === 'allowlist');
-  if (subsFeature && selections[cat.id].features[subsFeature.id]) {
-    const editor = document.createElement('div');
-    editor.style.cssText = 'margin-top:16px;padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;';
-
-    chrome.storage.sync.get(['allowedChannels'], (data) => {
-      const channels = data.allowedChannels || [];
-      editor.innerHTML = `
-        <div style="font-weight:700;font-size:.85rem;margin-bottom:10px;color:#e0e2e8">Allowed Channels</div>
-        <div style="font-size:.75rem;color:#666;margin-bottom:12px">Only videos from these channels will be allowed. Add @handles or channel names.</div>
-        <div style="display:flex;gap:8px;margin-bottom:4px">
-          <input type="text" id="channel-input" placeholder="Search or type @ChannelName" style="flex:1;background:#07080a;border:1px solid #1e2028;border-radius:8px;padding:8px 12px;color:#e4e6ea;font-size:.82rem;outline:none">
-          <button id="add-channel-btn" style="background:#22c55e;color:#000;border:none;border-radius:8px;padding:8px 16px;font-weight:700;font-size:.82rem;cursor:pointer">Add</button>
-        </div>
-        <div id="search-results" style="margin-bottom:10px"></div>
-        <div id="channel-list" style="display:flex;flex-wrap:wrap;gap:6px">
-          ${channels.map(c => `
-            <span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:#1e2028;border:1px solid #2a2e38;border-radius:100px;font-size:.78rem;font-family:monospace;color:#aab">
-              ${c}
-              <button data-ch="${c}" style="background:none;border:none;color:#555;cursor:pointer;font-size:1rem;line-height:1;padding:0">&times;</button>
-            </span>
-          `).join('')}
-        </div>
-      `;
-
-      const input = editor.querySelector('#channel-input');
-      const searchResults = editor.querySelector('#search-results');
-      let searchTimeout;
-
-      // Live search as user types
-      input.addEventListener('input', () => {
-        clearTimeout(searchTimeout);
-        const q = input.value.trim();
-        if (q.length < 2) { searchResults.innerHTML = ''; return; }
-
-        searchTimeout = setTimeout(async () => {
-          searchResults.innerHTML = '<div style="font-size:.7rem;color:#555;padding:4px 0">Searching...</div>';
-          try {
-            const resp = await fetch(`https://www.youtube.com/results?search_query=${encodeURIComponent(q)}&sp=EgIQAg%3D%3D`);
-            const html = await resp.text();
-
-            // Extract channel info from YouTube's initial data
-            const match = html.match(/var ytInitialData = ({.*?});<\/script>/s);
-            if (!match) { searchResults.innerHTML = ''; return; }
-
-            const data = JSON.parse(match[1]);
-            const items = data?.contents?.twoColumnSearchResultsRenderer?.primaryContents?.sectionListRenderer?.contents?.[0]?.itemSectionRenderer?.contents || [];
-
-            const channelResults = items
-              .filter(i => i.channelRenderer)
-              .slice(0, 5)
-              .map(i => {
-                const ch = i.channelRenderer;
-                return {
-                  name: ch.title?.simpleText || '',
-                  handle: ch.channelId || '',
-                  customUrl: ch.subscriberCountText?.simpleText || '',
-                  thumb: ch.thumbnail?.thumbnails?.[0]?.url || '',
-                };
-              });
-
-            if (channelResults.length === 0) {
-              searchResults.innerHTML = '<div style="font-size:.7rem;color:#555;padding:4px 0">No channels found</div>';
-              return;
-            }
-
-            searchResults.innerHTML = channelResults.map(ch => `
-              <div class="search-ch" data-name="${ch.name}" style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;cursor:pointer;transition:.15s;margin-bottom:2px">
-                <img src="${ch.thumb}" style="width:28px;height:28px;border-radius:50%;background:#1e2028">
-                <div style="flex:1;min-width:0">
-                  <div style="font-size:.78rem;font-weight:600;color:#ccd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${ch.name}</div>
-                  <div style="font-size:.6rem;color:#555">${ch.customUrl}</div>
-                </div>
-                <div style="font-size:.65rem;color:#22c55e;font-weight:600;flex-shrink:0">+ Add</div>
-              </div>
-            `).join('');
-
-            searchResults.querySelectorAll('.search-ch').forEach(el => {
-              el.addEventListener('mouseenter', () => { el.style.background = '#12141a'; });
-              el.addEventListener('mouseleave', () => { el.style.background = ''; });
-              el.addEventListener('click', () => {
-                const name = el.dataset.name;
-                if (!channels.includes(name)) {
-                  channels.push(name);
-                  chrome.storage.sync.set({ allowedChannels: channels }, () => {
-                    input.value = '';
-                    searchResults.innerHTML = '';
-                    render();
-                  });
-                }
-              });
-            });
-          } catch (e) {
-            searchResults.innerHTML = '<div style="font-size:.7rem;color:#555;padding:4px 0">Search failed — type the channel name and click Add</div>';
-          }
-        }, 400);
-      });
-
-      // Manual add button
-      editor.querySelector('#add-channel-btn').addEventListener('click', () => {
-        const val = input.value.trim();
-        if (!val) return;
-        channels.push(val);
-        chrome.storage.sync.set({ allowedChannels: channels }, () => {
-          input.value = '';
-          searchResults.innerHTML = '';
-          render();
-        });
-      });
-
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') editor.querySelector('#add-channel-btn').click();
-      });
-
-      // Remove channel buttons
-      editor.querySelectorAll('[data-ch]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const idx = channels.indexOf(btn.dataset.ch);
-          if (idx > -1) channels.splice(idx, 1);
-          chrome.storage.sync.set({ allowedChannels: channels }, () => render());
-        });
-      });
-    });
-
-    board.appendChild(editor);
-  }
-
   updateStatus();
 }
 
 function createFuseCell(label, isTripped, wireColor, info, canDrill, icon) {
   const cell = document.createElement('div');
-  cell.className = 'fuse-cell';
+  cell.className = 'cb-cell';
   cell.dataset.s = isTripped ? '1' : '0';
   cell.dataset.w = wireColor;
   cell.innerHTML = `
-    <div class="fuse-wire"></div>
-    <div class="fuse-box">
-      ${icon ? '<div class="fuse-icon">' + icon + '</div>' : ''}
-      <div class="fuse-lb">${label}</div>
-      <div class="fuse-trk" role="switch" aria-checked="${isTripped}" aria-label="Block ${label}" tabindex="0"><div class="fuse-lev"></div></div>
-      ${info ? '<div class="fuse-inf">' + info + '</div>' : ''}
-      ${canDrill ? '<div class="fuse-cfg">details ›</div>' : ''}
+    <div class="cb-wire"></div>
+    <div class="cb-box">
+      ${icon ? '<div class="cb-icon">' + icon + '</div>' : ''}
+      <div class="cb-lb">${label}</div>
+      <div class="cb-trk" role="switch" aria-checked="${isTripped}" aria-label="Block ${label}" tabindex="0"><div class="cb-lev"></div></div>
+      ${info ? '<div class="cb-inf">' + info + '</div>' : ''}
+      ${canDrill ? '<div class="cb-cfg">details ›</div>' : ''}
     </div>
-    <div class="fuse-wire"></div>
+    <div class="cb-wire"></div>
   `;
   return cell;
 }
@@ -389,7 +268,7 @@ function saveAndRender() {
             }
           }
           if (feat.type === 'element' && feat.selector) {
-            const h = (site.domains[0] || '').replace('www.', '');
+            const h = feat.global ? '*' : (site.domains[0] || '').replace('www.', '');
             if (!selectors[h]) selectors[h] = [];
             selectors[h].push(feat.selector);
           }
@@ -408,7 +287,7 @@ function saveAndRender() {
 
 // --- Sync UI ---
 const syncContent = document.getElementById('sync-content');
-const HOSTED_SERVER = 'https://fuseboard-sync.joe-780.workers.dev';
+const HOSTED_SERVER = 'https://circuitbreaker.app';
 
 function renderSyncUI() {
   chrome.runtime.sendMessage({ type: 'sync_status' }, (status) => {
@@ -424,7 +303,7 @@ function renderSignedOut() {
   syncContent.innerHTML = `
     <div style="text-align:center;margin-bottom:14px">
       <div style="font-weight:700;font-size:.95rem;margin-bottom:4px">Sync across devices</div>
-      <div style="font-size:.78rem;color:#666">FuseBox works perfectly on its own. Want your fuses on all your devices?</div>
+      <div style="font-size:.78rem;color:#666">Circuit Breaker works perfectly on its own. Want your breakers on all your devices?</div>
     </div>
     <div style="display:flex;gap:8px;margin-bottom:14px">
       <button id="sync-hosted-btn" style="flex:1;padding:10px;background:#12141a;border:1px solid #1e2028;border-radius:8px;color:#ccd;font-size:.78rem;font-weight:600;cursor:pointer;transition:.15s;font-family:inherit">
@@ -549,7 +428,7 @@ function renderSignedIn(status) {
     });
 
     document.getElementById('sync-web-btn').addEventListener('click', () => {
-      chrome.tabs.create({ url: 'https://fusebox.app' });
+      chrome.tabs.create({ url: 'https://circuitbreaker.app' });
     });
 
     const pushBtn = document.getElementById('sync-push-btn');
@@ -646,13 +525,35 @@ document.getElementById('changelog').innerHTML = `
   <div style="font-weight:700;font-size:.9rem;color:#e0e2e8;margin-bottom:12px">Changelog</div>
 
   <div style="margin-bottom:14px">
-    <div style="font-weight:700;color:#22c55e;margin-bottom:4px">v1.5.1 — Selector Updates
+    <div style="font-weight:700;color:#22c55e;margin-bottom:4px">v2.0.1 — Follower-Only Redirects</div>
+    <ul style="padding-left:16px;color:#777">
+      <li>YouTube / TikTok / Twitch "Following Only" now redirects home → native followed feed (was non-functional on TikTok/Twitch)</li>
+      <li>Fixed shared-state bug where toggling the feature on one site affected the others</li>
+      <li>Removed the manual channel-allowlist editor — no more curating lists; uses your actual platform subscriptions</li>
+    </ul>
+  </div>
+
+  <div style="margin-bottom:14px">
+    <div style="font-weight:700;color:#ccd;margin-bottom:4px">v2.0.0 — Circuit Breaker</div>
+    <ul style="padding-left:16px;color:#777">
+      <li>Rebrand: FuseBox is now <b style="color:#ccd">Circuit Breaker</b></li>
+      <li>New action language: "trip" replaces "switch off"</li>
+      <li>New icon and branding throughout</li>
+      <li>New domain: circuitbreaker.app</li>
+      <li>Cookie consent scroll-lock fix (pages now scroll after hiding consent popups)</li>
+      <li>Daily Mail comments selector updated</li>
+      <li>XSS fix for channel name display</li>
+    </ul>
+  </div>
+
+  <div style="margin-bottom:14px">
+    <div style="font-weight:700;color:#ccd;margin-bottom:4px">v1.5.1 — Selector Updates
     </div>
     <div style="font-weight:700;color:#22c55e;margin-bottom:4px">v1.5.0 — Cloud Sync</div>
     <ul style="padding-left:16px;color:#777">
-      <li>Cross-device sync (hosted $0.50/mo or self-host free)</li>
+      <li>Cross-device sync (hosted $1/mo or $10/yr, or self-host free)</li>
       <li>Email + password auth with JWT</li>
-      <li>Device management (10 device limit for hosted)</li>
+      <li>Device management (unlimited devices)</li>
       <li>Auto-push/pull with debounce</li>
       <li>Stripe integration for subscriptions</li>
       <li>Self-hosted Docker container with SQLite</li>
@@ -673,7 +574,7 @@ document.getElementById('changelog').innerHTML = `
     <ul style="padding-left:16px;color:#777">
       <li>Added in-app changelog</li>
       <li>Version number in popup and options header</li>
-      <li>Fixed amber wire color on sub-fuseboard</li>
+      <li>Fixed amber wire color on sub-breakerboard</li>
     </ul>
   </div>
 
@@ -717,7 +618,7 @@ document.getElementById('changelog').innerHTML = `
     <div style="font-weight:700;color:#ccd;margin-bottom:4px">v1.1 — Browser Extension</div>
     <ul style="padding-left:16px;color:#777">
       <li>Pivoted from Cloudflare DNS to Chrome extension</li>
-      <li>FuseBox UI in extension popup</li>
+      <li>Circuit Breaker UI in extension popup</li>
       <li>12 categories, domain blocking, element hiding</li>
       <li>Branded blocked page</li>
     </ul>
@@ -726,7 +627,7 @@ document.getElementById('changelog').innerHTML = `
   <div>
     <div style="font-weight:700;color:#ccd;margin-bottom:4px">v1.0 — Initial Release</div>
     <ul style="padding-left:16px;color:#777">
-      <li>FuseBox web app with fuseboard visual metaphor</li>
+      <li>Circuit Breaker web app with breakerboard visual metaphor</li>
       <li>Cloudflare Zero Trust Gateway DNS integration</li>
       <li>PIN-encrypted token storage</li>
       <li>Device setup guides for all platforms</li>

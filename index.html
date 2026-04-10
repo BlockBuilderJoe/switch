@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FuseBox — Your Kill Switch for the Internet</title>
+  <title>Circuit Breaker — Your circuit breaker for the internet</title>
+  <link rel="icon" type="image/png" sizes="128x128" href="favicon.png">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/dashboard.css">
@@ -15,17 +18,17 @@
     <div class="hero-inner hero-inner--v">
 
       <div class="hero-badge"><span class="hero-dot"></span> Free &amp; Open Source</div>
-      <h1 class="hero-title">Your kill switch<br><span class="hero-accent">for the internet</span></h1>
-      <p class="hero-sub">A browser extension that lets you switch off the distracting parts of the web. Kill YouTube Shorts without killing YouTube. Switch off social feeds but keep messaging. You decide what stays on.</p>
+      <h1 class="hero-title">Your circuit breaker<br><span class="hero-accent">for the internet</span></h1>
+      <p class="hero-sub">A browser extension that lets you trip the distracting parts of the web. Kill YouTube Shorts without killing YouTube. Cut social feeds but keep messaging. You decide what stays on.</p>
 
       <!-- V-formation: 5 – captain – 5, overlapping -->
       <div class="hero-v-formation">
 
         <!-- L5 — Crypto -->
-        <div class="hv-fuse" data-cat="crypto" style="--w:98px;--z:1;--ty:-50px;--o:.55;--mx:-18px">
-          <div class="fuse-housing"><div class="fuse-housing-inner">
-            <div class="fuse-terminal-top"><div class="fuse-label-box"><span class="fuse-label-text">Crypto</span></div></div>
-            <div class="fuse-track-area"><div class="fuse-track-line"></div><div class="fuse-trk"><div class="fuse-paddle fuse-paddle-char">
+        <div class="hv-cb" data-cat="crypto" style="--w:98px;--z:1;--ty:-50px;--o:.55;--mx:-18px">
+          <div class="cb-housing"><div class="cb-housing-inner">
+            <div class="cb-terminal-top"><div class="cb-label-box"><span class="cb-label-text">Crypto</span></div></div>
+            <div class="cb-track-area"><div class="cb-track-line"></div><div class="cb-trk"><div class="cb-paddle cb-paddle-char">
               <svg viewBox="-36 -36 72 72" style="overflow:visible">
                 <circle cx="0" cy="0" r="32" fill="#3abf6e"/><circle cx="0" cy="0" r="32" fill="none" stroke="rgba(0,0,0,.18)" stroke-width="5"/><circle cx="0" cy="0" r="23" fill="none" stroke="rgba(0,0,0,.08)" stroke-width="1.5"/>
                 <circle cx="-9" cy="-4" r="7" fill="#fff"/><circle cx="-9" cy="-4" r="5.5" fill="#0a2a1a"/><circle cx="-7" cy="-6" r="2.1" fill="#fff"/>
@@ -33,16 +36,16 @@
                 <path d="M-6,8 Q0,15 6,8" fill="none" stroke="#0a2a1a" stroke-width="2" stroke-linecap="round"/>
               </svg>
             </div></div></div>
-            <div class="fuse-terminal-bot"><div class="fuse-label-sm"><span class="fuse-label-sm-text">5 sites</span></div><div class="fuse-screw-wrap"><div class="fuse-screw-face"></div></div></div>
-            <div class="fuse-status fuse-status--green">Blocked</div>
+            <div class="cb-terminal-bot"><div class="cb-label-sm"><span class="cb-label-sm-text">5 sites</span></div><div class="cb-screw-wrap"><div class="cb-screw-face"></div></div></div>
+            <div class="cb-status cb-status--green">Blocked</div>
           </div></div>
         </div>
 
         <!-- L4 — News -->
-        <div class="hv-fuse" data-cat="news" style="--w:106px;--z:2;--ty:-38px;--o:.65;--mx:-18px">
-          <div class="fuse-housing"><div class="fuse-housing-inner">
-            <div class="fuse-terminal-top"><div class="fuse-label-box"><span class="fuse-label-text">News</span></div></div>
-            <div class="fuse-track-area"><div class="fuse-track-line"></div><div class="fuse-trk"><div class="fuse-paddle fuse-paddle-char">
+        <div class="hv-cb" data-cat="news" style="--w:106px;--z:2;--ty:-38px;--o:.65;--mx:-18px">
+          <div class="cb-housing"><div class="cb-housing-inner">
+            <div class="cb-terminal-top"><div class="cb-label-box"><span class="cb-label-text">News</span></div></div>
+            <div class="cb-track-area"><div class="cb-track-line"></div><div class="cb-trk"><div class="cb-paddle cb-paddle-char">
               <svg viewBox="-36 -36 72 72">
                 <rect x="-28" y="-32" width="56" height="64" rx="7" fill="#3abf6e"/><rect x="-22" y="-26" width="44" height="14" rx="4" fill="rgba(0,0,0,.18)"/><rect x="-22" y="-6" width="44" height="3" rx="1.5" fill="rgba(0,0,0,.12)"/>
                 <circle cx="-8" cy="6" r="7" fill="#fff"/><circle cx="-8" cy="6" r="5.5" fill="#0a2a1a"/><circle cx="-6" cy="4" r="2.1" fill="#fff"/>
@@ -50,16 +53,16 @@
                 <path d="M-5,18 Q0,25 5,18" fill="none" stroke="#0a2a1a" stroke-width="2" stroke-linecap="round"/>
               </svg>
             </div></div></div>
-            <div class="fuse-terminal-bot"><div class="fuse-label-sm"><span class="fuse-label-sm-text">11 sites</span></div><div class="fuse-screw-wrap"><div class="fuse-screw-face"></div></div></div>
-            <div class="fuse-status fuse-status--green">Blocked</div>
+            <div class="cb-terminal-bot"><div class="cb-label-sm"><span class="cb-label-sm-text">11 sites</span></div><div class="cb-screw-wrap"><div class="cb-screw-face"></div></div></div>
+            <div class="cb-status cb-status--green">Blocked</div>
           </div></div>
         </div>
 
         <!-- L3 — Gambling -->
-        <div class="hv-fuse" data-cat="gambling" style="--w:114px;--z:3;--ty:-25px;--o:.76;--mx:-18px">
-          <div class="fuse-housing"><div class="fuse-housing-inner">
-            <div class="fuse-terminal-top"><div class="fuse-label-box"><span class="fuse-label-text">Gambling</span></div></div>
-            <div class="fuse-track-area"><div class="fuse-track-line"></div><div class="fuse-trk"><div class="fuse-paddle fuse-paddle-char">
+        <div class="hv-cb" data-cat="gambling" style="--w:114px;--z:3;--ty:-25px;--o:.76;--mx:-18px">
+          <div class="cb-housing"><div class="cb-housing-inner">
+            <div class="cb-terminal-top"><div class="cb-label-box"><span class="cb-label-text">Gambling</span></div></div>
+            <div class="cb-track-area"><div class="cb-track-line"></div><div class="cb-trk"><div class="cb-paddle cb-paddle-char">
               <svg viewBox="-36 -40 72 80" style="overflow:visible">
                 <rect x="-26" y="-34" width="52" height="68" rx="8" fill="#3abf6e"/>
                 <text x="-18" y="-20" font-size="10" font-weight="900" fill="rgba(0,0,0,.25)" text-anchor="middle" dominant-baseline="middle" font-family="DM Sans,sans-serif">A</text>
@@ -70,16 +73,16 @@
                 <path d="M-5,10 Q0,17 5,10" fill="none" stroke="#0a2a1a" stroke-width="2" stroke-linecap="round"/>
               </svg>
             </div></div></div>
-            <div class="fuse-terminal-bot"><div class="fuse-label-sm"><span class="fuse-label-sm-text">9 sites</span></div><div class="fuse-screw-wrap"><div class="fuse-screw-face"></div></div></div>
-            <div class="fuse-status fuse-status--green">Blocked</div>
+            <div class="cb-terminal-bot"><div class="cb-label-sm"><span class="cb-label-sm-text">9 sites</span></div><div class="cb-screw-wrap"><div class="cb-screw-face"></div></div></div>
+            <div class="cb-status cb-status--green">Blocked</div>
           </div></div>
         </div>
 
         <!-- L2 — Dating -->
-        <div class="hv-fuse" data-cat="dating" style="--w:122px;--z:4;--ty:-12px;--o:.87;--mx:-18px">
-          <div class="fuse-housing"><div class="fuse-housing-inner">
-            <div class="fuse-terminal-top"><div class="fuse-label-box"><span class="fuse-label-text">Dating</span></div></div>
-            <div class="fuse-track-area"><div class="fuse-track-line"></div><div class="fuse-trk"><div class="fuse-paddle fuse-paddle-char">
+        <div class="hv-cb" data-cat="dating" style="--w:122px;--z:4;--ty:-12px;--o:.87;--mx:-18px">
+          <div class="cb-housing"><div class="cb-housing-inner">
+            <div class="cb-terminal-top"><div class="cb-label-box"><span class="cb-label-text">Dating</span></div></div>
+            <div class="cb-track-area"><div class="cb-track-line"></div><div class="cb-trk"><div class="cb-paddle cb-paddle-char">
               <svg viewBox="-36 -36 72 72" style="overflow:visible">
                 <path d="M0,30 C-6,24 -36,8 -36,-12 C-36,-28 -24,-36 -12,-32 C-6,-30 -2,-26 0,-20 C2,-26 6,-30 12,-32 C24,-36 36,-28 36,-12 C36,8 6,24 0,30 Z" fill="#3abf6e"/>
                 <circle cx="-10" cy="-8" r="7" fill="#fff"/><circle cx="-10" cy="-8" r="5.5" fill="#0a2a1a"/><circle cx="-8" cy="-10" r="2.1" fill="#fff"/>
@@ -87,16 +90,16 @@
                 <path d="M-6,4 Q0,12 6,4" fill="none" stroke="#0a2a1a" stroke-width="2" stroke-linecap="round"/>
               </svg>
             </div></div></div>
-            <div class="fuse-terminal-bot"><div class="fuse-label-sm"><span class="fuse-label-sm-text">7 sites</span></div><div class="fuse-screw-wrap"><div class="fuse-screw-face"></div></div></div>
-            <div class="fuse-status fuse-status--green">Blocked</div>
+            <div class="cb-terminal-bot"><div class="cb-label-sm"><span class="cb-label-sm-text">7 sites</span></div><div class="cb-screw-wrap"><div class="cb-screw-face"></div></div></div>
+            <div class="cb-status cb-status--green">Blocked</div>
           </div></div>
         </div>
 
         <!-- L1 — Gaming -->
-        <div class="hv-fuse" data-cat="gaming" style="--w:132px;--z:5;--ty:-5px;--o:.94;--mx:-18px">
-          <div class="fuse-housing"><div class="fuse-housing-inner">
-            <div class="fuse-terminal-top"><div class="fuse-label-box"><span class="fuse-label-text">Gaming</span></div></div>
-            <div class="fuse-track-area"><div class="fuse-track-line"></div><div class="fuse-trk"><div class="fuse-paddle fuse-paddle-char">
+        <div class="hv-cb" data-cat="gaming" style="--w:132px;--z:5;--ty:-5px;--o:.94;--mx:-18px">
+          <div class="cb-housing"><div class="cb-housing-inner">
+            <div class="cb-terminal-top"><div class="cb-label-box"><span class="cb-label-text">Gaming</span></div></div>
+            <div class="cb-track-area"><div class="cb-track-line"></div><div class="cb-trk"><div class="cb-paddle cb-paddle-char">
               <svg viewBox="-36 -36 72 72" style="overflow:visible">
                 <path d="M-24,24 L-24,-4 C-24,-30 -14,-34 0,-34 C14,-34 24,-30 24,-4 L24,24 Q18,16 12,24 Q6,32 0,24 Q-6,16 -12,24 Q-18,32 -24,24 Z" fill="#3abf6e"/>
                 <ellipse cx="-30" cy="2" rx="8" ry="6" fill="#3abf6e" transform="rotate(-20,-30,2)"/>
@@ -106,16 +109,16 @@
                 <path d="M-6,2 Q0,10 6,2" fill="none" stroke="#0a2a1a" stroke-width="2" stroke-linecap="round"/>
               </svg>
             </div></div></div>
-            <div class="fuse-terminal-bot"><div class="fuse-label-sm"><span class="fuse-label-sm-text">10 sites</span></div><div class="fuse-screw-wrap"><div class="fuse-screw-face"></div></div></div>
-            <div class="fuse-status fuse-status--green">Blocked</div>
+            <div class="cb-terminal-bot"><div class="cb-label-sm"><span class="cb-label-sm-text">10 sites</span></div><div class="cb-screw-wrap"><div class="cb-screw-face"></div></div></div>
+            <div class="cb-status cb-status--green">Blocked</div>
           </div></div>
         </div>
 
         <!-- ★ CAPTAIN — Security -->
-        <div class="hv-fuse hv-captain" data-cat="security-threats" style="--w:155px;--z:12;--ty:0px;--o:1;--mx:-18px">
-          <div class="fuse-housing"><div class="fuse-housing-inner">
-            <div class="fuse-terminal-top"><div class="fuse-label-box"><span class="fuse-label-text">Security</span></div></div>
-            <div class="fuse-track-area"><div class="fuse-track-line"></div><div class="fuse-trk"><div class="fuse-paddle fuse-paddle-char" style="width:74px;height:74px">
+        <div class="hv-cb hv-captain" data-cat="security-threats" style="--w:155px;--z:12;--ty:0px;--o:1;--mx:-18px">
+          <div class="cb-housing"><div class="cb-housing-inner">
+            <div class="cb-terminal-top"><div class="cb-label-box"><span class="cb-label-text">Security</span></div></div>
+            <div class="cb-track-area"><div class="cb-track-line"></div><div class="cb-trk"><div class="cb-paddle cb-paddle-char" style="width:74px;height:74px">
               <svg viewBox="-36 -40 72 80" style="overflow:visible">
                 <path d="M0,-36 C13,-36 30,-30 30,-16 L30,5 C30,22 18,33 0,40 C-18,33 -30,22 -30,5 L-30,-16 C-30,-30 -13,-36 0,-36 Z" fill="#3abf6e"/>
                 <path d="M0,-27 C9,-27 23,-22 23,-12 L23,4 C23,16 13,25 0,30 C-13,25 -23,16 -23,4 L-23,-12 C-23,-22 -9,-27 0,-27 Z" fill="rgba(0,0,0,.11)"/>
@@ -125,16 +128,16 @@
                 <path d="M-5,8 Q0,6 5,8" fill="#fff" stroke="none"/>
               </svg>
             </div></div></div>
-            <div class="fuse-terminal-bot"><div class="fuse-label-sm"><span class="fuse-label-sm-text">6 sites</span></div><div class="fuse-screw-wrap"><div class="fuse-screw-face"></div></div></div>
-            <div class="fuse-status fuse-status--green">Blocked</div>
+            <div class="cb-terminal-bot"><div class="cb-label-sm"><span class="cb-label-sm-text">6 sites</span></div><div class="cb-screw-wrap"><div class="cb-screw-face"></div></div></div>
+            <div class="cb-status cb-status--green">Blocked</div>
           </div></div>
         </div>
 
         <!-- R1 — Shopping -->
-        <div class="hv-fuse" data-cat="shopping" style="--w:132px;--z:5;--ty:-5px;--o:.94;--mx:-18px">
-          <div class="fuse-housing"><div class="fuse-housing-inner">
-            <div class="fuse-terminal-top"><div class="fuse-label-box"><span class="fuse-label-text">Shopping</span></div></div>
-            <div class="fuse-track-area"><div class="fuse-track-line"></div><div class="fuse-trk"><div class="fuse-paddle fuse-paddle-char">
+        <div class="hv-cb" data-cat="shopping" style="--w:132px;--z:5;--ty:-5px;--o:.94;--mx:-18px">
+          <div class="cb-housing"><div class="cb-housing-inner">
+            <div class="cb-terminal-top"><div class="cb-label-box"><span class="cb-label-text">Shopping</span></div></div>
+            <div class="cb-track-area"><div class="cb-track-line"></div><div class="cb-trk"><div class="cb-paddle cb-paddle-char">
               <svg viewBox="-36 -40 72 80" style="overflow:visible">
                 <path d="M-28,-36 L-28,-14 Q-28,-10 -24,-10 L24,-10 Q28,-10 28,-14 L28,-36" fill="none" stroke="#3abf6e" stroke-width="8" stroke-linecap="round"/>
                 <path d="M-30,-10 L30,-10 L24,30 Q24,34 20,34 L-20,34 Q-24,34 -24,30 Z" fill="#3abf6e"/>
@@ -144,16 +147,16 @@
                 <path d="M-6,16 Q0,23 6,16" fill="none" stroke="#0a2a1a" stroke-width="2" stroke-linecap="round"/>
               </svg>
             </div></div></div>
-            <div class="fuse-terminal-bot"><div class="fuse-label-sm"><span class="fuse-label-sm-text">12 sites</span></div><div class="fuse-screw-wrap"><div class="fuse-screw-face"></div></div></div>
-            <div class="fuse-status fuse-status--green">Blocked</div>
+            <div class="cb-terminal-bot"><div class="cb-label-sm"><span class="cb-label-sm-text">12 sites</span></div><div class="cb-screw-wrap"><div class="cb-screw-face"></div></div></div>
+            <div class="cb-status cb-status--green">Blocked</div>
           </div></div>
         </div>
 
         <!-- R2 — Ads -->
-        <div class="hv-fuse" data-cat="ads-trackers" style="--w:122px;--z:4;--ty:-12px;--o:.87;--mx:-18px">
-          <div class="fuse-housing"><div class="fuse-housing-inner">
-            <div class="fuse-terminal-top"><div class="fuse-label-box"><span class="fuse-label-text">Ads</span></div></div>
-            <div class="fuse-track-area"><div class="fuse-track-line"></div><div class="fuse-trk"><div class="fuse-paddle fuse-paddle-char">
+        <div class="hv-cb" data-cat="ads-trackers" style="--w:122px;--z:4;--ty:-12px;--o:.87;--mx:-18px">
+          <div class="cb-housing"><div class="cb-housing-inner">
+            <div class="cb-terminal-top"><div class="cb-label-box"><span class="cb-label-text">Ads</span></div></div>
+            <div class="cb-track-area"><div class="cb-track-line"></div><div class="cb-trk"><div class="cb-paddle cb-paddle-char">
               <svg viewBox="-36 -36 72 72" style="overflow:visible">
                 <line x1="16" y1="16" x2="32" y2="32" stroke="#3abf6e" stroke-width="8" stroke-linecap="round"/>
                 <circle cx="0" cy="0" r="26" fill="#3abf6e"/><circle cx="0" cy="0" r="18" fill="rgba(0,0,0,.13)"/>
@@ -162,16 +165,16 @@
                 <path d="M-6,8 Q0,16 6,8" fill="none" stroke="#0a2a1a" stroke-width="2.5" stroke-linecap="round"/>
               </svg>
             </div></div></div>
-            <div class="fuse-terminal-bot"><div class="fuse-label-sm"><span class="fuse-label-sm-text">22 sites</span></div><div class="fuse-screw-wrap"><div class="fuse-screw-face"></div></div></div>
-            <div class="fuse-status fuse-status--green">Blocked</div>
+            <div class="cb-terminal-bot"><div class="cb-label-sm"><span class="cb-label-sm-text">22 sites</span></div><div class="cb-screw-wrap"><div class="cb-screw-face"></div></div></div>
+            <div class="cb-status cb-status--green">Blocked</div>
           </div></div>
         </div>
 
         <!-- R3 — Streaming -->
-        <div class="hv-fuse" data-cat="video-streaming" style="--w:114px;--z:3;--ty:-25px;--o:.76;--mx:-18px">
-          <div class="fuse-housing"><div class="fuse-housing-inner">
-            <div class="fuse-terminal-top"><div class="fuse-label-box"><span class="fuse-label-text">Streaming</span></div></div>
-            <div class="fuse-track-area"><div class="fuse-track-line"></div><div class="fuse-trk"><div class="fuse-paddle fuse-paddle-char">
+        <div class="hv-cb" data-cat="video-streaming" style="--w:114px;--z:3;--ty:-25px;--o:.76;--mx:-18px">
+          <div class="cb-housing"><div class="cb-housing-inner">
+            <div class="cb-terminal-top"><div class="cb-label-box"><span class="cb-label-text">Streaming</span></div></div>
+            <div class="cb-track-area"><div class="cb-track-line"></div><div class="cb-trk"><div class="cb-paddle cb-paddle-char">
               <svg viewBox="-36 -36 72 72" style="overflow:visible">
                 <path d="M-22,-26 Q-26,-30 -26,-26 L-26,26 Q-26,30 -22,26 L28,4 Q32,0 28,-4 Z" fill="#3abf6e"/>
                 <circle cx="-8" cy="-4" r="8" fill="#fff"/><circle cx="-8" cy="-4" r="6" fill="#0a2a1a"/><circle cx="-6" cy="-6" r="2.3" fill="#fff"/>
@@ -179,16 +182,16 @@
                 <path d="M-6,8 Q2,16 10,8" fill="none" stroke="#0a2a1a" stroke-width="2.5" stroke-linecap="round"/>
               </svg>
             </div></div></div>
-            <div class="fuse-terminal-bot"><div class="fuse-label-sm"><span class="fuse-label-sm-text">8 sites</span></div><div class="fuse-screw-wrap"><div class="fuse-screw-face"></div></div></div>
-            <div class="fuse-status fuse-status--green">Blocked</div>
+            <div class="cb-terminal-bot"><div class="cb-label-sm"><span class="cb-label-sm-text">8 sites</span></div><div class="cb-screw-wrap"><div class="cb-screw-face"></div></div></div>
+            <div class="cb-status cb-status--green">Blocked</div>
           </div></div>
         </div>
 
         <!-- R4 — Social -->
-        <div class="hv-fuse" data-cat="social-media" style="--w:106px;--z:2;--ty:-38px;--o:.65;--mx:-18px">
-          <div class="fuse-housing"><div class="fuse-housing-inner">
-            <div class="fuse-terminal-top"><div class="fuse-label-box"><span class="fuse-label-text">Social</span></div></div>
-            <div class="fuse-track-area"><div class="fuse-track-line"></div><div class="fuse-trk"><div class="fuse-paddle fuse-paddle-char">
+        <div class="hv-cb" data-cat="social-media" style="--w:106px;--z:2;--ty:-38px;--o:.65;--mx:-18px">
+          <div class="cb-housing"><div class="cb-housing-inner">
+            <div class="cb-terminal-top"><div class="cb-label-box"><span class="cb-label-text">Social</span></div></div>
+            <div class="cb-track-area"><div class="cb-track-line"></div><div class="cb-trk"><div class="cb-paddle cb-paddle-char">
               <svg viewBox="-36 -36 72 72" style="overflow:visible">
                 <polygon points="-8,18 8,18 -4,36" fill="#3abf6e"/>
                 <rect x="-30" y="-28" width="60" height="48" rx="24" fill="#3abf6e"/>
@@ -197,16 +200,16 @@
                 <path d="M-8,6 Q0,16 8,6" fill="none" stroke="#0a2a1a" stroke-width="2.5" stroke-linecap="round"/>
               </svg>
             </div></div></div>
-            <div class="fuse-terminal-bot"><div class="fuse-label-sm"><span class="fuse-label-sm-text">14 sites</span></div><div class="fuse-screw-wrap"><div class="fuse-screw-face"></div></div></div>
-            <div class="fuse-status fuse-status--green">Blocked</div>
+            <div class="cb-terminal-bot"><div class="cb-label-sm"><span class="cb-label-sm-text">14 sites</span></div><div class="cb-screw-wrap"><div class="cb-screw-face"></div></div></div>
+            <div class="cb-status cb-status--green">Blocked</div>
           </div></div>
         </div>
 
         <!-- R5 — AI -->
-        <div class="hv-fuse" data-cat="ai" style="--w:98px;--z:1;--ty:-50px;--o:.55;--mx:-18px">
-          <div class="fuse-housing"><div class="fuse-housing-inner">
-            <div class="fuse-terminal-top"><div class="fuse-label-box"><span class="fuse-label-text">AI</span></div></div>
-            <div class="fuse-track-area"><div class="fuse-track-line"></div><div class="fuse-trk"><div class="fuse-paddle fuse-paddle-char">
+        <div class="hv-cb" data-cat="ai" style="--w:98px;--z:1;--ty:-50px;--o:.55;--mx:-18px">
+          <div class="cb-housing"><div class="cb-housing-inner">
+            <div class="cb-terminal-top"><div class="cb-label-box"><span class="cb-label-text">AI</span></div></div>
+            <div class="cb-track-area"><div class="cb-track-line"></div><div class="cb-trk"><div class="cb-paddle cb-paddle-char">
               <svg viewBox="-36 -40 72 80" style="overflow:visible">
                 <circle cx="0" cy="-38" r="5" fill="#3abf6e"/><rect x="-3" y="-33" width="6" height="14" rx="3" fill="#3abf6e"/>
                 <rect x="-38" y="-7" width="9" height="14" rx="4.5" fill="#3abf6e"/><rect x="29" y="-7" width="9" height="14" rx="4.5" fill="#3abf6e"/>
@@ -216,8 +219,8 @@
                 <path d="M-6,11 Q0,18 6,11" fill="none" stroke="#0a2a1a" stroke-width="2" stroke-linecap="round"/>
               </svg>
             </div></div></div>
-            <div class="fuse-terminal-bot"><div class="fuse-label-sm"><span class="fuse-label-sm-text">4 sites</span></div><div class="fuse-screw-wrap"><div class="fuse-screw-face"></div></div></div>
-            <div class="fuse-status fuse-status--green">Blocked</div>
+            <div class="cb-terminal-bot"><div class="cb-label-sm"><span class="cb-label-sm-text">4 sites</span></div><div class="cb-screw-wrap"><div class="cb-screw-face"></div></div></div>
+            <div class="cb-status cb-status--green">Blocked</div>
           </div></div>
         </div>
 
@@ -225,6 +228,7 @@
 
       <div class="hero-ctas">
         <a href="#why" id="hero-try" class="btn-primary hero-cta">See how it works &darr;</a>
+        <a href="#sync" class="btn-ghost hero-cta" style="font-size:.82rem;padding:8px 16px;color:var(--text-sec)">Sync &amp; Pricing</a>
         <a href="#" id="hero-install" class="btn-secondary hero-cta-install">
           <span>Install for <span id="hero-browser-name">Chrome</span></span>
         </a>
@@ -254,19 +258,19 @@
         <p>You close Instagram, then immediately reopen it out of habit. The feed is designed to keep you there.</p>
       </div>
     </div>
-    <p class="why-punch">It's not a willpower problem. These apps are engineered to hold your attention.<br><strong>FuseBox gives you the kill switch they won't.</strong></p>
+    <p class="why-punch">It's not a willpower problem. These apps are engineered to hold your attention.<br><strong>Circuit Breaker gives you the circuit breaker they won't.</strong></p>
 
     <div class="why-example">
-      <h3>Surgical switches, not blunt blocking</h3>
-      <p>Most blockers are all-or-nothing. FuseBox lets you keep what's useful and switch off what's toxic. Kill YouTube Shorts and recommendations but keep search and subscriptions. Switch off Twitter's trending tab but keep DMs. Remove comment sections everywhere.</p>
-      <p class="why-example-sub">Each switch controls one feature. Switch off what you don't need. Keep what you do. It's your internet now.</p>
+      <h3>Surgical breakers, not blunt blocking</h3>
+      <p>Most blockers are all-or-nothing. Circuit Breaker lets you keep what's useful and trip what's toxic. Kill YouTube Shorts and recommendations but keep search and subscriptions. Cut Twitter's trending tab but keep DMs. Remove comment sections everywhere.</p>
+      <p class="why-example-sub">Each breaker controls one feature. Trip what you don't need. Keep what you do. It's your internet now.</p>
     </div>
 
     <div class="why-strategy">
       <h3><svg viewBox="-36 -40 72 80" width="28" height="28" style="overflow:visible;vertical-align:middle;margin-right:6px"><path d="M0,-36 C13,-36 30,-30 30,-16 L30,5 C30,22 18,33 0,40 C-18,33 -30,22 -30,5 L-30,-16 C-30,-30 -13,-36 0,-36 Z" fill="#2dc653"/><path d="M0,-27 C9,-27 23,-22 23,-12 L23,4 C23,16 13,25 0,30 C-13,25 -23,16 -23,4 L-23,-12 C-23,-22 -9,-27 0,-27 Z" fill="rgba(0,0,0,.11)"/><circle cx="-8" cy="-6" r="7" fill="#fff"/><circle cx="-8" cy="-6" r="5.5" fill="#0a2a1a"/><circle cx="-6" cy="-8" r="2.1" fill="#fff" opacity=".8"/><circle cx="8" cy="-6" r="7" fill="#fff"/><circle cx="8" cy="-6" r="5.5" fill="#0a2a1a"/><circle cx="10" cy="-8" r="2.1" fill="#fff" opacity=".8"/><path d="M-6,8 Q0,15 6,8" fill="#0a2a1a"/></svg> The strategy</h3>
-      <p>FuseBox works in your browser — not in apps. That's the point.</p>
-      <p><strong>Delete the apps. Use the web versions instead.</strong> Then use FuseBox to switch off the parts designed to keep you scrolling — the algorithmic feeds, the autoplay, the infinite recommendations. You keep the useful parts (messaging, search, your subscriptions) without the addictive ones.</p>
-      <p class="why-example-sub">Apps are designed to bypass your self-control. The browser is where you switch it off.</p>
+      <p>Circuit Breaker works in your browser — not in apps. That's the point.</p>
+      <p><strong>Delete the apps. Use the web versions instead.</strong> Then use Circuit Breaker to trip the parts designed to keep you scrolling — the algorithmic feeds, the autoplay, the infinite recommendations. You keep the useful parts (messaging, search, your subscriptions) without the addictive ones.</p>
+      <p class="why-example-sub">Apps are designed to bypass your self-control. The browser is where you trip them.</p>
     </div>
   </div>
 
@@ -279,8 +283,8 @@
         <div class="step-icon">
           <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2dc653" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M9 12l2 2 4-4"/></svg>
         </div>
-        <h3>Choose what to switch off</h3>
-        <p>Switch off entire categories like Social Media or Streaming. Or drill down — kill just YouTube Shorts, Instagram Reels, or Twitter's trending tab.</p>
+        <h3>Choose what to trip</h3>
+        <p>Trip entire categories like Social Media or Streaming. Or drill down — kill just YouTube Shorts, Instagram Reels, or Twitter's trending tab.</p>
       </div>
       <div class="step">
         <div class="step-num">2</div>
@@ -288,7 +292,7 @@
           <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2dc653" stroke-width="1.5"><path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.66 0 3-4.03 3-9s-1.34-9-3-9m0 18c-1.66 0-3-4.03-3-9s1.34-9 3-9m-9 9a9 9 0 0 1 9-9"/></svg>
         </div>
         <h3>Delete the apps, install the extension</h3>
-        <p>Remove the apps that hijack your attention. Use the web versions instead, with FuseBox controlling what you see. One click install for Chrome, Firefox, Safari, or Edge.</p>
+        <p>Remove the apps that hijack your attention. Use the web versions instead, with Circuit Breaker controlling what you see. One click install for Chrome, Firefox, Safari, or Edge.</p>
       </div>
       <div class="step">
         <div class="step-num">3</div>
@@ -296,7 +300,7 @@
           <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2dc653" stroke-width="1.5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><circle cx="9" cy="9" r="1" fill="#2dc653"/><circle cx="15" cy="9" r="1" fill="#2dc653"/></svg>
         </div>
         <h3>Browse on your terms</h3>
-        <p>Switched-off sites show a friendly page. Distracting features vanish. You're in control — not the algorithm.</p>
+        <p>Tripped sites show a friendly page. Distracting features vanish. You're in control — not the algorithm.</p>
       </div>
     </div>
   </div>
@@ -304,14 +308,14 @@
   <!-- ═══ SECTION 4: Try it yourself ═══ -->
   <div class="page-section try-section">
     <h2 class="section-heading">Try it yourself</h2>
-    <p class="try-sub">Flip the switches below. Each one controls a category of websites. Drill into any to switch off individual sites and features.</p>
+    <p class="try-sub">Trip the breakers below. Each one controls a category of websites. Drill into any to trip individual sites and features.</p>
   </div>
 
-  <!-- ═══ SECTION 5: Interactive Fusebox ═══ -->
-  <div id="fusebox" class="page-section">
+  <!-- ═══ SECTION 5: Interactive Circuit Board ═══ -->
+  <div id="circuitboard" class="page-section">
     <div id="dashboard-screen" class="screen">
       <div class="dash-header">
-        <div class="logo">Fuse<span class="dot"></span>Box <span class="version">v1.5.1</span></div>
+        <div class="logo"><img src="favicon.svg" class="logo-icon" alt="">Circuit<span class="dot"></span>Breaker <span class="version">v2.0.1</span></div>
         <div class="dash-header-right">
           <div id="ext-badge" class="ext-badge"></div>
           <button id="nav-theme" class="btn-ghost theme-toggle" aria-label="Toggle theme">
@@ -326,12 +330,13 @@
       <div class="dash-status-bar">
         <span class="status-dot" id="status-dot"></span>
         <span id="status-text"></span>
+        <span id="ext-status" class="ext-status"></span>
         <span class="sync-badge" id="sync-badge"></span>
       </div>
 
       <div id="nav"></div>
       <div id="title" class="section-title"></div>
-      <div id="fuseboard"></div>
+      <div id="breakerboard"></div>
 
       <!-- Extension install prompt (shown when not connected) -->
       <div id="install-prompt" class="install-prompt">
@@ -342,7 +347,7 @@
       <!-- Sync banner -->
       <div id="sync-banner" class="sync-banner" style="display:none">
         <div class="sync-banner-text">
-          <strong>Sync across devices?</strong> Sign in to save your fuses to the cloud.
+          <strong>Sync across devices?</strong> Sign in to save your settings to the cloud.
         </div>
         <button id="sync-signin-btn" class="btn-secondary sync-banner-btn">Sign in</button>
       </div>
@@ -355,7 +360,7 @@
           <button id="auth-close-btn" class="btn-ghost">&times;</button>
         </div>
         <div class="auth-hosting">
-          <button id="auth-hosted-btn" class="auth-host-btn selected">We'll host it &mdash; $0.50/mo</button>
+          <button id="auth-hosted-btn" class="auth-host-btn selected">We'll host it &mdash; $1/mo</button>
           <button id="auth-self-btn" class="auth-host-btn">Self-host (free)</button>
         </div>
         <div id="auth-server-row" class="auth-row" style="display:none">
@@ -413,8 +418,8 @@
 
   <!-- ═══ SECTION 4: Download CTA ═══ -->
   <div id="download" class="page-section download-section">
-    <h2 class="section-heading">Get the kill switch</h2>
-    <p class="download-sub">Install FuseBox and decide what stays on. Free, open source, no account needed.</p>
+    <h2 class="section-heading">Get the circuit breaker</h2>
+    <p class="download-sub">Install Circuit Breaker and decide what stays on. Free, open source, no account needed.</p>
     <a href="#" id="download-main" class="btn-primary download-btn">
       Install for <span id="download-browser-name">Chrome</span>
     </a>
@@ -424,8 +429,75 @@
       <a href="#" class="store-link" data-store="safari">Safari Extensions</a>
       <a href="#" class="store-link" data-store="edge">Edge Add-ons</a>
     </div>
-    <p class="download-self-host">Or <a href="https://github.com/BlockBuilderJoe/switch">self-host for free</a></p>
+    <p class="download-self-host">Or <a href="https://github.com/BlockBuilderJoe/circuit-breaker">self-host for free</a></p>
     <p class="download-self-host" style="margin-top:8px"><a href="/privacy.html">Privacy Policy</a></p>
+  </div>
+
+  <!-- ═══ SECTION 5: Sync Pricing ═══ -->
+  <div id="sync" class="page-section sync-section">
+    <h2 class="section-heading">Sync across all your devices</h2>
+    <p class="sync-sub">Circuit Breaker works 100% locally with no account. Want your settings everywhere? Pick a plan.</p>
+
+    <div class="pricing-grid">
+
+      <!-- Free / Self-Host -->
+      <div class="pricing-card">
+        <div class="pricing-badge">Open Source</div>
+        <h3 class="pricing-name">Self-Hosted</h3>
+        <div class="pricing-amount">
+          <span class="pricing-currency">$</span><span class="pricing-value">0</span>
+          <span class="pricing-period">forever</span>
+        </div>
+        <ul class="pricing-features">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Unlimited devices</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Full sync</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Docker one-liner</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Your server, your data</li>
+        </ul>
+        <a href="https://github.com/BlockBuilderJoe/circuit-breaker#self-host" class="btn-secondary pricing-btn">View on GitHub</a>
+        <p class="pricing-note">docker pull josephpalmer/circuit-breaker</p>
+      </div>
+
+      <!-- Monthly -->
+      <div class="pricing-card">
+        <div class="pricing-badge">Monthly</div>
+        <h3 class="pricing-name">Hosted Sync</h3>
+        <div class="pricing-amount">
+          <span class="pricing-currency">$</span><span class="pricing-value">1</span>
+          <span class="pricing-period">/month</span>
+        </div>
+        <ul class="pricing-features">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Unlimited devices</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Instant cloud sync</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Zero setup</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Cancel anytime</li>
+        </ul>
+        <button class="btn-secondary pricing-btn" onclick="document.getElementById('sync-signin-btn')?.click();window.scrollTo({top:document.getElementById('circuitboard').offsetTop,behavior:'smooth'})">Get started</button>
+        <p class="pricing-note">Sign in from the dashboard above</p>
+      </div>
+
+      <!-- Annual -->
+      <div class="pricing-card pricing-card--accent">
+        <div class="pricing-badge pricing-badge--green">Best Value</div>
+        <h3 class="pricing-name">Hosted Sync</h3>
+        <div class="pricing-amount">
+          <span class="pricing-currency">$</span><span class="pricing-value">10</span>
+          <span class="pricing-period">/year</span>
+        </div>
+        <div class="pricing-save">Save $2 vs monthly</div>
+        <ul class="pricing-features">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Unlimited devices</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Instant cloud sync</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Zero setup</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Cancel anytime</li>
+        </ul>
+        <button class="btn-primary pricing-btn" onclick="document.getElementById('sync-signin-btn')?.click();window.scrollTo({top:document.getElementById('circuitboard').offsetTop,behavior:'smooth'})">Get started</button>
+        <p class="pricing-note">Sign in from the dashboard above</p>
+      </div>
+
+    </div>
+
+    <p class="sync-footer">No account needed for local use. Sync is optional. <a href="https://github.com/BlockBuilderJoe/circuit-breaker#self-host">Self-hosting docs on GitHub.</a></p>
   </div>
 
   <script src="js/blocklists.js"></script>

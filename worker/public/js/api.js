@@ -1,8 +1,8 @@
-// FuseBox Web Dashboard — API Client
-// Standalone auth + sync client that talks to the FuseBox worker API.
+// Circuit Breaker Web Dashboard — API Client
+// Standalone auth + sync client that talks to the Circuit Breaker worker API.
 // Uses localStorage instead of chrome.storage.
 
-const HOSTED_SERVER = 'https://fuseboard-sync.joe-780.workers.dev';
+const HOSTED_SERVER = 'https://circuitbreaker.app';
 
 let serverUrl = '';
 let accessToken = '';

@@ -1,16 +1,16 @@
 services:
-  fusebox:
+  circuit-breaker:
     build: .
-    image: fusebox/sync
+    image: josephpalmer/circuit-breaker:latest
     ports:
       - "8787:8787"
     volumes:
-      - fusebox-data:/data
+      - cb-data:/data
     environment:
       - JWT_SECRET=change-me-to-a-long-random-string
-      - DB_PATH=/data/fusebox.db
+      - DB_PATH=/data/circuitbreaker.db
       - PORT=8787
     restart: unless-stopped
 
 volumes:
-  fusebox-data:
+  cb-data:
