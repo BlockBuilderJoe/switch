@@ -1,6 +1,6 @@
 // Circuit Breaker Web Dashboard — Main Application Logic
 
-const SYNC_KEYS = ['selections', 'blockedDomains', 'blockedUrls', 'hiddenSelectors', 'followingOnly'];
+const SYNC_KEYS = ['selections', 'blockedDomains', 'blockedUrls', 'hiddenSelectors', 'followingOnly', 'scrollCaps'];
 
 // Brand logos (official SVG marks) + colors for site labels
 const BRANDS = {
@@ -627,7 +627,7 @@ function renderFeatures(path, animate) {
   (site.features || []).forEach(feat => {
     const isTripped = selections[cat.id].features[feat.id] || false;
     const wire = isTripped ? 'green' : 'red';
-    const cell = createFuseCell(feat.name, isTripped, wire, feat.type === 'allowlist' ? 'allow list' : feat.type, false, '', siteId, catId);
+    const cell = createFuseCell(feat.name, isTripped, wire, feat.type === 'allowlist' ? 'allow list' : feat.type === 'scroll-cap' ? 'scroll cap' : feat.type, false, '', siteId, catId);
 
     cell.addEventListener('click', () => {
       cell.classList.add('just-toggled');
@@ -958,6 +958,7 @@ function saveAndSync() {
     domains: payload.blockedDomains,
     urls: payload.blockedUrls,
     selectors: payload.hiddenSelectors,
+    scrollCaps: payload.scrollCaps,
   });
 
   // If signed in, also push to server (debounced)
@@ -973,7 +974,7 @@ function saveAndSync() {
 }
 
 function buildSettingsPayload() {
-  const domains = [], urls = [], selectors = {};
+  const domains = [], urls = [], selectors = {}, scrollCaps = {};
   categories.forEach(cat => {
     const s = selections[cat.id];
     if (!s) return;
@@ -983,15 +984,15 @@ function buildSettingsPayload() {
       const allFeaturesOn = siteFeatures.length > 0 && siteFeatures.every(f => s.features[f.id]);
       if (siteOn && (siteFeatures.length === 0 || allFeaturesOn)) {
         (site.domains || []).forEach(d => { if (d && !domains.includes(d)) domains.push(d); });
-        // Still collect element selectors — especially global ones (e.g. cookie popup CSS)
-        // which need to apply on ALL sites, not just the provider's domain.
-        // Many sites self-host consent scripts (e.g. sourcepoint.theguardian.com)
-        // so network-level blocking alone won't catch them.
         siteFeatures.forEach(feat => {
           if (feat.type === 'element' && feat.selector) {
             const h = feat.global ? '*' : (site.domains[0] || '').replace('www.', '');
             if (!selectors[h]) selectors[h] = [];
             selectors[h].push(feat.selector);
+          }
+          if (feat.type === 'scroll-cap') {
+            const d = (site.domains[0] || '').replace('www.', '');
+            if (d) scrollCaps[d] = feat.defaultScreens;
           }
         });
         return;
@@ -1002,7 +1003,6 @@ function buildSettingsPayload() {
           urls.push(feat.requestDomains ? { urlFilter: feat.urlFilter, requestDomains: feat.requestDomains } : feat.urlFilter);
         }
         if (feat.type === 'element' && feat.selector) {
-          // Use '*' for global selectors (cookie popups apply on all sites)
           const h = feat.global ? '*' : (site.domains[0] || '').replace('www.', '');
           if (!selectors[h]) selectors[h] = [];
           selectors[h].push(feat.selector);
@@ -1012,10 +1012,14 @@ function buildSettingsPayload() {
           if (!selectors[h]) selectors[h] = [];
           selectors[h].push(...feat.elementSelectors);
         }
+        if (feat.type === 'scroll-cap') {
+          const d = (site.domains[0] || '').replace('www.', '');
+          if (d) scrollCaps[d] = feat.defaultScreens;
+        }
       });
     });
   });
-  return { selections, blockedDomains: domains, blockedUrls: urls, hiddenSelectors: selectors };
+  return { selections, blockedDomains: domains, blockedUrls: urls, hiddenSelectors: selectors, scrollCaps };
 }
 
 // --- Devices Panel ---
