@@ -66,6 +66,7 @@ window.addEventListener('message', (event) => {
     };
     if (msg.selections) toStore.selections = msg.selections;
     if (event.data.followingOnly !== undefined) toStore.followingOnly = event.data.followingOnly;
+    if (event.data.scrollCaps !== undefined) toStore.scrollCaps = event.data.scrollCaps;
 
     try {
       chrome.storage.sync.set(toStore);

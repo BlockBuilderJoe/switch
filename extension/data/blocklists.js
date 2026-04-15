@@ -19,6 +19,7 @@ const categories = [
         { id: 'tt-following', name: 'Following Only', type: 'allowlist', description: 'Redirect the home page to the Following feed — only see videos from accounts you follow' },
         { id: 'tt-likes', name: 'Like Counts', type: 'element', selector: '[data-e2e="like-count"], [data-e2e="browse-like-count"]' },
         { id: 'tt-share', name: 'Share Button', type: 'element', selector: '[data-e2e="share-icon"], [data-e2e="share-button"]' },
+        { id: 'tt-scroll-cap', name: 'Scroll Limit', type: 'scroll-cap', defaultScreens: 5, description: 'Block the page after scrolling 5 screen heights' },
       ]},
       { id: 'instagram', name: 'Instagram', domains: ['instagram.com', 'cdninstagram.com'], features: [
         { id: 'ig-reels', name: 'Reels', type: 'url', urlFilter: '/reels', requestDomains: ['instagram.com'] },
@@ -29,6 +30,7 @@ const categories = [
         { id: 'ig-comments', name: 'Comments', type: 'element', selector: '[placeholder="Add a comment…"], article section div:has(svg[aria-label="Comment"])' },
         { id: 'ig-like-counts', name: 'Like Counts', type: 'element', selector: 'article section span[role="button"]' },
         { id: 'ig-ads', name: 'Sponsored Posts', type: 'element', selector: '[data-testid="sponsored"], article:has(a[href*="ads/about"])' },
+        { id: 'ig-scroll-cap', name: 'Scroll Limit', type: 'scroll-cap', defaultScreens: 5, description: 'Block the page after scrolling 5 screen heights' },
       ]},
       { id: 'facebook', name: 'Facebook', domains: ['facebook.com', 'fbcdn.net', 'fb.com', 'facebook.net', 'fbsbx.com'], features: [
         { id: 'fb-reels', name: 'Reels', type: 'url', urlFilter: '/reel', requestDomains: ['facebook.com'] },
@@ -40,6 +42,7 @@ const categories = [
         { id: 'fb-notifications', name: 'Notifications', type: 'element', selector: '[aria-label="Notifications"], [data-testid="notif_container"]' },
         { id: 'fb-stories', name: 'Stories', type: 'element', selector: '[aria-label="Stories"]' },
         { id: 'fb-comments', name: 'Comments', type: 'element', selector: '[aria-label="Write a comment"], ul.x1n2onr6' },
+        { id: 'fb-scroll-cap', name: 'Scroll Limit', type: 'scroll-cap', defaultScreens: 5, description: 'Block the page after scrolling 5 screen heights' },
       ]},
       { id: 'twitter', name: 'Twitter / X', domains: ['twitter.com', 'x.com', 't.co', 'twimg.com'], features: [
         { id: 'tw-trending', name: 'Trending', type: 'element', selector: '[aria-label="Timeline: Trending now"], [data-testid="trend"]' },
@@ -55,6 +58,7 @@ const categories = [
         { id: 'tw-spaces', name: 'Spaces', type: 'element', selector: 'a[href*="/i/spaces"], [aria-label*="Space"]' },
         { id: 'tw-view-counts', name: 'View Counts', type: 'element', selector: 'a[href*="/analytics"], [aria-label*="views"]' },
         { id: 'tw-bookmark', name: 'Bookmarks', type: 'url', urlFilter: '/i/bookmarks', requestDomains: ['x.com', 'twitter.com'] },
+        { id: 'tw-scroll-cap', name: 'Scroll Limit', type: 'scroll-cap', defaultScreens: 5, description: 'Block the page after scrolling 5 screen heights' },
       ]},
       { id: 'snapchat', name: 'Snapchat', domains: ['snapchat.com', 'snap.com', 'sc-cdn.net', 'snapkit.co'], features: [
         { id: 'sc-discover', name: 'Discover', type: 'url', urlFilter: '/discover', requestDomains: ['snapchat.com'] },
@@ -71,11 +75,13 @@ const categories = [
         { id: 'rd-promoted', name: 'Promoted Posts', type: 'element', selector: 'shreddit-post[is-promoted], .promotedlink, [data-promoted="true"]' },
         { id: 'rd-vote-counts', name: 'Vote Counts', type: 'element', selector: 'faceplate-number, [score], .score' },
         { id: 'rd-suggested', name: 'Suggested Subs', type: 'element', selector: 'pdp-right-rail, #right-sidebar-container aside, [data-testid="subreddit-recommendation"]' },
+        { id: 'rd-scroll-cap', name: 'Scroll Limit', type: 'scroll-cap', defaultScreens: 5, description: 'Block the page after scrolling 5 screen heights' },
       ]},
       { id: 'pinterest', name: 'Pinterest', domains: ['pinterest.com', 'pinimg.com'], features: [
         { id: 'pn-home', name: 'Home Feed', type: 'url', urlFilter: '||pinterest.com/', requestDomains: ['pinterest.com'] },
         { id: 'pn-shop', name: 'Shop', type: 'element', selector: '[data-test-id="shopping-spotlight"], [data-test-id*="shop"], a[href*="/shop/"], a[href*="/shopping/"]' },
         { id: 'pn-notifications', name: 'Notifications', type: 'element', selector: '[aria-label="Notifications"]' },
+        { id: 'pn-scroll-cap', name: 'Scroll Limit', type: 'scroll-cap', defaultScreens: 5, description: 'Block the page after scrolling 5 screen heights' },
       ]},
       { id: 'linkedin', name: 'LinkedIn', domains: ['linkedin.com', 'licdn.com'], features: [
         { id: 'li-feed', name: 'Feed', type: 'url', urlFilter: '/feed', requestDomains: ['linkedin.com'] },
@@ -83,6 +89,7 @@ const categories = [
         { id: 'li-messaging', name: 'Messaging', type: 'url', urlFilter: '/messaging', requestDomains: ['linkedin.com'] },
         { id: 'li-ads', name: 'Promoted Posts', type: 'url', urlFilter: '/jobs', requestDomains: ['linkedin.com'] },
         { id: 'li-games', name: 'Games', type: 'url', urlFilter: '/games', requestDomains: ['linkedin.com'] },
+        { id: 'li-scroll-cap', name: 'Scroll Limit', type: 'scroll-cap', defaultScreens: 5, description: 'Block the page after scrolling 5 screen heights' },
       ]},
     ]
   },
@@ -112,6 +119,7 @@ const categories = [
         { id: 'yt-subscribe-btn', name: 'Subscribe Button', type: 'element', selector: '#subscribe-button, ytd-subscribe-button-renderer' },
         { id: 'yt-playlist-mix', name: 'Mixes / Playlists', type: 'element', selector: 'ytd-radio-renderer, ytd-compact-radio-renderer, ytd-rich-item-renderer:has(a[href*="list="])' },
         { id: 'yt-ads', name: 'Ads', type: 'element', selector: '.ytp-ad-module, .ytp-ad-overlay-container, .ytp-ad-text, .ytp-ad-skip-button-container, .ytp-ad-image-overlay, .video-ads, #player-ads, #masthead-ad, ytd-ad-slot-renderer, ytd-banner-promo-renderer, ytd-promoted-sparkles-web-renderer, ytd-promoted-video-renderer, ytd-display-ad-renderer, ytd-in-feed-ad-layout-renderer, ytd-rich-item-renderer:has(.ytd-ad-slot-renderer), #related ytd-promoted-sparkles-web-renderer, tp-yt-paper-dialog:has(#mealbar-promo-renderer)' },
+        { id: 'yt-scroll-cap', name: 'Scroll Limit', type: 'scroll-cap', defaultScreens: 5, description: 'Block the page after scrolling 5 screen heights' },
       ]},
       { id: 'netflix', name: 'Netflix', domains: ['netflix.com', 'nflxvideo.net', 'nflximg.net', 'nflxext.com'] },
       { id: 'disneyplus', name: 'Disney+', domains: ['disneyplus.com', 'disney-plus.net', 'dssott.com', 'bamgrid.com'], features: [

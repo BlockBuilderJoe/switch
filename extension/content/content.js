@@ -11,6 +11,9 @@ if (SAFE_HOSTS.includes(location.hostname)) {
 let hiddenSelectors = {};
 let blockedUrlRules = [];
 let followingOnly = {};
+let scrollCaps = {};
+let scrollDistance = 0;
+let scrollCapTripped = false;
 let lastUrl = location.href;
 
 // Follower-only redirects: when enabled, bounce the home/FYP-style page to the
@@ -30,7 +33,7 @@ const COOKIE_CONSENT_CSS = '#onetrust-banner-sdk, #onetrust-consent-sdk, .onetru
 
 // Load config from storage
 function loadConfig() {
-  chrome.storage.sync.get(['hiddenSelectors', 'blockedUrls', 'followingOnly', 'selections'], (data) => {
+  chrome.storage.sync.get(['hiddenSelectors', 'blockedUrls', 'followingOnly', 'scrollCaps', 'selections'], (data) => {
     hiddenSelectors = data.hiddenSelectors || {};
 
     // Ensure cookie consent CSS is applied when the feature is enabled,
@@ -44,6 +47,8 @@ function loadConfig() {
 
     blockedUrlRules = data.blockedUrls || [];
     followingOnly = data.followingOnly || {};
+    scrollCaps = data.scrollCaps || {};
+    initScrollCap();
     applyHiding();
     checkUrl();
     checkFollowingOnly();
@@ -91,6 +96,55 @@ function applyHiding() {
   }
 
   style.textContent = css;
+}
+
+// --- Scroll Cap ---
+let scrollCapListener = null;
+
+function initScrollCap() {
+  const hostname = window.location.hostname.replace('www.', '');
+  const limit = scrollCaps[hostname] ||
+    Object.entries(scrollCaps).find(([k]) => k !== '*' && hostname.endsWith('.' + k))?.[1];
+
+  // Remove previous listener if any
+  if (scrollCapListener) {
+    window.removeEventListener('scroll', scrollCapListener);
+    scrollCapListener = null;
+  }
+
+  if (!limit) return;
+
+  let lastScrollY = window.scrollY;
+  scrollCapListener = () => {
+    if (scrollCapTripped) return;
+    const delta = Math.abs(window.scrollY - lastScrollY);
+    lastScrollY = window.scrollY;
+    scrollDistance += delta;
+    if (scrollDistance >= limit * window.innerHeight) {
+      scrollCapTripped = true;
+      showScrollCapOverlay();
+    }
+  };
+  window.addEventListener('scroll', scrollCapListener, { passive: true });
+}
+
+function showScrollCapOverlay() {
+  document.body.style.overflow = 'hidden';
+  const overlay = document.createElement('div');
+  overlay.id = 'cb-scroll-cap-overlay';
+  overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:999999;background:#07080a;display:flex;align-items:center;justify-content:center;text-align:center;font-family:system-ui,sans-serif;color:#e4e6ea';
+  overlay.innerHTML = `
+    <div>
+      <div style="font-size:2rem;margin-bottom:8px">Scroll limit reached</div>
+      <div style="color:#666;margin-bottom:16px">Tripped by <span style="color:#22c55e">Circuit Breaker</span></div>
+      <a href="javascript:void(0)" style="color:#22c55e;text-decoration:none;padding:8px 20px;border:1px solid rgba(34,197,94,.3);border-radius:8px;font-size:.85rem">Go Back</a>
+    </div>
+  `;
+  overlay.querySelector('a').addEventListener('click', (e) => {
+    e.preventDefault();
+    history.back();
+  });
+  document.body.appendChild(overlay);
 }
 
 // --- SPA URL Blocking ---
@@ -180,6 +234,11 @@ function watchUrlChanges() {
   setInterval(() => {
     if (location.href !== lastUrl) {
       lastUrl = location.href;
+      scrollDistance = 0;
+      scrollCapTripped = false;
+      const existingOverlay = document.getElementById('cb-scroll-cap-overlay');
+      if (existingOverlay) existingOverlay.remove();
+      document.body.style.overflow = '';
       checkUrl();
       applyHiding();
       checkFollowingOnly();
@@ -252,6 +311,15 @@ chrome.storage.onChanged.addListener((changes, area) => {
     if (changes.followingOnly) {
       followingOnly = changes.followingOnly.newValue || {};
       checkFollowingOnly();
+    }
+    if (changes.scrollCaps) {
+      scrollCaps = changes.scrollCaps.newValue || {};
+      scrollDistance = 0;
+      scrollCapTripped = false;
+      const existingOverlay = document.getElementById('cb-scroll-cap-overlay');
+      if (existingOverlay) existingOverlay.remove();
+      document.body.style.overflow = '';
+      initScrollCap();
     }
   }
 });

@@ -187,7 +187,7 @@ function renderFeatures(path) {
   (site.features || []).forEach(feat => {
     const isTripped = selections[cat.id].features[feat.id] || false;
     const wire = isTripped ? 'green' : 'red';
-    const cell = createFuseCell(feat.name, isTripped, wire, feat.type === 'allowlist' ? 'allow list' : feat.type, false, '');
+    const cell = createFuseCell(feat.name, isTripped, wire, feat.type === 'allowlist' ? 'allow list' : feat.type === 'scroll-cap' ? 'scroll cap' : feat.type, false, '');
 
     cell.addEventListener('click', () => {
       if (document.body.classList.contains('client-locked')) return;
@@ -242,7 +242,7 @@ function updateStatus() {
 
 function saveAndRender() {
   chrome.storage.sync.set({ selections }, () => {
-    const domains = [], urls = [], selectors = {};
+    const domains = [], urls = [], selectors = {}, scrollCaps = {};
     categories.forEach(cat => {
       const s = selections[cat.id];
       if (!s) return;
@@ -254,6 +254,13 @@ function saveAndRender() {
         // Whole site blocked
         if (siteOn && (siteFeatures.length === 0 || allFeaturesOn)) {
           (site.domains || []).forEach(d => { if (d && !domains.includes(d)) domains.push(d); });
+          // Still collect scroll-cap features for whole-site blocking
+          siteFeatures.forEach(feat => {
+            if (feat.type === 'scroll-cap' && s.features[feat.id]) {
+              const d = (site.domains[0] || '').replace('www.', '');
+              if (d) scrollCaps[d] = feat.defaultScreens;
+            }
+          });
           return;
         }
 
@@ -277,9 +284,14 @@ function saveAndRender() {
             if (!selectors[h]) selectors[h] = [];
             selectors[h].push(...feat.elementSelectors);
           }
+          if (feat.type === 'scroll-cap') {
+            const d = (site.domains[0] || '').replace('www.', '');
+            if (d) scrollCaps[d] = feat.defaultScreens;
+          }
         });
       });
     });
+    chrome.storage.sync.set({ scrollCaps });
     chrome.runtime.sendMessage({ type: 'updateRules', domains, urls, selectors });
     render();
   });
